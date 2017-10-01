@@ -8,12 +8,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import seedu.address.model.person.ReadOnlyPerson;
 
+import java.util.HashMap;
+import java.util.Random;
+
 /**
  * An UI component that displays information of a {@code Person}.
  */
 public class PersonCard extends UiPart<Region> {
 
     private static final String FXML = "PersonListCard.fxml";
+    private static HashMap<String, int[]> tagColour = new HashMap<>();
+    private static Random random = new Random();
 
     /**
      * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX.
@@ -59,12 +64,27 @@ public class PersonCard extends UiPart<Region> {
         email.textProperty().bind(Bindings.convert(person.emailProperty()));
         person.tagProperty().addListener((observable, oldValue, newValue) -> {
             tags.getChildren().clear();
-            person.getTags().forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+            initTags(person);
         });
     }
 
+    private int[] getTagColour(String tag) {
+        int rgb[] = {random.nextInt(256), random.nextInt(256), random.nextInt(256)};
+
+        if(!tagColour.containsKey(tag)) {
+            tagColour.put(tag, rgb);
+        }
+
+        return tagColour.get(tag);
+    }
     private void initTags(ReadOnlyPerson person) {
-        person.getTags().forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+        person.getTags().forEach(tag -> {
+            int rgb[] = getTagColour(tag.tagName);
+
+            Label tagLabel = new Label(tag.tagName);
+            tagLabel.setStyle("-fx-background-color: rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")");
+            tags.getChildren().add(tagLabel);
+        });
     }
 
     @Override
