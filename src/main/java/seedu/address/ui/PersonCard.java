@@ -4,12 +4,12 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
+import java.util.HashMap;
 import javafx.scene.layout.HBox;
+import java.util.Random;
 import javafx.scene.layout.Region;
 import seedu.address.model.person.ReadOnlyPerson;
 
-import java.util.HashMap;
-import java.util.Random;
 
 /**
  * An UI component that displays information of a {@code Person}.
@@ -69,17 +69,23 @@ public class PersonCard extends UiPart<Region> {
     }
 
     private int[] getTagColour(String tag) {
-        int rgb[] = {random.nextInt(256), random.nextInt(256), random.nextInt(256)};
+        int[] rgb = {random.nextInt(256), random.nextInt(256), random.nextInt(256)};
 
-        if(!tagColour.containsKey(tag)) {
+        if (!tagColour.containsKey(tag)) {
             tagColour.put(tag, rgb);
         }
 
         return tagColour.get(tag);
     }
+
+    /**
+     * Initalizes the tags with same colours for same tags
+     *
+     * @param person the person for which the tags are being initialized
+     */
     private void initTags(ReadOnlyPerson person) {
         person.getTags().forEach(tag -> {
-            int rgb[] = getTagColour(tag.tagName);
+            int[] rgb = getTagColour(tag.tagName);
 
             Label tagLabel = new Label(tag.tagName);
             tagLabel.setStyle("-fx-background-color: rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")");

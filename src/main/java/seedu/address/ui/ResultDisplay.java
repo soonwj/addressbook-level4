@@ -39,14 +39,13 @@ public class ResultDisplay extends UiPart<Region> {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         Platform.runLater(() -> displayed.setValue(event.message));
 
-        if(event.isError) {
+        if (event.isError) {
             ObservableList<String> styleClass = resultDisplay.getStyleClass();
 
-            if(!styleClass.contains(ERROR_STYLE_CLASS)){
+            if (!styleClass.contains(ERROR_STYLE_CLASS)) {
                 styleClass.add(ERROR_STYLE_CLASS);
             }
-        }
-        else {
+        } else {
             resultDisplay.getStyleClass().remove(ERROR_STYLE_CLASS);
         }
     }
