@@ -837,7 +837,7 @@ Use case ends.
 *Extensions*
 
 [none]
-** 3a. User fails to login.
+* 3a. User fails to login.
 +
 Use case resumes at step 2.
 
