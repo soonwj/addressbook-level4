@@ -769,7 +769,7 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`* *` |user |swap two contacts in the list |view in the desired order
 
-|`* *` |user |view user page of contacts who also use the app
+|`* *` |user |view user page of contacts who also use the app |
 
 |`* *` |user |view the profile picture of a contact |
 
