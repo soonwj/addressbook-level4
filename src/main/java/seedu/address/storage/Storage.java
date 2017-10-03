@@ -39,3 +39,4 @@ public interface Storage extends AddressBookStorage, UserPrefsStorage {
      */
     void handleAddressBookChangedEvent(AddressBookChangedEvent abce);
 }
+
