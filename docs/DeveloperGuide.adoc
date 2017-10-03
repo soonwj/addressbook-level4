@@ -767,6 +767,58 @@ Use case ends.
 +
 Use case resumes at step 2.
 
+[discrete]
+== Use case: Undo command
+
+*MSS*
+
+1.  User requests to undo command
+2.  AddressBook shows the latest command and ask for confirmation
+3.  User confirms the request
+4.  AddressBook reverts to the state before the command
++
+Use case ends.
+
+*Extensions*
+
+[none]
+* 1a. The user has not input any commands.
++
+Use case ends.
+
+* 2a. The latest command does not involve altering the AddressBook.
++
+[none]
+** 2a1. AddressBook shows an error message.
++
+Use case ends.
+
+[discrete]
+== Use case: Swap Persons
+
+*MSS*
+
+1.  User requests to list persons
+2.  AddressBook shows a list of persons
+3.  User request to swap the indexes of two persons in the list
+4.  AddressBook swaps the two persons
++
+Use case ends.
+
+*Extensions*
+
+[none]
+* 2a. The list is empty.
++
+Use case ends.
+
+* 3a. The given index(s) is/are invalid.
++
+[none]
+** 3a1. AddressBook shows an error message.
++
+Use case resumes at step 2.
+
 {More to be added}
 
 [appendix]
