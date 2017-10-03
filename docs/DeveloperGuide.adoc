@@ -723,11 +723,63 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 |Priority |As a ... |I want to ... |So that I can...
 |`* * *` |new user |see usage instructions |refer to instructions when I forget how to use the App
 
-|`* * *` |user |add a new person |
+|`* * *` |user |add more fields to a contact |cater to contacts with multiple emails, phone numbers, etc
+
+|`* * *` |new user |sort contacts |look through the list easier
+
+|`* * *` |user |view frequently contacted contacts on the top of the list |
+
+|`* * *` |user |delete multiple people |delete groups faster
+
+|`* * *` |user |create a backup of my contacts |avoid losing them
+
+|`* * *` |user |list all my contacts |
+
+|`* * *` |user |update each contact's information |
+
+|`* * *` |user |search for contacts by common tags |
+
+|`* * *` |user |favourite a contact |
+
+|`* * *` |user |search for a particular contact |
+
+|`* * *` |user |view history of recent commands |
+
+|`* * *` |user |add new contacts |
 
 |`* * *` |user |delete a person |remove entries that I no longer need
 
 |`* * *` |user |find a person by name |locate details of persons without having to go through the entire list
+
+|`* *` |user |call a person |
+
+|`* *` |user |email a person |
+
+|`* *` |user |retrieve physical location of a person |
+
+|`* *` |user |send feedback to the developer |to improve the app
+
+|`* *` |user |import all existing contacts |use the app with less set-up time
+
+|`* *` |user |use shorthands of commands |use commands faster
+
+|`* *` |user |share my contacts with other users |save time on adding
+
+|`* *` |user |customize the appearance of the app |
+
+|`* *` |user |swap two contacts in the list |view in the desired order
+
+|`* *` |user |view user page of contacts who also use the app
+
+|`* *` |user |view the profile picture of a contact |
+
+|`* *` |user |enable auto-correct for slightly mistyped commands |
+
+|`* *` |user |store my contacts on an online database |
+
+|`* *` |user |access the app using my mobile phone |
+
+|`* *` |user |undo my latest command |
 
 |`* *` |user |hide link:#private-contact-detail[private contact details] by default |minimize chance of someone else seeing them by accident
 
@@ -766,6 +818,36 @@ Use case ends.
 ** 3a1. AddressBook shows an error message.
 +
 Use case resumes at step 2.
+
+[discrete]
+=== Use case: Import existing contacts from google
+
+*MSS*
+
+1.  User requests to import existing contacts
+2.  AddressBook prompts google login for authentication
+3.  User enters authentication information
+4.  AddressBook shows a list of incoming contacts
+5.  AddressBook prompts for confirmation
+6.  User accepts
+7.  AddressBook updates contact list
++
+Use case ends.
+
+*Extensions*
+
+[none]
+** 3a. User fails to login.
++
+Use case resumes at step 2.
+
+* 4a. The list is empty
++
+Use case ends
+
+* 6a. User declines
++
+Use case ends
 
 {More to be added}
 
