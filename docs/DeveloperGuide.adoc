@@ -774,7 +774,7 @@ Use case resumes at step 2.
 
 1.  User requests to undo command
 2.  AddressBook shows the latest command and ask for confirmation
-3.  User confirms the request
+3.  User confirms
 4.  AddressBook reverts to the state before the command
 +
 Use case ends.
@@ -827,6 +827,10 @@ Use case resumes at step 2.
 .  Should work on any link:#mainstream-os[mainstream OS] as long as it has Java `1.8.0_60` or higher installed.
 .  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
 .  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+.  The system should respond under a second.
+.  The system should be able to recover the data from its backup version.
+.  The system should work on both 32-bit and 64-bit environments.
+.  The system should provide necessary assistance in usage and operation.
 
 {More to be added}
 
