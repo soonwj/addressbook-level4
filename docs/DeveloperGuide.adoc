@@ -821,54 +821,54 @@ Use case resumes at step 2.
 
 [discrete]
  === Use case: Sort command
- 
+
  *MSS*
- 
+
  1.  User requests to sort persons
  2.  AddressBook shows a list of sorted persons
  +
  Use case ends.
- 
+
  *Extensions*
- 
+
  [none]
  * 2a. The list will be altered and shows the sorted list.
  +
  Use case ends.
- 
+
  * 3a. The given index is invalid.
  +
  [none]
  ** 3a1. AddressBook shows an error message.
  +
  Use case resumes at step 2.
- 
+
  [discrete]
  === Use case: Delete multiple persons
- 
+
  *MSS*
- 
+
  1.  User requests to list persons
  2.  AddressBook shows a list of persons
  3.  User requests to delete multiple person in the list
  4.  AddressBook delete the persons
  +
  Use case ends.
- 
+
  *Extensions*
- 
+
  [none]
  * 2a. The list is empty.
  +
  Use case ends.
- 
+
  * 3a. The given index is invalid.
  +
  [none]
  ** 3a1. AddressBook shows an error message.
  +
  Use case resumes at step 2.
- 
+
  [discrete]
 === Use case: Import existing contacts from google
 
