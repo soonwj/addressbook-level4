@@ -906,6 +906,8 @@ Use case ends
 
 1.  User requests to add person to the address book
 2.  AddressBook adds the person
++
+Use case ends.
 
 *Extensions*
 
