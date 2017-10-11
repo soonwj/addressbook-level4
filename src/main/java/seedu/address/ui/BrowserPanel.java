@@ -110,6 +110,7 @@ public class BrowserPanel extends UiPart<Region> {
     private void handleGoogleAuthSucessEvent(GoogleAuthSuccessEvent event) {
         String authCode = currentUrl.split("=")[1].split("&")[0];
         System.out.println(authCode);
+        authService.setupCredentials(authCode);
     }
 
     private boolean authSuccessUrlDetected(String currentUrl) {
