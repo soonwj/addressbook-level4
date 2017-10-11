@@ -15,6 +15,7 @@ import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.logic.GoogleAuthRequestEvent;
 import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
 import seedu.address.model.person.ReadOnlyPerson;
+import seedu.address.commons.auth.GoogleApiAuth;
 
 /**
  * The Browser Panel of the App.
@@ -33,6 +34,7 @@ public class BrowserPanel extends UiPart<Region> {
     private WebView browser;
 
     private String currentUrl;
+    private GoogleApiAuth authService;
 
     public BrowserPanel() {
         super(FXML);
@@ -48,6 +50,9 @@ public class BrowserPanel extends UiPart<Region> {
             currentUrl = (String) newValue;
             System.out.println("Browser Panel Redirected to: " + currentUrl);
         }));
+
+        //instantiates authService for future use
+        authService = new GoogleApiAuth();
     }
 
     private void loadPersonPage(ReadOnlyPerson person) {
@@ -80,8 +85,26 @@ public class BrowserPanel extends UiPart<Region> {
         loadPersonPage(event.getNewSelection().person);
     }
 
+    /**
+     * Event listener for Google Auth Requests
+     * @param event
+     */
     @Subscribe
     private void handleGoogleAuthRequestEvent(GoogleAuthRequestEvent event) {
-
+        loadPage(authService.getAuthContactWriteUrl());
+        if(checkForSuccessfulAuthentication()) {
+            System.out.println("Successfully authenticated, Auth Code:"
+                    + currentUrl.split("=")[1].split("&")[0]);
+        }
     }
+
+    private boolean checkForSuccessfulAuthentication() {
+//        while(true) {
+//            if(currentUrl.charAt(8)=='c') {
+//                return true;
+//            }
+//        }
+        return true;
+    }
+
 }
