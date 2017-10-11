@@ -36,7 +36,7 @@ public interface Model {
      */
     void updatePerson(ReadOnlyPerson target, ReadOnlyPerson editedPerson)
             throws DuplicatePersonException, PersonNotFoundException;
-    
+
     void deleteTag(Tag tag) throws PersonNotFoundException, DuplicatePersonException;
 
     /** Returns an unmodifiable view of the filtered person list */
