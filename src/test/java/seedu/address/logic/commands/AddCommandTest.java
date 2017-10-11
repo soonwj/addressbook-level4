@@ -157,7 +157,7 @@ public class AddCommandTest {
     }
 
     /**
-     * A Model stub that always accept the person being added. 
+     * A Model stub that always accept the person being added.
      */
     private class ModelStubAcceptingPersonAdded extends ModelStub {
         final ArrayList<Person> personsAdded = new ArrayList<>();
