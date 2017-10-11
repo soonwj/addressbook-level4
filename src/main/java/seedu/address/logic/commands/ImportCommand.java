@@ -12,8 +12,11 @@ import seedu.address.commons.events.logic.GoogleAuthRequestEvent;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.auth.GoogleApiAuth;
+import seedu.address.commons.util.GooglePersonConverterUtil;
+import seedu.address.model.person.exceptions.DuplicatePersonException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,8 +26,7 @@ import java.util.List;
 public class ImportCommand extends Command{
 
     public static final String COMMAND_WORD = "import";
-    public String MESSAGE_SUCCESS = "Import Success";
-    public String MESSAGE_FAIL = "Import Failed";
+    public String MESSAGE_SUCCESS = "Please proceed to login";
     private GoogleApiAuth authService;
     private PeopleService peopleService;
     private HttpTransport httpTransport;
@@ -60,9 +62,18 @@ public class ImportCommand extends Command{
                     .setPersonFields("names,emailAddresses,phoneNumbers,addresses")
                     .execute();
             List<Person> connections = response.getConnections();
+
             for(Person p: connections) {
-                System.out.println(p);
+                try{
+                    seedu.address.model.person.Person temp = GooglePersonConverterUtil.convertPerson(p);
+                    if(temp != null){
+                        model.addPerson(GooglePersonConverterUtil.convertPerson(p));
+                    }
+                } catch (DuplicatePersonException e) {
+                    continue;
+                }
             }
+
         } catch (IOException e) {
             System.out.print(e);
         }
