@@ -1,14 +1,14 @@
 package seedu.address.logic.parser;
 
-import org.junit.Test;
-import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.logic.commands.RemoveTagCommand;
-import seedu.address.model.tag.Tag;
-
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
+import org.junit.Test;
+
+import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.logic.commands.RemoveTagCommand;
+import seedu.address.model.tag.Tag;
 
 /**
  * As we are only doing white-box testing, our test cases do not cover path variations
@@ -23,7 +23,8 @@ public class RemoveTagCommandParserTest {
 
     @Test
     public void parse_emptyArg_throwsParseException() {
-        assertParseFailure(parser, "     ", String.format(MESSAGE_INVALID_COMMAND_FORMAT, RemoveTagCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, "     ", 
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, RemoveTagCommand.MESSAGE_USAGE));
     }
 
     @Test
