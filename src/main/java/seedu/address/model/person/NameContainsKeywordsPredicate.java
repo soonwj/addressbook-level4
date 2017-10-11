@@ -21,12 +21,15 @@ public class NameContainsKeywordsPredicate implements Predicate<ReadOnlyPerson> 
         boolean validNames =  keywords.stream()
                 .anyMatch(keyword -> StringUtil.containsWordIgnoreCase(person.getName().fullName, keyword));
         boolean validTags = false;
-        if(validNames)
+        if (validNames) {
             return validNames;
+        }
         for (Tag tag: person.getTags()) {
             validTags = keywords.stream()
                     .anyMatch(keyword -> StringUtil.containsWordIgnoreCase(tag.tagName, keyword));
-            if (validTags) {break;}
+            if (validTags) {
+                break;
+            }
         }
         return validTags;
     }
