@@ -16,18 +16,18 @@ import java.util.Arrays;
  * Created by Philemon1 on 11/10/2017.
  * This class is used to facilitate the OAuth2 process with Google's APIs
  * Client ID and Secret used belong to the creator (Philemon) 's project CS2103T-addressbook
- * Client ID name: CS2103T-Doc
+ * Client ID name: doc client
  * https://console.developers.google.com/apis/credentials?project=cs2103t-addressbook
  */
 public class GoogleApiAuth {
     /**
      * Class Constants
      */
-    private static String clientId = "591065149112-d03t233mjnjbc7v7uev56ubeghbmoamg.apps.googleusercontent.com";
-    private static String clientSecret = "waKCYfZT6DJqnh6qsK0ReEWW";
+    private static String clientId = "591065149112-69ikmid17q2trahg28gip4o8srmo47pv.apps.googleusercontent.com";
+    private static String clientSecret = "tXcIFXQ1OXEz9NTtMVC4KSc7";
     private static String contactWriteScope = "https://www.googleapis.com/auth/contacts";
     private static String contactReadOnlyScope = "https://www.googleapis.com/auth/contacts.readonly";
-    private static String redirectUrl = "";
+    private static String redirectUrl = "https://cs2103tdummyendpoint.herokuapp.com";
 
     /**
      * Class Attributes

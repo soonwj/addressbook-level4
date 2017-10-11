@@ -31,6 +31,8 @@ public class BrowserPanel extends UiPart<Region> {
     @FXML
     private WebView browser;
 
+    private String currentUrl;
+
     public BrowserPanel() {
         super(FXML);
 
@@ -39,6 +41,12 @@ public class BrowserPanel extends UiPart<Region> {
 
         loadDefaultPage();
         registerAsAnEventHandler(this);
+
+        // Listener for URL : Code adapted from https://gist.github.com/tewarid/57031d4b2f0a27765fa82abd10c21351
+        browser.getEngine().locationProperty().addListener(((observable, oldValue, newValue) -> {
+            currentUrl = (String) newValue;
+            System.out.println("Browser Panel Redirected to: " + currentUrl);
+        }));
     }
 
     private void loadPersonPage(ReadOnlyPerson person) {
