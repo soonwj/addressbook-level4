@@ -57,9 +57,6 @@ public class BrowserPanel extends UiPart<Region> {
                 EventsCenter.getInstance().post(new GoogleAuthSuccessEvent());
             }
         }));
-
-        //instantiates authService for future use
-        authService = new GoogleApiAuth();
     }
 
 
@@ -99,6 +96,7 @@ public class BrowserPanel extends UiPart<Region> {
      */
     @Subscribe
     private void handleGoogleAuthRequestEvent(GoogleAuthRequestEvent event) {
+        authService = event.authServiceRef;
         loadPage(authService.getAuthContactWriteUrl());
     }
 
