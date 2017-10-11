@@ -45,4 +45,10 @@ public interface Model {
      */
     void updateFilteredPersonList(Predicate<ReadOnlyPerson> predicate);
 
+    /**
+     * Exports all contacts in the address book to Google Contacts
+     * @throws PersonNotFoundException if address book is empty
+     */
+    void export() throws PersonNotFoundException;
+
 }

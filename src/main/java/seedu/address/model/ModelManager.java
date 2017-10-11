@@ -3,9 +3,20 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
+import com.google.api.services.people.v1.model.ContactGroup;
+import com.google.api.services.people.v1.model.Person;
+import com.google.api.services.people.v1.model.Name;
+import com.google.api.services.people.v1.model.PhoneNumber;
+import com.google.api.services.people.v1.model.Address;
+import com.google.api.services.people.v1.model.EmailAddress;
+import com.google.api.services.people.v1.model.UserDefined;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -15,6 +26,7 @@ import seedu.address.commons.events.model.AddressBookChangedEvent;
 import seedu.address.model.person.ReadOnlyPerson;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
+import seedu.address.model.tag.Tag;
 
 /**
  * Represents the in-memory model of the address book data.
@@ -79,6 +91,57 @@ public class ModelManager extends ComponentManager implements Model {
 
         addressBook.updatePerson(target, editedPerson);
         indicateAddressBookChanged();
+    }
+
+    @Override
+    public void export() throws PersonNotFoundException {
+        ObservableList<ReadOnlyPerson> contacts = addressBook.getPersonList();
+
+        if (contacts.size() == 0) {
+            throw new PersonNotFoundException();
+        }
+        else {
+            ArrayList<String> contactResourceNames = new ArrayList<>();
+
+            for(ReadOnlyPerson contact : contacts) {
+                Person newPerson = new Person();
+
+                List<Name> names = new ArrayList<>();
+                names.add(new Name().setDisplayName(contact.getName().toString()));
+                newPerson.setNames(names);
+
+                List<PhoneNumber> phones = new ArrayList<>();
+                phones.add(new PhoneNumber().setValue(contact.getPhone().toString()));
+                newPerson.setPhoneNumbers(phones);
+
+                List<Address> addresses = new ArrayList<>();
+                addresses.add(new Address().setExtendedAddress(contact.getAddress().toString()));
+                newPerson.setAddresses(addresses);
+
+                List<EmailAddress> emails = new ArrayList<>();
+                emails.add(new EmailAddress().setValue(contact.getEmail().toString()));
+                newPerson.setEmailAddresses(emails);
+
+                List<UserDefined> tags = new ArrayList<>();
+                Set<Tag> tagList = contact.getTags();
+                for(Tag t : tagList) {
+                    UserDefined tag = new UserDefined();
+                    tag.setKey("Tag");
+                    tag.setValue(t.toString());
+                    tags.add(tag);
+                }
+                newPerson.setUserDefined(tags);
+
+                Person createdPerson = peopleService.people().createContact(newPerson).execute();
+                contactResourceNames.add(createdPerson.getResourceName());
+            }
+
+            ContactGroup newGroup = new ContactGroup();
+            newGroup.setMemberResourceNames(contactResourceNames);
+            newGroup.setName("AddressBook Contacts @ " + new Date().getTime());
+
+            personService.contactGroups().create(newGroup).execute();
+        }
     }
 
     //=========== Filtered Person List Accessors =============================================================
