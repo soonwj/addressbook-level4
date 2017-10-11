@@ -12,6 +12,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.web.WebView;
 import seedu.address.MainApp;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.commons.events.logic.GoogleApiAuthServiceCredentialsSetupCompleted;
 import seedu.address.commons.events.logic.GoogleAuthRequestEvent;
 import seedu.address.commons.events.logic.GoogleAuthSuccessEvent;
 import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
@@ -107,8 +108,9 @@ public class BrowserPanel extends UiPart<Region> {
     @Subscribe
     private void handleGoogleAuthSucessEvent(GoogleAuthSuccessEvent event) {
         String authCode = currentUrl.split("=")[1].split("&")[0];
-        System.out.println(authCode);
-        authService.setupCredentials(authCode);
+        if (authService.setupCredentials(authCode)){
+            EventsCenter.getInstance().post(new GoogleApiAuthServiceCredentialsSetupCompleted());
+        }
     }
 
     private boolean authSuccessUrlDetected(String currentUrl) {

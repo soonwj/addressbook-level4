@@ -1,5 +1,6 @@
 package seedu.address.commons.auth;
 
+import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -32,7 +33,7 @@ public class GoogleApiAuth {
     /**
      * Class Attributes
      */
-    private GoogleTokenResponse authToken;
+    private TokenResponse authToken;
     private GoogleCredential credential;
     private HttpTransport httpTransport;
     private JacksonFactory jsonFactory;
@@ -45,7 +46,7 @@ public class GoogleApiAuth {
         jsonFactory = new JacksonFactory();
     }
 
-    public GoogleTokenResponse getAuthToken() {
+    public TokenResponse getAuthToken() {
         return authToken;
     }
 
@@ -70,35 +71,11 @@ public class GoogleApiAuth {
      * @return boolean indicating if set-up is successful or not
      */
     public boolean setupCredentials(String authCode) {
-        try {
-            setAuthToken(authCode);
-        } catch(IOException e) {
-            return false;
-        }
-        // Input parameter is valid, attempt to generate credentials now
-        credential = new GoogleCredential.Builder()
-                    .setTransport(httpTransport)
-                    .setJsonFactory(jsonFactory)
-                    .setClientSecrets(clientId, clientSecret)
-                    .build()
-                    .setFromTokenResponse(authToken);
+        System.out.println(authCode);
+        authToken = new TokenResponse();
+        authToken.setAccessToken(authCode);
+        credential = new GoogleCredential().setFromTokenResponse(authToken);
         return true;
     }
-
-    /**
-     * Helper method called by setupCredentials(), to obtain authToken from user input authCode
-     * @param authCode
-     * @throws IOException
-     */
-    private void setAuthToken(String authCode) throws IOException {
-        if(authCode == null) {
-            throw new IOException("authCode cannnot be null");
-        }
-        authToken =  new GoogleAuthorizationCodeTokenRequest(
-                httpTransport, jsonFactory, clientId, clientSecret, authCode, redirectUrl)
-                .execute();
-    }
-
-
 
 }
