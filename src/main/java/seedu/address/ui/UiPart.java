@@ -1,17 +1,17 @@
 package seedu.address.ui;
 
-import static java.util.Objects.requireNonNull;
+        import static java.util.Objects.requireNonNull;
 
-import java.io.IOException;
-import java.net.URL;
+        import java.io.IOException;
+        import java.net.URL;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import seedu.address.MainApp;
-import seedu.address.commons.core.EventsCenter;
-import seedu.address.commons.events.BaseEvent;
+        import javafx.fxml.FXMLLoader;
+        import javafx.scene.Scene;
+        import javafx.stage.Modality;
+        import javafx.stage.Stage;
+        import seedu.address.MainApp;
+        import seedu.address.commons.core.EventsCenter;
+        import seedu.address.commons.events.BaseEvent;
 
 /**
  * Represents a distinct part of the UI. e.g. Windows, dialogs, panels, status bars, etc.
