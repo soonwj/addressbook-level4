@@ -13,9 +13,11 @@ import javafx.scene.web.WebView;
 import seedu.address.MainApp;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.logic.GoogleAuthRequestEvent;
+import seedu.address.commons.events.logic.GoogleAuthSuccessEvent;
 import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
 import seedu.address.model.person.ReadOnlyPerson;
 import seedu.address.commons.auth.GoogleApiAuth;
+import seedu.address.commons.core.EventsCenter;
 
 /**
  * The Browser Panel of the App.
@@ -45,15 +47,21 @@ public class BrowserPanel extends UiPart<Region> {
         loadDefaultPage();
         registerAsAnEventHandler(this);
 
-        // Listener for URL : Code adapted from https://gist.github.com/tewarid/57031d4b2f0a27765fa82abd10c21351
+        /**Listener for URL : Code adapted from https://gist.github.com/tewarid/57031d4b2f0a27765fa82abd10c21351
+         * Fires a GoogleAuthSuccessEvent when a URL change to GoogleApiAuth.redirectUrl is detected
+         */
         browser.getEngine().locationProperty().addListener(((observable, oldValue, newValue) -> {
             currentUrl = (String) newValue;
             System.out.println("Browser Panel Redirected to: " + currentUrl);
+            if(authSuccessUrlDetected(currentUrl)){
+                EventsCenter.getInstance().post(new GoogleAuthSuccessEvent());
+            }
         }));
 
         //instantiates authService for future use
         authService = new GoogleApiAuth();
     }
+
 
     private void loadPersonPage(ReadOnlyPerson person) {
         loadPage(GOOGLE_SEARCH_URL_PREFIX + person.getName().fullName.replaceAll(" ", "+")
@@ -86,25 +94,26 @@ public class BrowserPanel extends UiPart<Region> {
     }
 
     /**
-     * Event listener for Google Auth Requests
+     * Event listener for Google Auth Requests Events
      * @param event
      */
     @Subscribe
     private void handleGoogleAuthRequestEvent(GoogleAuthRequestEvent event) {
         loadPage(authService.getAuthContactWriteUrl());
-        if(checkForSuccessfulAuthentication()) {
-            System.out.println("Successfully authenticated, Auth Code:"
-                    + currentUrl.split("=")[1].split("&")[0]);
-        }
     }
 
-    private boolean checkForSuccessfulAuthentication() {
-//        while(true) {
-//            if(currentUrl.charAt(8)=='c') {
-//                return true;
-//            }
-//        }
-        return true;
+    /**
+     * Event listener for Google Auth Success Events
+     * @param event
+     */
+    @Subscribe
+    private void handleGoogleAuthSucessEvent(GoogleAuthSuccessEvent event) {
+        String authCode = currentUrl.split("=")[1].split("&")[0];
+        System.out.println(authCode);
+    }
+
+    private boolean authSuccessUrlDetected(String currentUrl) {
+        return currentUrl.charAt(9)=='s';
     }
 
 }
