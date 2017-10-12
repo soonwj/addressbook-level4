@@ -27,9 +27,18 @@ public class GooglePersonConverterUtil {
     public static seedu.address.model.person.Person convertPerson(Person person){
         String tempName = person.getNames().get(0).getDisplayName();
         String tempPhoneNumber = person.getPhoneNumbers().get(0).getValue();
-        String tempEmailAddress = null;
-        String tempAddress = null;
+        String tempEmailAddress;
+        String tempAddress;
         seedu.address.model.person.Person tempPerson;
+
+        try {
+            tempEmailAddress = person.getEmailAddresses().get(0).getValue();
+            tempAddress = person.getAddresses().get(0).getFormattedValue();
+        } catch (IndexOutOfBoundsException|NullPointerException E) {
+            tempEmailAddress = null;
+            tempAddress = null;
+        }
+
 
         //Assumed to be non-null for now
         tempName = processName(tempName);
