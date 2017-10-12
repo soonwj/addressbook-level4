@@ -16,7 +16,6 @@ import seedu.address.commons.util.GooglePersonConverterUtil;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -55,7 +54,6 @@ public class ImportCommand extends Command{
     @Subscribe
     private void handleGoogleApiAuthServiceCredentialsSetupComplete(GoogleApiAuthServiceCredentialsSetupCompleted event)
     {
-        System.out.println("Credentials set");
         peopleService = new PeopleService.Builder(httpTransport, jsonFactory, authService.getCredential())
                 .setApplicationName("CS2103T - Doc")
                 .build();
@@ -65,7 +63,6 @@ public class ImportCommand extends Command{
                     .setPageSize(1000)
                     .execute();
             List<Person> connections = response.getConnections();
-            System.out.println("020202: " + connections.size());
             for(Person p: connections) {
                 try{
                     seedu.address.model.person.Person temp = GooglePersonConverterUtil.convertPerson(p);
