@@ -114,7 +114,6 @@ public class BrowserPanel extends UiPart<Region> {
     }
 
     private boolean authSuccessUrlDetected(String currentUrl) {
-        return currentUrl.charAt(9)=='s';
+        return currentUrl.contains(authService.getRedirectUrl());
     }
-
 }

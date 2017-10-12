@@ -1,21 +1,20 @@
 package seedu.address.commons.auth;
 
 import com.google.api.client.auth.oauth2.TokenResponse;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 /**
  * License Crediting: Code adapted from : https://developers.google.com/people/v1/getting-started
- * Created by Philemon1 on 11/10/2017.
+ * Authentication Service: Created by Philemon1 on 11/10/2017.
  * This class is used to facilitate the OAuth2 process with Google's APIs
+ * Each command instance seeking to perform OAuth2 with Google is expected to maintain its own instance of this class
+ * Authentication is bypassed if login has been performed in the session before
  * Client ID and Secret used belong to the creator (Philemon) 's project CS2103T-addressbook
  * Client ID name: doc client
  * https://console.developers.google.com/apis/credentials?project=cs2103t-addressbook
@@ -61,6 +60,13 @@ public class GoogleApiAuth {
      */
     public String getAuthContactWriteUrl() {
         return new GoogleBrowserClientRequestUrl(clientId, redirectUrl, Arrays.asList(contactWriteScope)).build();
+    }
+
+    /**
+     * @return String:  redirect URL used upon successful authentication
+     */
+    public String getRedirectUrl() {
+        return redirectUrl;
     }
 
     /**
