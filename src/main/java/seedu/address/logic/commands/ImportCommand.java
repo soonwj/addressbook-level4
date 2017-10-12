@@ -9,6 +9,7 @@ import com.google.api.services.people.v1.model.Person;
 import com.google.common.eventbus.Subscribe;
 import seedu.address.commons.events.logic.GoogleApiAuthServiceCredentialsSetupCompleted;
 import seedu.address.commons.events.logic.GoogleAuthRequestEvent;
+import seedu.address.commons.exceptions.InvalidGooglePersonException;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.auth.GoogleApiAuth;
@@ -78,6 +79,8 @@ public class ImportCommand extends Command{
                     model.addPerson(GooglePersonConverterUtil.convertPerson(p));
                 }
             } catch (DuplicatePersonException e) {
+                System.out.println(e);
+            } catch (InvalidGooglePersonException e) {
                 System.out.println(e);
             }
         }

@@ -2,18 +2,14 @@ package seedu.address.commons.util;
 
 
 import com.google.api.services.people.v1.model.Person;
-
-import jdk.nashorn.internal.objects.NativeUint8Array;
 import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.commons.exceptions.InvalidGooglePersonException;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
-import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
 
-import java.util.HashSet;
-import java.util.Set;
 
 
 /**This class is a service to convert Person objects from Google's API, to the Person object declared in
@@ -23,15 +19,19 @@ import java.util.Set;
  */
 public class GooglePersonConverterUtil {
     public static final String DEFAULT_TAGS = "ImportedFromGoogle";
+    public static final String DEFAULT_EMAIL = "INVALID_EMAIL@INVALID.COM";
+    public static final String DEFAULT_ADDRESS = "INVALID_ADDRESS PLEASE UPDATE THIS";
 
-    public static seedu.address.model.person.Person convertPerson(Person person){
-        String tempName = person.getNames().get(0).getDisplayName();
-        String tempPhoneNumber = person.getPhoneNumbers().get(0).getValue();
+    public static seedu.address.model.person.Person convertPerson(Person person) throws InvalidGooglePersonException {
+        String tempName = new String();
+        String tempPhoneNumber = new String();
         String tempEmailAddress;
         String tempAddress;
         seedu.address.model.person.Person tempPerson;
 
         try {
+            tempName = person.getNames().get(0).getDisplayName();
+            tempPhoneNumber = person.getPhoneNumbers().get(0).getValue();
             tempEmailAddress = person.getEmailAddresses().get(0).getValue();
             tempAddress = person.getAddresses().get(0).getFormattedValue();
         } catch (IndexOutOfBoundsException|NullPointerException E) {
@@ -39,22 +39,19 @@ public class GooglePersonConverterUtil {
             tempAddress = null;
         }
 
-
+        if(tempName == null | tempPhoneNumber == null) {
+            throw new InvalidGooglePersonException("Name and Phone number cannot be null");
+        }
         //Assumed to be non-null for now
         tempName = processName(tempName);
         tempPhoneNumber = processNumber(tempPhoneNumber);
 
         if (tempEmailAddress == null) {
-            tempEmailAddress = "INVALID_EMAIL@INVALID.COM";
+            tempEmailAddress = DEFAULT_EMAIL;
         }
         if (tempAddress == null) {
-            tempAddress = "INVALID_ADDRESS PLEASE UPDATE THIS";
+            tempAddress = DEFAULT_ADDRESS;
         }
-        System.out.println(tempName);
-        System.out.println(tempAddress);
-        System.out.println(tempEmailAddress);
-        System.out.println(tempPhoneNumber);
-
         try {
             Name nameObj = new Name(tempName);
             Email emailAddressObj = new Email(tempEmailAddress);
