@@ -63,21 +63,24 @@ public class ImportCommand extends Command{
                     .setPageSize(1000)
                     .execute();
             List<Person> connections = response.getConnections();
-            for(Person p: connections) {
-                try{
-                    seedu.address.model.person.Person temp = GooglePersonConverterUtil.convertPerson(p);
-                    if(temp != null){
-                        model.addPerson(GooglePersonConverterUtil.convertPerson(p));
-                    }
-                } catch (DuplicatePersonException e) {
-                    continue;
-                }
-            }
-
+            convertAndAddAll(connections);
         } catch (IOException e) {
             System.out.print(e);
         }
 
+    }
+
+    private void convertAndAddAll(List<Person> connections) {
+        for(Person p: connections) {
+            try{
+                seedu.address.model.person.Person temp = GooglePersonConverterUtil.convertPerson(p);
+                if(temp != null){
+                    model.addPerson(GooglePersonConverterUtil.convertPerson(p));
+                }
+            } catch (DuplicatePersonException e) {
+                System.out.println(e);
+            }
+        }
     }
 
 }
