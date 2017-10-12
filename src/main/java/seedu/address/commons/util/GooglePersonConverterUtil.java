@@ -2,6 +2,8 @@ package seedu.address.commons.util;
 
 
 import com.google.api.services.people.v1.model.Person;
+
+import jdk.nashorn.internal.objects.NativeUint8Array;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
@@ -29,11 +31,10 @@ public class GooglePersonConverterUtil {
         String tempAddress = null;
         seedu.address.model.person.Person tempPerson;
 
+        //Assumed to be non-null for now
         tempName = processName(tempName);
+        tempPhoneNumber = processNumber(tempPhoneNumber);
 
-        if (tempPhoneNumber == null) {
-            tempPhoneNumber = "00000000";
-        }
         if (tempEmailAddress == null) {
             tempEmailAddress = "INVALID_EMAIL@INVALID.COM";
         }
@@ -54,19 +55,21 @@ public class GooglePersonConverterUtil {
             return tempPerson;
 
         } catch (IllegalValueException e) {
-            System.out.println("asdadasd");
             System.out.println(e);
         }
         return null;
     }
 
     public static String processName(String tempName) {
-        String tempName1 = tempName.replace("(", "");
-        String tempName2 = tempName1.replace(")", "");
-        return tempName2;
+        return tempName.replaceAll("[^a-zA-Z0-9]", " ");
     }
 
-
+    public static String processNumber(String tempNumber) {
+        if (tempNumber == null) {
+            tempNumber = "00000000";
+        }
+        return tempNumber.replaceAll("[^0-9]", "");
+    }
 
 
 }

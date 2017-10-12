@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
+/**Purpose: Imports contacts from Google Contacts, fulfilling Google's OAuth2 protocol.
+ * Limit of contacts retrieved set at : 1000
+ * Each instance of this method will maintain it's own GoogleApiAuth authService. Token re-use is not supported.
  * Created by Philemon1 on 11/10/2017.
  */
 public class ImportCommand extends Command{
@@ -60,9 +62,10 @@ public class ImportCommand extends Command{
         try {
             ListConnectionsResponse response = peopleService.people().connections().list("people/me")
                     .setPersonFields("names,emailAddresses,phoneNumbers,addresses")
+                    .setPageSize(1000)
                     .execute();
             List<Person> connections = response.getConnections();
-
+            System.out.println("020202: " + connections.size());
             for(Person p: connections) {
                 try{
                     seedu.address.model.person.Person temp = GooglePersonConverterUtil.convertPerson(p);
