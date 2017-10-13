@@ -54,7 +54,6 @@ public class BrowserPanel extends UiPart<Region> {
          */
         browser.getEngine().locationProperty().addListener(((observable, oldValue, newValue) -> {
             currentUrl = (String) newValue;
-            System.out.println("Browser Panel Redirected to: " + currentUrl);
             if (authSuccessUrlDetected(currentUrl)) {
                 EventsCenter.getInstance().post(new GoogleAuthSuccessEvent());
             }
