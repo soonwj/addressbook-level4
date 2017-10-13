@@ -5,9 +5,6 @@ import java.util.Arrays;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
 
 /**
  * License Crediting: Code adapted from : https://developers.google.com/people/v1/getting-started
@@ -25,25 +22,18 @@ public class GoogleApiAuth {
      */
     public static final String REDIRECT_URL = "https://cs2103tdummyendpoint.herokuapp.com";
     private static String clientId = "591065149112-69ikmid17q2trahg28gip4o8srmo47pv.apps.googleusercontent.com";
-    private static String clientSecret = "tXcIFXQ1OXEz9NTtMVC4KSc7";
     private static String contactWriteScope = "https://www.googleapis.com/auth/contacts";
-    private static String contactReadOnlyScope = "https://www.googleapis.com/auth/contacts.readonly";
 
     /**
      * Class Attributes
      */
     private TokenResponse authToken;
     private GoogleCredential credential;
-    private HttpTransport httpTransport;
-    private JacksonFactory jsonFactory;
 
     /**
      * Default constructor
      */
-    public GoogleApiAuth() {
-        httpTransport = new NetHttpTransport();
-        jsonFactory = new JacksonFactory();
-    }
+    public GoogleApiAuth() {}
 
     public TokenResponse getAuthToken() {
         return authToken;
@@ -77,7 +67,6 @@ public class GoogleApiAuth {
      * @return boolean indicating if set-up is successful or not
      */
     public boolean setupCredentials(String authCode) {
-        System.out.println(authCode);
         authToken = new TokenResponse();
         authToken.setAccessToken(authCode);
         credential = new GoogleCredential().setFromTokenResponse(authToken);
