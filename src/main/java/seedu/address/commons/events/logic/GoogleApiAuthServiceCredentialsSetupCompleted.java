@@ -12,7 +12,7 @@ public class GoogleApiAuthServiceCredentialsSetupCompleted extends BaseEvent {
     public GoogleApiAuthServiceCredentialsSetupCompleted() {}
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.getClass().getSimpleName();
     }
 }

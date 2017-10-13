@@ -36,7 +36,7 @@ public class BrowserPanel extends UiPart<Region> {
     @FXML
     private WebView browser;
 
-    private String currentUrl;
+    private String currentUrl = "";
     private GoogleApiAuth authService;
 
     public BrowserPanel() {
@@ -54,7 +54,7 @@ public class BrowserPanel extends UiPart<Region> {
         browser.getEngine().locationProperty().addListener(((observable, oldValue, newValue) -> {
             currentUrl = (String) newValue;
             System.out.println("Browser Panel Redirected to: " + currentUrl);
-            if(authSuccessUrlDetected(currentUrl)){
+            if (authSuccessUrlDetected(currentUrl)){
                 EventsCenter.getInstance().post(new GoogleAuthSuccessEvent());
             }
         }));
@@ -97,7 +97,7 @@ public class BrowserPanel extends UiPart<Region> {
      */
     @Subscribe
     private void handleGoogleAuthRequestEvent(GoogleAuthRequestEvent event) {
-        authService = event.authServiceRef;
+        authService = event.getAuthServiceRef();
         loadPage(authService.getAuthContactWriteUrl());
     }
 
@@ -114,6 +114,6 @@ public class BrowserPanel extends UiPart<Region> {
     }
 
     private boolean authSuccessUrlDetected(String currentUrl) {
-        return currentUrl.contains(authService.getRedirectUrl());
+        return currentUrl.contains(GoogleApiAuth.redirectUrl);
     }
 }
