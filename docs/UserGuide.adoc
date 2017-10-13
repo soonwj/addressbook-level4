@@ -82,7 +82,7 @@ Number of persons imported is limited to 1000
 
 **Picture guide**
 
-image::import_pic.png[width="1400"]
+image::importpic.png[width="1000"]
 
 
 === Listing all persons : `list`
