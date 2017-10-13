@@ -81,8 +81,7 @@ Number of persons imported is limited to 1000
 3. Grant permission to DoC to access your contacts
 
 **Picture guide**
-
-
+image::import_pic.png[width="790"]
 
 === Listing all persons : `list`
 
