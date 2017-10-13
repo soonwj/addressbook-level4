@@ -72,8 +72,8 @@ Examples:
 Imports persons to DoC from Google Contacts +
 Format: `import`
 
-[IMPORTANT]
-Number of persons imported is limited to 1000 +
+IMPORTANT: Number of persons imported is limited to 1000 +
+
 
 **Steps** +
 **1.** Enter the `import` command +
