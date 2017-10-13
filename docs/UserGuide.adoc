@@ -69,21 +69,22 @@ Examples:
 
 === Importing persons: `import`
 
-Imports persons to DoC from Google Contacts
+Imports persons to DoC from Google Contacts +
 Format: `import`
 
-[TIP]
+[IMPORTANT]
 Number of persons imported is limited to 1000
 
-**Steps**
-1. Enter the `import` command
-2. Log in to your Google account on the in-built browser
-3. Grant permission to DoC to access your contacts
+**Steps** +
+**1.** Enter the `import` command +
+**2.** Log in to your Google account on the in-built browser +
+**3.** Grant permission to DoC to access your contacts +
 
 **Picture guide**
-+
-image::import_pic.png[width="790"]
-+
+
+image::import_pic.png[width="1400"]
+
+
 === Listing all persons : `list`
 
 Shows a list of all persons in the address book. +
