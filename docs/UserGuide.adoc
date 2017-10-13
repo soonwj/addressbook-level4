@@ -72,7 +72,7 @@ Examples:
 Imports persons to DoC from Google Contacts +
 Format: `import`
 
-IMPORTANT: Number of persons imported is limited to 1000 +
+WARNING: Number of persons imported is limited to 1000 +
 
 
 **Steps** +
