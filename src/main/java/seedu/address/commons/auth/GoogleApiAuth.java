@@ -21,8 +21,8 @@ public class GoogleApiAuth {
      * Class Constants
      */
     public static final String REDIRECT_URL = "https://cs2103tdummyendpoint.herokuapp.com";
-    private static String clientId = "591065149112-69ikmid17q2trahg28gip4o8srmo47pv.apps.googleusercontent.com";
-    private static String contactWriteScope = "https://www.googleapis.com/auth/contacts";
+    private static final String clientId = "591065149112-69ikmid17q2trahg28gip4o8srmo47pv.apps.googleusercontent.com";
+    private static final String contactWriteScope = "https://www.googleapis.com/auth/contacts";
 
     /**
      * Class Attributes
