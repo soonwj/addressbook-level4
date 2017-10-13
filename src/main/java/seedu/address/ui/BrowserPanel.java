@@ -48,16 +48,6 @@ public class BrowserPanel extends UiPart<Region> {
 
         loadDefaultPage();
         registerAsAnEventHandler(this);
-
-        /**Listener for URL : Code adapted from https://gist.github.com/tewarid/57031d4b2f0a27765fa82abd10c21351
-         * Fires a GoogleAuthSuccessEvent when a URL change to GoogleApiAuth.redirectUrl is detected
-         */
-        browser.getEngine().locationProperty().addListener(((observable, oldValue, newValue) -> {
-            currentUrl = (String) newValue;
-            if (authSuccessUrlDetected(currentUrl)) {
-                EventsCenter.getInstance().post(new GoogleAuthSuccessEvent());
-            }
-        }));
     }
 
 
@@ -99,6 +89,16 @@ public class BrowserPanel extends UiPart<Region> {
     private void handleGoogleAuthRequestEvent(GoogleAuthRequestEvent event) {
         authService = event.getAuthServiceRef();
         loadPage(authService.getAuthContactWriteUrl());
+
+        /**Listener for URL : Code adapted from https://gist.github.com/tewarid/57031d4b2f0a27765fa82abd10c21351
+         * Fires a GoogleAuthSuccessEvent when a URL change to GoogleApiAuth.redirectUrl is detected
+         */
+        browser.getEngine().locationProperty().addListener(((observable, oldValue, newValue) -> {
+            currentUrl = (String) newValue;
+            if (authSuccessUrlDetected(currentUrl)) {
+                EventsCenter.getInstance().post(new GoogleAuthSuccessEvent());
+            }
+        }));
     }
 
     /**
