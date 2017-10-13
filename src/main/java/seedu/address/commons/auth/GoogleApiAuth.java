@@ -23,7 +23,7 @@ public class GoogleApiAuth {
     /**
      * Class Constants
      */
-    public static final String redirectUrl = "https://cs2103tdummyendpoint.herokuapp.com";
+    public static final String REDIRECT_URL = "https://cs2103tdummyendpoint.herokuapp.com";
     private static String clientId = "591065149112-69ikmid17q2trahg28gip4o8srmo47pv.apps.googleusercontent.com";
     private static String clientSecret = "tXcIFXQ1OXEz9NTtMVC4KSc7";
     private static String contactWriteScope = "https://www.googleapis.com/auth/contacts";
@@ -59,14 +59,14 @@ public class GoogleApiAuth {
      * @return a String URL for caller to redirect.
      */
     public String getAuthContactWriteUrl() {
-        return new GoogleBrowserClientRequestUrl(clientId, redirectUrl, Arrays.asList(contactWriteScope)).build();
+        return new GoogleBrowserClientRequestUrl(clientId, REDIRECT_URL, Arrays.asList(contactWriteScope)).build();
     }
 
     /**
      * @return String:  redirect URL used upon successful authentication
      */
     public String getRedirectUrl() {
-        return redirectUrl;
+        return REDIRECT_URL;
     }
 
     /**

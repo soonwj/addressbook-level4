@@ -11,14 +11,15 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.Region;
 import javafx.scene.web.WebView;
 import seedu.address.MainApp;
+import seedu.address.commons.auth.GoogleApiAuth;
+import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.logic.GoogleApiAuthServiceCredentialsSetupCompleted;
 import seedu.address.commons.events.logic.GoogleAuthRequestEvent;
 import seedu.address.commons.events.logic.GoogleAuthSuccessEvent;
 import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
 import seedu.address.model.person.ReadOnlyPerson;
-import seedu.address.commons.auth.GoogleApiAuth;
-import seedu.address.commons.core.EventsCenter;
+
 
 /**
  * The Browser Panel of the App.
@@ -54,7 +55,7 @@ public class BrowserPanel extends UiPart<Region> {
         browser.getEngine().locationProperty().addListener(((observable, oldValue, newValue) -> {
             currentUrl = (String) newValue;
             System.out.println("Browser Panel Redirected to: " + currentUrl);
-            if (authSuccessUrlDetected(currentUrl)){
+            if (authSuccessUrlDetected(currentUrl)) {
                 EventsCenter.getInstance().post(new GoogleAuthSuccessEvent());
             }
         }));
@@ -108,12 +109,12 @@ public class BrowserPanel extends UiPart<Region> {
     @Subscribe
     private void handleGoogleAuthSucessEvent(GoogleAuthSuccessEvent event) {
         String authCode = currentUrl.split("=")[1].split("&")[0];
-        if (authService.setupCredentials(authCode)){
+        if (authService.setupCredentials(authCode)) {
             EventsCenter.getInstance().post(new GoogleApiAuthServiceCredentialsSetupCompleted());
         }
     }
 
     private boolean authSuccessUrlDetected(String currentUrl) {
-        return currentUrl.contains(GoogleApiAuth.redirectUrl);
+        return currentUrl.contains(GoogleApiAuth.REDIRECT_URL);
     }
 }

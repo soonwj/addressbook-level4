@@ -1,7 +1,7 @@
 package seedu.address.commons.util;
 
-
 import com.google.api.services.people.v1.model.Person;
+
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.exceptions.InvalidGooglePersonException;
 import seedu.address.model.person.Address;
@@ -22,24 +22,29 @@ public class GooglePersonConverterUtil {
     public static final String DEFAULT_EMAIL = "INVALID_EMAIL@INVALID.COM";
     public static final String DEFAULT_ADDRESS = "INVALID_ADDRESS PLEASE UPDATE THIS";
 
+    /**
+     * Main functionality of the Util: converts a Google Person to a ..model.person.Person
+     * @param person
+     * @return Returns a model.person.Person instance, converted from the Google Person instance
+     * @throws InvalidGooglePersonException if input parameter Person has null name or phone
+     */
     public static seedu.address.model.person.Person convertPerson(Person person) throws InvalidGooglePersonException {
         String tempName = new String();
         String tempPhoneNumber = new String();
         String tempEmailAddress;
         String tempAddress;
         seedu.address.model.person.Person tempPerson;
-
         try {
             tempName = person.getNames().get(0).getDisplayName();
             tempPhoneNumber = person.getPhoneNumbers().get(0).getValue();
             tempEmailAddress = person.getEmailAddresses().get(0).getValue();
             tempAddress = person.getAddresses().get(0).getFormattedValue();
-        } catch (IndexOutOfBoundsException|NullPointerException E) {
+        } catch (IndexOutOfBoundsException | NullPointerException E) {
             tempEmailAddress = null;
             tempAddress = null;
         }
 
-        if(tempName == null | tempPhoneNumber == null) {
+        if (tempName == null | tempPhoneNumber == null) {
             throw new InvalidGooglePersonException("Name and Phone number cannot be null");
         }
         //Assumed to be non-null for now
@@ -57,7 +62,8 @@ public class GooglePersonConverterUtil {
             Email emailAddressObj = new Email(tempEmailAddress);
             Phone phoneObj = new Phone(tempPhoneNumber);
             Address addressObj = new Address(tempAddress);
-            tempPerson = new seedu.address.model.person.Person(nameObj, phoneObj, emailAddressObj, addressObj, SampleDataUtil.getTagSet(DEFAULT_TAGS));
+            tempPerson = new seedu.address.model.person.Person(nameObj,
+                    phoneObj, emailAddressObj, addressObj, SampleDataUtil.getTagSet(DEFAULT_TAGS));
             return tempPerson;
 
         } catch (IllegalValueException e) {
@@ -70,6 +76,11 @@ public class GooglePersonConverterUtil {
         return tempName.replaceAll("[^a-zA-Z0-9]", " ");
     }
 
+    /**
+     * Helper method that removes all characters not in the allowed regex for a model.person.Person.Phone's value
+     * @param tempNumber
+     * @return the corrected phone number in the form of a String
+     */
     public static String processNumber(String tempNumber) {
         if (tempNumber == null) {
             tempNumber = "00000000";
