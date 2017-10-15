@@ -53,8 +53,8 @@ public class SampleDataUtil {
     public static Event[] getSampleEvents() {
         try {
             return new Event[] {
-                    new Event(new Header("Birthday party"), new Desc("location"), new EventDate("2017-06-12")),
-                    new Event(new Header("Meeting"), new Desc("location"), new EventDate("2017-10-23"))
+                new Event(new Header("Birthday party"), new Desc("location"), new EventDate("2017-06-12")),
+                new Event(new Header("Meeting"), new Desc("location"), new EventDate("2017-10-23"))
             };
         } catch (IllegalValueException e) {
             throw new AssertionError("sample data cannot be invalid", e);
