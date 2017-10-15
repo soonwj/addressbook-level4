@@ -92,6 +92,46 @@ Edits the phone number and email address of the 1st person to be `91234567` and 
 * `edit 2 n/Betsy Crower t/` +
 Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 
+=== Updating a person's profile picture: `updateProfilePic`
+
+Updates the profile picture of a person. +
+Format: `updateProfilePic INDEX [u/imageUrl]`
+
+****
+* Updates the profile picture of the person at the specified `INDEX`. The index refers to the index number shown in the last person listing. The index *must be a positive integer* 1, 2, 3, ...
+* The index must be valid as well
+* The `imageUrl` must be a valid one. It should start with `file:///` for images stored locally
+* Or a valid web URL for an image stored on the internet
+****
+
+Examples:
+
+* `updateProfilePic 1 u/file:///C:/Users/Bobby/image.jpg` +
+Updates the profile picture of the 1st person to be the image at `file:///C:/Users/Bobby/image.jpg` +
+* `updateProfilePic 2 u/http://www.google.com/images/image.png` +
+Updates the profile picture of the 2nd person to be the image at `http://www.google.com/images/image.png` +
+
+=== Deleting the profile picture of a person : `deleteProfilePic`
+
+Deletes the profile picture of the specified person from the address book. +
+Format: `deleteProfilePic INDEX`
+
+****
+* Deletes the profile picture of the person at the specified `INDEX`.
+* The index refers to the index number shown in the most recent listing.
+* The index *must be a positive integer* 1, 2, 3, ...
+* The index must be valid as well
+****
+
+Examples:
+
+* `list` +
+`deleteProfilePic 2` +
+Deletes the profile picture of the 2nd person in the address book.
+* `find Bobby` +
+`delete 1` +
+Deletes the profile picture of the 1st person in the results of the `find` command.
+
 === Locating persons by name: `find`
 
 Finds persons whose names contain any of the given keywords. +
