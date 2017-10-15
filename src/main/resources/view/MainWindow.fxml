@@ -49,9 +49,12 @@
         <Insets bottom="10" left="10" right="10" top="10" />
       </padding>
     </StackPane>
-      <VBox fx:id="personList1" maxWidth="350.0" prefWidth="350.0">
+      <VBox fx:id="personList1" maxWidth="418.0" prefHeight="620.0" prefWidth="418.0">
          <children>
-            <StackPane fx:id="eventListPanelPlaceholder" layoutX="20.0" layoutY="20.0" prefHeight="620.0" />
+            <StackPane fx:id="eventListPanelPlaceholder" layoutX="20.0" layoutY="20.0" maxWidth="500.0" prefHeight="620.0">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></StackPane>
          </children>
       </VBox>
   </SplitPane>

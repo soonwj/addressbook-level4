@@ -1,5 +1,7 @@
 package seedu.address.storage;
 
+import java.time.format.DateTimeFormatter;
+
 import javax.xml.bind.annotation.XmlElement;
 
 import seedu.address.commons.exceptions.IllegalValueException;
@@ -36,7 +38,7 @@ public class XmlAdaptedEvent {
     public XmlAdaptedEvent(ReadOnlyEvent source) {
         header = source.getHeader().value;
         desc = source.getDesc().value;
-        eventDate = source.getEventDate().value;
+        eventDate = source.getEventDate().eventLocalDate.toString();
     }
 
     /**

@@ -1,6 +1,8 @@
 package seedu.address.model.person.event;
 
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -16,10 +18,11 @@ public class EventDate{
 
     public static final String MESSAGE_EVENT_DATE_CONSTRAINTS =
             "Event must have a valid date input\n" +
-                    "Format: day/month/year";
+                    "Format: year-month-day";
 
     public final String value;
     public final LocalDate eventLocalDate;
+    public String countDown;
 
     /**
      * Validates given eventDate.
@@ -28,19 +31,35 @@ public class EventDate{
      */
     public EventDate(String eventDate) throws IllegalValueException {
         requireNonNull(eventDate);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
             eventLocalDate = LocalDate.parse(eventDate, formatter);
         }
         catch (DateTimeParseException ex) {
             throw new IllegalValueException(MESSAGE_EVENT_DATE_CONSTRAINTS, ex);
         }
-        this.value = eventDate;
+        getCountDown();
+        this.value = eventDate + "\n" + countDown;
     }
 
-    /**
-     * Returns true if a given string is a valid eventDate.
-     */
+    public void getCountDown() {
+        ZoneId sgt = ZoneId.of("GMT+8");
+        LocalDate currentDate = LocalDate.now(sgt);
+        Period period = currentDate.until(eventLocalDate);
+        int days, months, years;
+        years = period.getYears();
+        months = period.getMonths();
+        days = period.getDays();
+        if (period.isNegative()) {
+            this.countDown = "Event is overdue.";
+        }
+        else if (period.isZero()) {
+            this.countDown = "Event is today!";
+        }
+        else {
+            this.countDown = "Event in: " + years + "years " + months + "months " + days + "days";
+        }
+    }
 
     @Override
     public String toString() {
