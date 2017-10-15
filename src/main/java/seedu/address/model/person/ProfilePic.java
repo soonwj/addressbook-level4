@@ -2,17 +2,16 @@ package seedu.address.model.person;
 
 import static java.util.Objects.requireNonNull;
 
-import seedu.address.commons.exceptions.IllegalValueException;
-
-import javax.imageio.ImageIO;
 import java.awt.Image;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
+import javax.imageio.ImageIO;
+
+import seedu.address.commons.exceptions.IllegalValueException;
 
 /**
  * Represents a Person's profile picture in the address book.
- * Guarantees: immutable; is valid as declared in {@link #isValidURL(String)}
+ * Guarantees: immutable; is valid as declared in {@link #isValidUrl(String)}
  */
 public class ProfilePic {
     public static final String MESSAGE_PROFILE_PIC_CONSTRAINTS =
@@ -33,17 +32,15 @@ public class ProfilePic {
      */
     public ProfilePic(String url) throws IllegalValueException {
         requireNonNull(url);
-        if (!isValidURL(url)) {
+        if (!isValidUrl(url)) {
             throw new IllegalValueException(MESSAGE_PROFILE_PIC_CONSTRAINTS);
-        }
-        else {
+        } else {
             try {
                 Image img = ImageIO.read(new URL(url));
                 if (img == null) {
                     throw new IllegalValueException(MESSAGE_PROFILE_PIC_CONSTRAINTS);
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 throw new IllegalValueException(MESSAGE_PROFILE_PIC_CONSTRAINTS);
             }
         }
@@ -53,7 +50,7 @@ public class ProfilePic {
     /**
      * Returns true if a given string is a valid image URL.
      */
-    private boolean isValidURL(String test) {
+    private boolean isValidUrl(String test) {
         return test.matches(PROFILE_PIC_VALIDATION_REGEX);
     }
 

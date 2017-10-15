@@ -10,7 +10,6 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import javafx.scene.image.Image;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -47,7 +46,8 @@ public class AddCommandParser implements Parser<AddCommand> {
             Email email = ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL)).get();
             Address address = ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS)).get();
             Set<Tag> tagList = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
-            ProfilePic profilePic = new ProfilePic("file:///D:/D_/Users/Assassin Ranger/Documents/SWJ/NUS/Yr 2 Sem 1/CS2103T/addressbook-level4/src/main/resources/images/fail.png");
+            ProfilePic profilePic = new ProfilePic("file:///D:/D_/Users/Assassin Ranger/Documents/SWJ/NUS/Yr 2 Sem 1"
+                    + "/CS2103T/addressbook-level4/src/main/resources/images/fail.png");
 
             ReadOnlyPerson person = new Person(name, phone, email, address, profilePic, tagList);
 
