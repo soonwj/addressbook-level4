@@ -29,7 +29,7 @@ Responsibilities: UI
 '''
 
 === Siddharth Madhavan
-image::sidhmads.jpg[width="150", align="left"]
+image::Siddharth_Madhavan.jpg[width="150", align="left"]
 {empty}[http://github.com/sidhmads[github]] [<<sidhmads#, portfolio>>]
 
 Role: Developer
