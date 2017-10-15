@@ -1,103 +1,98 @@
 package seedu.address.model.person.event;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Date;
-
 import static java.util.Objects.requireNonNull;
+import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
-import seedu.address.commons.exceptions.IllegalValueException;
+import java.util.Objects;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
- * Represents a Person's event in the address book.
- * Guarantees: immutable; is valid as declared in {@link #isValidEvent(String)}
+ * Represents a Person in the address book.
+ * Guarantees: details are present and not null, field values are validated.
  */
-public class Event {
+public class Event implements ReadOnlyEvent {
 
-    public static final String MESSAGE_EVENT_CONSTRAINTS =
-            "Person event can take in any two strings separated by '@'";
-    public static final String MESSAGE_EVENT_DATE_CONSTRAINTS =
-            "Person event can only date in (day)/(month) in numbers";
-    public static final String EVENT_VALIDATION_REGEX = ".*@.*";
-
-    public final String eventAll;
-    public final String eventName;
-    public static String eventDateString;
-    public final Date eventDate;
+    private ObjectProperty<Header> header;
+    private ObjectProperty<Desc> desc;
+    private ObjectProperty<EventDate> eventDate;
 
     /**
-     * Validates given email.
-     *
-     * @throws IllegalValueException if given email address string is invalid.
+     * Every field must be present and not null.
      */
-    public Event(String event) throws IllegalValueException {
-        requireNonNull(event);
-        String trimmedEvent = event.trim();
-        if (!isValidEvent(trimmedEvent)) {
-            throw new IllegalValueException(MESSAGE_EVENT_CONSTRAINTS);
-        }
-        this.eventAll = trimmedEvent;
-        String[] splitEvent = trimmedEvent.split("@");
-        this.eventName = splitEvent[0].trim();
-        try {
-            this.eventDateString = splitEvent[1].trim();
-            DateFormat df = new SimpleDateFormat("dd/MM");
-            this.eventDate = df.parse(eventDateString);
-        }
-        catch (ParseException ex) {
-            throw new IllegalValueException(MESSAGE_EVENT_DATE_CONSTRAINTS);
-        }
-    }
-
-    public static String periodTillEvent() {
-        LocalDate eventLocalDate;
-        try {
-            DateTimeFormatter formatter =
-                    DateTimeFormatter.ofPattern("dd/MM");
-            eventLocalDate = LocalDate.parse(eventDateString, formatter);
-        }
-        catch (DateTimeParseException ex) {
-            System.out.printf(eventDateString + " is not parsable.");
-            throw ex;
-        }
-        ZoneId sgt = ZoneId.of("GMT+8");
-        LocalDate currentDate = LocalDate.now(sgt);
-        Period period = currentDate.until(eventLocalDate);
-        int days, months;
-        months = period.getMonths();
-        days = period.getDays();
-        return "Months: " + months + " Days: " + days;
+    public Event(Header header, Desc desc, EventDate eventDate) {
+        requireAllNonNull(header, desc, eventDate);
+        this.header = new SimpleObjectProperty<>(header);
+        this.desc = new SimpleObjectProperty<>(desc);
+        this.eventDate = new SimpleObjectProperty<>(eventDate);
     }
 
     /**
-     * Returns if a given string is a valid event name.
+     * Creates a copy of the given ReadOnlyEvent.
      */
-    public static boolean isValidEvent(String test) {
-        return test.matches(EVENT_VALIDATION_REGEX);
+    public Event(ReadOnlyEvent source) {
+        this(source.getHeader(), source.getDesc(), source.getEventDate());
+    }
+
+    public void setHeader(Header header) {
+        this.header.set(requireNonNull(header));
+    }
+
+    @Override
+    public ObjectProperty<Header> headerProperty() {
+        return header;
+    }
+
+    @Override
+    public Header getHeader() {
+        return header.get();
+    }
+
+    public void setDesc(Desc desc) {
+        this.desc.set(requireNonNull(desc));
+    }
+
+    @Override
+    public ObjectProperty<Desc> descProperty() {
+        return desc;
+    }
+
+    @Override
+    public Desc getDesc() {
+        return desc.get();
+    }
+
+    public void setEventDate(EventDate eventDate) {
+        this.eventDate.set(requireNonNull(eventDate));
+    }
+
+    @Override
+    public ObjectProperty<EventDate> eventDateProperty() {
+        return eventDate;
+    }
+
+    @Override
+    public EventDate getEventDate() {
+        return eventDate.get();
     }
 
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-                || (other instanceof Event // instanceof handles nulls
-                && this.eventAll.equals(((Event) other).eventAll)); // state check
+                || (other instanceof ReadOnlyEvent // instanceof handles nulls
+                && this.isSameStateAs((ReadOnlyEvent) other));
     }
 
     @Override
-    public int hashCode() { return eventAll.hashCode(); }
+    public int hashCode() {
+        // use this method for custom fields hashing instead of implementing your own
+        return Objects.hash(header, desc, eventDate);
+    }
 
-    /**
-     * Format state as text for viewing.
-     */
     @Override
     public String toString() {
-        return '[' + eventAll + ']';
+        return getAsText();
     }
 
 }
