@@ -9,7 +9,6 @@ import java.util.Set;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.image.Image;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.UniqueTagList;
 
@@ -112,13 +111,19 @@ public class Person implements ReadOnlyPerson {
         return address.get();
     }
 
-    public void setProfilePic(ProfilePic profilePic) { this.profilePic.set(requireNonNull(profilePic)); }
+    public void setProfilePic(ProfilePic profilePic) {
+        this.profilePic.set(requireNonNull(profilePic));
+    }
 
     @Override
-    public ObjectProperty<ProfilePic> profilePicProperty() { return profilePic; }
+    public ObjectProperty<ProfilePic> profilePicProperty() {
+        return profilePic;
+    }
 
     @Override
-    public ProfilePic getProfilePic() { return profilePic.get(); }
+    public ProfilePic getProfilePic() {
+        return profilePic.get();
+    }
 
     /**
      * Returns an immutable tag set, which throws {@code UnsupportedOperationException}

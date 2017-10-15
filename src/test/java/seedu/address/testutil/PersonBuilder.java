@@ -22,7 +22,6 @@ public class PersonBuilder {
     public static final String DEFAULT_PHONE = "85355255";
     public static final String DEFAULT_EMAIL = "alice@gmail.com";
     public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
-    public static final String DEFAULT_PROFILE_PIC_URL = "images/fail.png";
     public static final String DEFAULT_TAGS = "friends";
 
     private Person person;
@@ -33,7 +32,7 @@ public class PersonBuilder {
             Phone defaultPhone = new Phone(DEFAULT_PHONE);
             Email defaultEmail = new Email(DEFAULT_EMAIL);
             Address defaultAddress = new Address(DEFAULT_ADDRESS);
-            ProfilePic defaultProfilePic = new ProfilePic(DEFAULT_PROFILE_PIC_URL);
+            ProfilePic defaultProfilePic = new ProfilePic();
             Set<Tag> defaultTags = SampleDataUtil.getTagSet(DEFAULT_TAGS);
             this.person = new Person(defaultName, defaultPhone, defaultEmail, defaultAddress, defaultProfilePic,
                     defaultTags);
