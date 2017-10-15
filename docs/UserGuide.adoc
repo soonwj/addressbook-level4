@@ -67,6 +67,24 @@ Examples:
 * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
 * `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
 
+=== Importing persons: `import`
+
+Imports persons to DoC from Google Contacts +
+Format: `import`
+
+WARNING: Number of persons imported is limited to 1000 +
+
+
+**Steps** +
+**1.** Enter the `import` command +
+**2.** Log in to your Google account on the in-built browser +
+**3.** Grant permission to DoC to access your contacts +
+
+**Picture guide**
+
+image::importpic.png[width="1000"]
+
+
 === Listing all persons : `list`
 
 Shows a list of all persons in the address book. +
