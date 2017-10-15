@@ -19,6 +19,14 @@ Role: Developer
 
 '''
 
+=== Philemon Tan
+image::philemontan.png[width="150", align="left"]
+{empty}[https://github.com/philemontan[github]] [<<philemontan#, portfolio>>]
+
+Role: Developer
+
+'''
+
 === John Roe
 image::lejolly.jpg[width="150", align="left"]
 {empty}[http://github.com/lejolly[github]] [<<johndoe#, portfolio>>]
