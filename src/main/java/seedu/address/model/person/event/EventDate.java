@@ -1,5 +1,9 @@
 package seedu.address.model.person.event;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 import static java.util.Objects.requireNonNull;
 
 import seedu.address.commons.exceptions.IllegalValueException;
@@ -11,15 +15,11 @@ import seedu.address.commons.exceptions.IllegalValueException;
 public class EventDate{
 
     public static final String MESSAGE_EVENT_DATE_CONSTRAINTS =
-            "Person addresses can take any values, and it should not be blank";
-
-    /*
-     * The first character of the address must not be a whitespace,
-     * otherwise " " (a blank string) becomes a valid input.
-     */
-    public static final String EVENT_DATE_VALIDATION_REGEX = "[^\\s].*";
+            "Event must have a valid date input\n" +
+                    "Format: day/month/year";
 
     public final String value;
+    public final LocalDate eventLocalDate;
 
     /**
      * Validates given eventDate.
@@ -28,8 +28,12 @@ public class EventDate{
      */
     public EventDate(String eventDate) throws IllegalValueException {
         requireNonNull(eventDate);
-        if (!isValidEventDate(eventDate)) {
-            throw new IllegalValueException(MESSAGE_EVENT_DATE_CONSTRAINTS);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        try {
+            eventLocalDate = LocalDate.parse(eventDate, formatter);
+        }
+        catch (DateTimeParseException ex) {
+            throw new IllegalValueException(MESSAGE_EVENT_DATE_CONSTRAINTS, ex);
         }
         this.value = eventDate;
     }
@@ -37,9 +41,6 @@ public class EventDate{
     /**
      * Returns true if a given string is a valid eventDate.
      */
-    public static boolean isValidEventDate(String test) {
-        return test.matches(EVENT_DATE_VALIDATION_REGEX);
-    }
 
     @Override
     public String toString() {
