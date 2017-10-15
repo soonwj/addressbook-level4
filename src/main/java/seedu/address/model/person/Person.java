@@ -23,21 +23,14 @@ public class Person implements ReadOnlyPerson {
     private ObjectProperty<Phone> phone;
     private ObjectProperty<Email> email;
     private ObjectProperty<Address> address;
-    private ObjectProperty<Image> profilePic;
+    private ObjectProperty<ProfilePic> profilePic;
 
     private ObjectProperty<UniqueTagList> tags;
 
     /**
-     * Using default profile picture.
-     */
-    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        this(name, phone, email, address, new Image("images/fail.png"), tags);
-    }
-
-    /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Email email, Address address, Image profilePic, Set<Tag> tags) {
+    public Person(Name name, Phone phone, Email email, Address address, ProfilePic profilePic, Set<Tag> tags) {
         requireAllNonNull(name, phone, email, address, tags);
         this.name = new SimpleObjectProperty<>(name);
         this.phone = new SimpleObjectProperty<>(phone);
@@ -112,13 +105,13 @@ public class Person implements ReadOnlyPerson {
         return address.get();
     }
 
-    public void setProfilePic(Image profilePic) { this.profilePic.setValue(requireNonNull(profilePic)); }
+    public void setProfilePic(ProfilePic profilePic) { this.profilePic.setValue(requireNonNull(profilePic)); }
 
     @Override
-    public ObjectProperty<Image> profilePicProperty() { return profilePic; }
+    public ObjectProperty<ProfilePic> profilePicProperty() { return profilePic; }
 
     @Override
-    public Image getProfilePic() { return profilePic.get(); }
+    public ProfilePic getProfilePic() { return profilePic.get(); }
 
     /**
      * Returns an immutable tag set, which throws {@code UnsupportedOperationException}
