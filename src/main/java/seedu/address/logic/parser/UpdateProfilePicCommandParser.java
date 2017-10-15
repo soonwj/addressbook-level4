@@ -38,7 +38,7 @@ public class UpdateProfilePicCommandParser implements Parser<UpdateProfilePicCom
         Person updatedPerson = new Person(SampleDataUtil.getSamplePersons()[0]);
 
         try {
-            ParserUtil.parseImageURL(argMultimap.getValue(PREFIX_IMAGE_URL)).ifPresent(updatedPerson::setProfilePic);
+            ParserUtil.parseImageUrl(argMultimap.getValue(PREFIX_IMAGE_URL)).ifPresent(updatedPerson::setProfilePic);
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
         }
