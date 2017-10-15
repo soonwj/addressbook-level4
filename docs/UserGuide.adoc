@@ -79,6 +79,23 @@ Examples:
 
 * `addE h/Meeting de/Business meeting at work d/2017-11-20`
 
+=== Importing persons: `import`
+
+Imports persons to DoC from Google Contacts +
+Format: `import`
+
+WARNING: Number of persons imported is limited to 1000 +
+
+
+**Steps** +
+**1.** Enter the `import` command +
+**2.** Log in to your Google account on the in-built browser +
+**3.** Grant permission to DoC to access your contacts +
+
+**Picture guide**
+
+image::importpic.png[width="1000"]
+
 === Listing all persons : `list`
 
 Shows a list of all persons in the address book. +
