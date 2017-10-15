@@ -3,7 +3,10 @@ package seedu.address.logic.commands;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DESC;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_EVENT_DATE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_HEADER;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
@@ -17,6 +20,7 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.ReadOnlyPerson;
+import seedu.address.model.person.event.ReadOnlyEvent;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 
@@ -56,6 +60,25 @@ public class CommandTestUtil {
     public static final EditCommand.EditPersonDescriptor DESC_AMY;
     public static final EditCommand.EditPersonDescriptor DESC_BOB;
 
+    public static final String VALID_HEADER_MEETING = "Meeting";
+    public static final String VALID_HEADER_BIRTHDAY = "Birthday";
+    public static final String VALID_DESC_MEETING = "Business";
+    public static final String VALID_DESC_BIRTHDAY = "friend";
+    public static final String VALID_EVENT_DATE_MEETING = "2017-10-25";
+    public static final String VALID_EVENT_DATE_BIRTHDAY = "2017-10-10";
+
+    public static final String HEADER_DESC_MEETING = " " + PREFIX_HEADER + VALID_HEADER_MEETING;
+    public static final String DESC_DESC_MEETING = " " + PREFIX_DESC + VALID_DESC_MEETING;
+    public static final String EVENT_DATE_DESC_MEETING = " " + PREFIX_EVENT_DATE + VALID_EVENT_DATE_BIRTHDAY;
+
+    public static final String INVALID_HEADER_DESC = " " + PREFIX_HEADER; // empty string not allowed for addresses
+    public static final String INVALID_DESC_DESC = " " + PREFIX_DESC; // empty string not allowed for addresses
+    public static final String INVALID_EVENT_DATE_DESC = " "
+            + PREFIX_EVENT_DATE; // empty string not allowed for addresses
+
+    public static final EditEventCommand.EditEventDescriptor DESC_MEETING;
+    public static final EditEventCommand.EditEventDescriptor DESC_BIRTHDAY;
+
     static {
         DESC_AMY = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY)
                 .withPhone(VALID_PHONE_AMY).withEmail(VALID_EMAIL_AMY).withAddress(VALID_ADDRESS_AMY)
@@ -63,6 +86,13 @@ public class CommandTestUtil {
         DESC_BOB = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB)
                 .withPhone(VALID_PHONE_BOB).withEmail(VALID_EMAIL_BOB).withAddress(VALID_ADDRESS_BOB)
                 .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
+    }
+
+    static {
+        DESC_MEETING = new EditEventDescriptorBuilder().withHeader(VALID_HEADER_MEETING)
+                .withDesc(VALID_DESC_MEETING).withEventDate(VALID_EVENT_DATE_MEETING).build();
+        DESC_BIRTHDAY = new EditEventDescriptorBuilder().withHeader(VALID_HEADER_BIRTHDAY)
+                .withDesc(VALID_DESC_BIRTHDAY).withEventDate(VALID_EVENT_DATE_BIRTHDAY).build();
     }
 
     /**
@@ -85,13 +115,15 @@ public class CommandTestUtil {
      * Executes the given {@code command}, confirms that <br>
      * - a {@code CommandException} is thrown <br>
      * - the CommandException message matches {@code expectedMessage} <br>
-     * - the address book and the filtered person list in the {@code actualModel} remain unchanged
+     * - the address book, the filtered event list
+     * - and the filtered person list in the {@code actualModel} remain unchanged
      */
     public static void assertCommandFailure(Command command, Model actualModel, String expectedMessage) {
         // we are unable to defensively copy the model for comparison later, so we can
         // only do so by copying its components.
         AddressBook expectedAddressBook = new AddressBook(actualModel.getAddressBook());
-        List<ReadOnlyPerson> expectedFilteredList = new ArrayList<>(actualModel.getFilteredPersonList());
+        List<ReadOnlyPerson> expectedFilteredList1 = new ArrayList<>(actualModel.getFilteredPersonList());
+        List<ReadOnlyEvent> expectedFilteredList2 = new ArrayList<>(actualModel.getFilteredEventList());
 
         try {
             command.execute();
@@ -99,7 +131,8 @@ public class CommandTestUtil {
         } catch (CommandException e) {
             assertEquals(expectedMessage, e.getMessage());
             assertEquals(expectedAddressBook, actualModel.getAddressBook());
-            assertEquals(expectedFilteredList, actualModel.getFilteredPersonList());
+            assertEquals(expectedFilteredList1, actualModel.getFilteredPersonList());
+            assertEquals(expectedFilteredList2, actualModel.getFilteredEventList());
         }
     }
 
