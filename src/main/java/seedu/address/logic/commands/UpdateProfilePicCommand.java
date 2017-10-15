@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_IMAGE_URL;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.logic.parser.Prefix;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.ProfilePic;
 import seedu.address.model.person.ReadOnlyPerson;
@@ -29,9 +31,9 @@ public class UpdateProfilePicCommand extends UndoableCommand {
             + "Parameters: INDEX (must be a positive integer) "
             + "[valid URL of image]\n"
             + "Example of image stored locally: " + COMMAND_WORD + " 1 "
-            + "file:///C:/Users/Bobby/Images/picture.jpg\n"
+            + PREFIX_IMAGE_URL + "file:///C:/Users/Bobby/Images/picture.jpg\n"
             + "Example of image stored on the internet: " + COMMAND_WORD + " 1 "
-            + "http://www.google.com/images/picture2.png\n";
+            + PREFIX_IMAGE_URL + "http://www.google.com/images/picture2.png\n";
 
     public static final String MESSAGE_UPDATE_PROFILE_PIC_SUCCESS = "Update profile pic of Person: %1$s";
     public static final String MESSAGE_NOT_UPDATED = "Please enter a valid image URL.";
