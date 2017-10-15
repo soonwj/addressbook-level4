@@ -44,9 +44,7 @@ public class ProfilePic {
                 }
             }
             catch (IOException e) {
-                if (!(e instanceof MalformedURLException)) {
-                    e.printStackTrace();
-                }
+                throw new IllegalValueException(MESSAGE_PROFILE_PIC_CONSTRAINTS);
             }
         }
         this.source = url;

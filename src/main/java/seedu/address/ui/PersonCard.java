@@ -63,7 +63,7 @@ public class PersonCard extends UiPart<Region> {
         address.textProperty().bind(Bindings.convert(person.addressProperty()));
         email.textProperty().bind(Bindings.convert(person.emailProperty()));
         person.profilePicProperty().addListener((observable, oldValue, newValue) -> {
-            imageView.setImage(new Image(person.getProfilePic().toString()));
+            imageView.setImage(new Image(person.getProfilePic().toString(), 128, 128, true, false));
         });
         person.tagProperty().addListener((observable, oldValue, newValue) -> {
             tags.getChildren().clear();
@@ -76,7 +76,7 @@ public class PersonCard extends UiPart<Region> {
     }
 
     private void initProfilePic(ReadOnlyPerson person) {
-        imageView.setImage(new Image(person.getProfilePic().toString()));
+        imageView.setImage(new Image(person.getProfilePic().toString(), 128, 128, true, false));
     }
 
     @Override

@@ -105,7 +105,7 @@ public class Person implements ReadOnlyPerson {
         return address.get();
     }
 
-    public void setProfilePic(ProfilePic profilePic) { this.profilePic.setValue(requireNonNull(profilePic)); }
+    public void setProfilePic(ProfilePic profilePic) { this.profilePic.set(requireNonNull(profilePic)); }
 
     @Override
     public ObjectProperty<ProfilePic> profilePicProperty() { return profilePic; }
