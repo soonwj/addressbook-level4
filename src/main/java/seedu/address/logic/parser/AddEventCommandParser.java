@@ -1,15 +1,13 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_HEADER;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESC;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EVENT_DATE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_HEADER;
 
-import java.util.Set;
 import java.util.stream.Stream;
 
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.AddEventCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.event.Desc;

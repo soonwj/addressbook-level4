@@ -1,9 +1,9 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_HEADER;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESC;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EVENT_DATE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_HEADER;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_EVENTS;
 
 import java.util.List;
@@ -16,8 +16,8 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.event.Desc;
 import seedu.address.model.person.event.Event;
 import seedu.address.model.person.event.EventDate;
-import seedu.address.model.person.event.ReadOnlyEvent;
 import seedu.address.model.person.event.Header;
+import seedu.address.model.person.event.ReadOnlyEvent;
 import seedu.address.model.person.exceptions.DuplicateEventException;
 import seedu.address.model.person.exceptions.EventNotFoundException;
 

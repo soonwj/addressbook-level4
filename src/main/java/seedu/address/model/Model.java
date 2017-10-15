@@ -7,8 +7,8 @@ import seedu.address.model.person.ReadOnlyPerson;
 import seedu.address.model.person.event.ReadOnlyEvent;
 import seedu.address.model.person.exceptions.DuplicateEventException;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
-import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.person.exceptions.EventNotFoundException;
+import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 /**
  * The API of the Model component.

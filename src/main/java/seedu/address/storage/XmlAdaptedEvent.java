@@ -1,7 +1,5 @@
 package seedu.address.storage;
 
-import java.time.format.DateTimeFormatter;
-
 import javax.xml.bind.annotation.XmlElement;
 
 import seedu.address.commons.exceptions.IllegalValueException;

@@ -14,15 +14,15 @@ import seedu.address.commons.exceptions.IllegalValueException;
  * Represents a Event's header in the address book.
  * Guarantees: immutable; is valid as declared in {@link #isValidEventDate(String)}
  */
-public class EventDate{
+public class EventDate {
 
     public static final String MESSAGE_EVENT_DATE_CONSTRAINTS =
-            "Event must have a valid date input\n" +
-                    "Format: year-month-day";
+            "Event must have a valid date input\n"
+                    + "Format: year-month-day";
 
     public final String value;
     public final LocalDate eventLocalDate;
-    public String countDown;
+    private String countDown;
 
     /**
      * Validates given eventDate.
@@ -34,29 +34,25 @@ public class EventDate{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
             eventLocalDate = LocalDate.parse(eventDate, formatter);
-        }
-        catch (DateTimeParseException ex) {
+        } catch (DateTimeParseException ex) {
             throw new IllegalValueException(MESSAGE_EVENT_DATE_CONSTRAINTS, ex);
         }
         getCountDown();
         this.value = eventDate + "\n" + countDown;
     }
 
-    public void getCountDown() {
+    private void getCountDown() {
         ZoneId sgt = ZoneId.of("GMT+8");
         LocalDate currentDate = LocalDate.now(sgt);
         Period period = currentDate.until(eventLocalDate);
-        int days, months, years;
-        years = period.getYears();
-        months = period.getMonths();
-        days = period.getDays();
+        int years = period.getYears();
+        int months = period.getMonths();
+        int days = period.getDays();
         if (period.isNegative()) {
             this.countDown = "Event is overdue.";
-        }
-        else if (period.isZero()) {
+        } else if (period.isZero()) {
             this.countDown = "Event is today!";
-        }
-        else {
+        } else {
             this.countDown = "Event in: " + years + "years " + months + "months " + days + "days";
         }
     }
