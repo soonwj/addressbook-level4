@@ -2,8 +2,15 @@ package seedu.address.logic.commands;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static seedu.address.logic.commands.CommandTestUtil.*;
-import static seedu.address.testutil.TypicalIndexes.*;
+import static seedu.address.logic.commands.CommandTestUtil.DESC_BIRTHDAY;
+import static seedu.address.logic.commands.CommandTestUtil.DESC_MEETING;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_DESC_BIRTHDAY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_HEADER_BIRTHDAY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_DESC_MEETING;
+import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
+import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_EVENT;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_EVENT;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import org.junit.Test;
@@ -19,7 +26,7 @@ import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.event.Event;
 import seedu.address.model.person.event.ReadOnlyEvent;
-import seedu.address.testutil.EditPersonDescriptorBuilder;
+import seedu.address.testutil.EditEventDescriptorBuilder;
 import seedu.address.testutil.EventBuilder;
 
 /**
