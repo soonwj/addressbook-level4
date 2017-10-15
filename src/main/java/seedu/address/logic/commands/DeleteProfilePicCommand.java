@@ -44,12 +44,7 @@ public class DeleteProfilePicCommand extends UndoableCommand {
 
         ReadOnlyPerson profilePicToDelete = lastShownList.get(targetIndex.getZeroBased());
         Person deletedProfilePicPerson = new Person(profilePicToDelete);
-        try {
-            deletedProfilePicPerson.setProfilePic(new ProfilePic("file:///D:/D_/Users/Assassin Ranger/Documents/SWJ"
-                    + "/NUS/Yr 2 Sem 1/CS2103T/addressbook-level4/src/main/resources/images/fail.png"));
-        } catch (IllegalValueException ive) {
-            assert false : "The default image URL cannot be wrong";
-        }
+        deletedProfilePicPerson.setProfilePic(new ProfilePic());
 
         try {
             model.updatePerson(profilePicToDelete, deletedProfilePicPerson);
