@@ -11,20 +11,27 @@ We are a team based in the http://www.comp.nus.edu.sg[School of Computing, Natio
 
 == Project Team
 
-=== Soon Wei Jun
-image::SoonWeiJun.jpg[width="150", align="left"]
-{empty}[https://github.com/soonwj[github]] [<<soonwj#, portfolio>>]
+=== Royce Lim
+image::RoyceLim.jpg[width="150", align="left"]
+{empty}[https://github.com/royceljh[github]] [https://github.com/damithc[github]] [<<royceljh#, portfolio>>]
 
 Role: Developer
 
 '''
 
-=== John Roe
-image::lejolly.jpg[width="150", align="left"]
-{empty}[http://github.com/lejolly[github]] [<<johndoe#, portfolio>>]
+=== Philemon Tan
+image::philemontan.png[width="150", align="left"]
+{empty}[https://github.com/philemontan[github]] [<<philemontan#, portfolio>>]
 
-Role: Team Lead +
-Responsibilities: UI
+Role: Developer
+
+'''
+
+=== Soon Wei Jun
+image::SoonWeiJun.jpg[width="150", align="left"]
+{empty}[https://github.com/soonwj[github]] [<<soonwj#, portfolio>>]
+
+Role: Developer
 
 '''
 
