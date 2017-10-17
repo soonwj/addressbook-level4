@@ -138,15 +138,29 @@ Examples:
 * `editE 1 h/Birthday party d/2017-06-12` +
 Edits the header and date of the 1st event to be `Birthday party` and `2017-06-12` respectively.
 
-=== Locating persons by name: `find`
+=== Address of a person : `location`
 
-Finds persons whose names contain any of the given keywords. +
+Shows the address of the person in Google Maps. +
+Format: `location INDEX`
+
+****
+* Shows the address of the person at the specified `INDEX`. The index refers to the index number shown in the last person listing. The index *must be a positive integer* 1, 2, 3, ...
+****
+
+Examples:
+
+* `location 1` +
+Shows the address of the 1st person in Google Maps on the Browser Panel.
+
+=== Locating persons by name and tags: `find`
+
+Finds persons whose names or tags contain any of the given keywords. +
 Format: `find KEYWORD [MORE_KEYWORDS]`
 
 ****
 * The search is case insensitive. e.g `hans` will match `Hans`
 * The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
-* Only the name is searched.
+* Only the name and tag is searched.
 * Only full words will be matched e.g. `Han` will not match `Hans`
 * Persons matching at least one keyword will be returned (i.e. `OR` search). e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
 ****
@@ -157,6 +171,27 @@ Examples:
 Returns `john` and `John Doe`
 * `find Betsy Tim John` +
 Returns any person having names `Betsy`, `Tim`, or `John`
+* `find Family` +
+Returns any person having tag `Family`
+* `find Family Friend Brother` +
+Returns any person having tags `Family`, `Friend`, or `Brother`
+
+=== Removing tags: `removeTag`
+
+Finds persons whose names or tags contain any of the given tag and removes that tag. +
+Format: `removeTag KEYWORD`
+
+****
+* The search is case sensitive. e.g `family` will match `family`
+* Only tag is searched.
+* Only full words will be matched e.g. `Family` will not match `Families`
+* Persons having that tag will be returned
+****
+
+Examples:
+
+* `removeTag Friend` +
+Returns `john` and `John Doe` with Friend tag removed
 
 === Deleting a person : `delete`
 
