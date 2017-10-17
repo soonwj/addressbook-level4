@@ -11,6 +11,8 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Person;
 import seedu.address.model.util.SampleDataUtil;
 
+import java.nio.file.Paths;
+
 /**
  * Parses input arguments and creates a new UpdateProfilePicCommand object
  */
@@ -43,8 +45,8 @@ public class UpdateProfilePicCommandParser implements Parser<UpdateProfilePicCom
             throw new ParseException(ive.getMessage(), ive);
         }
 
-        if (updatedPerson.getProfilePic().toString().equals("file:///D:/D_/Users/Assassin Ranger/Documents/SWJ/NUS"
-                + "/Yr 2 Sem 1/CS2103T/addressbook-level4/src/main/resources/images/fail.png")) {
+        if (updatedPerson.getProfilePic().toString().equals("file://"
+                + Paths.get("src/main/resources/images/fail.png").toAbsolutePath().toUri().getPath())) {
             throw new ParseException(UpdateProfilePicCommand.MESSAGE_NOT_UPDATED);
         }
 
