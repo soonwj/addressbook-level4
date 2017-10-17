@@ -2,8 +2,14 @@ package seedu.address.testutil;
 
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_DESC_BIRTHDAY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_DESC_MEETING;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_EVENT_DATE_BIRTHDAY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_EVENT_DATE_MEETING;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_HEADER_BIRTHDAY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_HEADER_MEETING;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_AMY;
@@ -15,8 +21,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.sun.org.apache.regexp.internal.RE;
+
 import seedu.address.model.AddressBook;
 import seedu.address.model.person.ReadOnlyPerson;
+import seedu.address.model.person.event.ReadOnlyEvent;
+import seedu.address.model.person.exceptions.DuplicateEventException;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 
 /**
@@ -60,6 +70,18 @@ public class TypicalPersons {
 
     private TypicalPersons() {} // prevents instantiation
 
+    public static final ReadOnlyEvent MEETING = new EventBuilder().withHeader(VALID_HEADER_MEETING)
+            .withDesc(VALID_DESC_MEETING).withEventDate(VALID_EVENT_DATE_MEETING).build();
+
+    public static final ReadOnlyEvent BIRTHDAY = new EventBuilder().withHeader(VALID_HEADER_BIRTHDAY)
+            .withDesc(VALID_DESC_BIRTHDAY).withEventDate(VALID_EVENT_DATE_BIRTHDAY).build();
+
+    public static final ReadOnlyEvent OUTING = new EventBuilder().withHeader("Outing").withDesc("friends")
+            .withEventDate("2017-12-12").build();
+
+    public static final ReadOnlyEvent MOVIE = new EventBuilder().withHeader("Movie").withDesc("with date")
+            .withEventDate("2017-11-06").build();
+
     /**
      * Returns an {@code AddressBook} with all the typical persons.
      */
@@ -72,7 +94,18 @@ public class TypicalPersons {
                 assert false : "not possible";
             }
         }
+        for (ReadOnlyEvent event : getTypicalEvents()) {
+            try {
+                ab.addEvent(event);
+            } catch (DuplicateEventException e) {
+                assert false : "not possible";
+            }
+        }
         return ab;
+    }
+
+    public static List<ReadOnlyEvent> getTypicalEvents() {
+        return new ArrayList<>(Arrays.asList(MEETING, BIRTHDAY, OUTING, MOVIE));
     }
 
     public static List<ReadOnlyPerson> getTypicalPersons() {
