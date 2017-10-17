@@ -20,6 +20,7 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.ReadOnlyPerson;
+import seedu.address.model.person.event.HeaderContainsKeywordsPredicate;
 import seedu.address.model.person.event.ReadOnlyEvent;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.testutil.EditEventDescriptorBuilder;
@@ -69,8 +70,11 @@ public class CommandTestUtil {
     public static final String VALID_EVENT_DATE_BIRTHDAY = "2017-10-10";
 
     public static final String HEADER_DESC_MEETING = " " + PREFIX_HEADER + VALID_HEADER_MEETING;
+    public static final String HEADER_DESC_BIRTHDAY = " " + PREFIX_HEADER + VALID_HEADER_BIRTHDAY;
     public static final String DESC_DESC_MEETING = " " + PREFIX_DESC + VALID_DESC_MEETING;
-    public static final String EVENT_DATE_DESC_MEETING = " " + PREFIX_EVENT_DATE + VALID_EVENT_DATE_BIRTHDAY;
+    public static final String DESC_DESC_BIRTHDAY = " " + PREFIX_DESC + VALID_DESC_BIRTHDAY;
+    public static final String EVENT_DATE_DESC_MEETING = " " + PREFIX_EVENT_DATE + VALID_EVENT_DATE_MEETING;
+    public static final String EVENT_DATE_DESC_BIRTHDAY = " " + PREFIX_EVENT_DATE + VALID_EVENT_DATE_BIRTHDAY;
 
     public static final String INVALID_HEADER_DESC = " " + PREFIX_HEADER; // empty string not allowed for addresses
     public static final String INVALID_DESC_DESC = " " + PREFIX_DESC; // empty string not allowed for addresses
@@ -158,5 +162,16 @@ public class CommandTestUtil {
         } catch (PersonNotFoundException pnfe) {
             throw new AssertionError("Person in filtered list must exist in model.", pnfe);
         }
+    }
+
+    /**
+     * Updates {@code model}'s filtered list to show only the first event in the {@code model}'s address book.
+     */
+    public static void showFirstEventOnly(Model model) {
+        ReadOnlyEvent event = model.getAddressBook().getEventList().get(0);
+        final String[] splitHeader = event.getHeader().value.split("\\s+");
+        model.updateFilteredEventList(new HeaderContainsKeywordsPredicate(Arrays.asList(splitHeader[0])));
+
+        assert model.getFilteredEventList().size() == 1;
     }
 }

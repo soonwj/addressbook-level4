@@ -22,7 +22,7 @@ public class EventBuilder {
         try {
             Header defaultHeader = new Header(DEFAULT_HEADER);
             Desc defaultDesc = new Desc(DEFAULT_DESC);
-            EventDate defaultEventDate = new EventDate(DEFAULT_EVENT_DATE));
+            EventDate defaultEventDate = new EventDate(DEFAULT_EVENT_DATE);
             this.event = new Event(defaultHeader, defaultDesc, defaultEventDate);
         } catch (IllegalValueException ive) {
             throw new AssertionError("Default event's values are invalid.");

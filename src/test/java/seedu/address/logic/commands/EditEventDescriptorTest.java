@@ -35,7 +35,7 @@ public class EditEventDescriptorTest {
 
         // different header -> returns false
         EditEventDescriptor editedMeeting = new EditEventDescriptorBuilder(DESC_MEETING)
-                .withName(VALID_HEADER_BIRTHDAY).build();
+                .withHeader(VALID_HEADER_BIRTHDAY).build();
         assertFalse(DESC_MEETING.equals(editedMeeting));
 
         // different desc -> returns false

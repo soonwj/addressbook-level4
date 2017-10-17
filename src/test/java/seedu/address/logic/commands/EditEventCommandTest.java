@@ -9,6 +9,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_HEADER_BIRTHDAY
 import static seedu.address.logic.commands.CommandTestUtil.VALID_DESC_MEETING;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static seedu.address.logic.commands.CommandTestUtil.showFirstEventOnly;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_EVENT;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_EVENT;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
