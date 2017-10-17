@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.sun.org.apache.regexp.internal.RE;
-
 import seedu.address.model.AddressBook;
 import seedu.address.model.person.ReadOnlyPerson;
 import seedu.address.model.person.event.ReadOnlyEvent;
@@ -68,19 +66,17 @@ public class TypicalPersons {
 
     public static final String KEYWORD_MATCHING_MEIER = "Meier"; // A keyword that matches MEIER
 
-    private TypicalPersons() {} // prevents instantiation
 
     public static final ReadOnlyEvent MEETING = new EventBuilder().withHeader(VALID_HEADER_MEETING)
             .withDesc(VALID_DESC_MEETING).withEventDate(VALID_EVENT_DATE_MEETING).build();
-
     public static final ReadOnlyEvent BIRTHDAY = new EventBuilder().withHeader(VALID_HEADER_BIRTHDAY)
             .withDesc(VALID_DESC_BIRTHDAY).withEventDate(VALID_EVENT_DATE_BIRTHDAY).build();
-
     public static final ReadOnlyEvent OUTING = new EventBuilder().withHeader("Outing").withDesc("friends")
             .withEventDate("2017-12-12").build();
-
     public static final ReadOnlyEvent MOVIE = new EventBuilder().withHeader("Movie").withDesc("with date")
             .withEventDate("2017-11-06").build();
+
+    private TypicalPersons() {} // prevents instantiation
 
     /**
      * Returns an {@code AddressBook} with all the typical persons.
