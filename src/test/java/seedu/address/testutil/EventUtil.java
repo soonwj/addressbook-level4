@@ -3,6 +3,7 @@ package seedu.address.testutil;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DESC;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EVENT_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_HEADER;
+
 import seedu.address.logic.commands.AddEventCommand;
 import seedu.address.model.person.event.ReadOnlyEvent;
 
