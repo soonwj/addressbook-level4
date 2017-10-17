@@ -67,6 +67,35 @@ Examples:
 * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
 * `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
 
+=== Adding an event: `addE`
+
+Adds an event to the address book +
+Format: `addE h/HEADER de/DESCRIPTION d/DATE`
+
+[TIP]
+The date must a valid date with format: year-month-day
+
+Examples:
+
+* `addE h/Meeting de/Business meeting at work d/2017-11-20`
+
+=== Importing persons: `import`
+
+Imports persons to DoC from Google Contacts +
+Format: `import`
+
+WARNING: Number of persons imported is limited to 1000 +
+
+
+**Steps** +
+**1.** Enter the `import` command +
+**2.** Log in to your Google account on the in-built browser +
+**3.** Grant permission to DoC to access your contacts +
+
+**Picture guide**
+
+image::importpic.png[width="1000"]
+
 === Listing all persons : `list`
 
 Shows a list of all persons in the address book. +
@@ -91,6 +120,23 @@ Examples:
 Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
 * `edit 2 n/Betsy Crower t/` +
 Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+
+=== Editing an event : `editE`
+
+Edits an existing event in the address book. +
+Format: `editE INDEX [h/HEADER] [de/DESCRIPTION] [d/DATE]`
+
+****
+* Edits the event at the specified `INDEX`. The index refers to the index number shown in the last event listing. The index *must be a positive integer* 1, 2, 3, ...
+* At least one of the optional fields must be provided.
+* The date must a valid date.
+* Existing values will be updated to the input values.
+****
+
+Examples:
+
+* `editE 1 h/Birthday party d/2017-06-12` +
+Edits the header and date of the 1st event to be `Birthday party` and `2017-06-12` respectively.
 
 === Address of a person : `location`
 
@@ -167,6 +213,62 @@ Deletes the 2nd person in the address book.
 `delete 1` +
 Deletes the 1st person in the results of the `find` command.
 
+=== Deleting an event : `deleteE`
+
+Deletes the specified event from the address book. +
+Format: `deleteE INDEX`
+
+****
+* Deletes the event at the specified `INDEX`.
+* The index refers to the index number shown in the most recent listing.
+* The index *must be a positive integer* 1, 2, 3, ...
+****
+
+Examples:
+
+* `deleteE 3` +
+Deletes the 3rd event in the address book.
+
+=== Updating a person's profile picture: `updateProfilePic`
+
+Updates the profile picture of a person. +
+Format: `updateProfilePic INDEX [u/imageUrl]`
+
+****
+* Updates the profile picture of the person at the specified `INDEX`. The index refers to the index number shown in the last person listing. The index *must be a positive integer* 1, 2, 3, ...
+* The index must be valid as well
+* The `imageUrl` must be a valid one. It should start with `file:///` for images stored locally
+* Or a valid web URL for an image stored on the internet
+****
+
+Examples:
+
+* `updateProfilePic 1 u/file:///C:/Users/Bobby/image.jpg` +
+Updates the profile picture of the 1st person to be the image at `file:///C:/Users/Bobby/image.jpg` +
+* `updateProfilePic 2 u/http://www.google.com/images/image.png` +
+Updates the profile picture of the 2nd person to be the image at `http://www.google.com/images/image.png` +
+
+=== Deleting the profile picture of a person : `deleteProfilePic`
+
+Deletes the profile picture of the specified person from the address book. +
+Format: `deleteProfilePic INDEX`
+
+****
+* Deletes the profile picture of the person at the specified `INDEX`.
+* The index refers to the index number shown in the most recent listing.
+* The index *must be a positive integer* 1, 2, 3, ...
+* The index must be valid as well
+****
+
+Examples:
+
+* `list` +
+`deleteProfilePic 2` +
+Deletes the profile picture of the 2nd person in the address book.
+* `find Bobby` +
+`delete 1` +
+Deletes the profile picture of the 1st person in the results of the `find` command.
+
 === Selecting a person : `select`
 
 Selects the person identified by the index number used in the last person listing. +
@@ -205,7 +307,7 @@ Format: `undo`
 
 [NOTE]
 ====
-Undoable commands: those commands that modify the address book's content (`add`, `delete`, `edit` and `clear`).
+Undoable commands: those commands that modify the address book's content (`add`, `addE`, `delete`, `deleteE`, `edit`, `editE` and `clear`).
 ====
 
 Examples:
@@ -219,10 +321,10 @@ Examples:
 `undo` +
 The `undo` command fails as there are no undoable commands executed previously.
 
-* `delete 1` +
+* `deleteE 1` +
 `clear` +
 `undo` (reverses the `clear` command) +
-`undo` (reverses the `delete 1` command) +
+`undo` (reverses the `deleteE 1` command) +
 
 === Redoing the previously undone command : `redo`
 
@@ -239,11 +341,11 @@ Examples:
 `redo` +
 The `redo` command fails as there are no `undo` commands executed previously.
 
-* `delete 1` +
+* `deleteE 1` +
 `clear` +
 `undo` (reverses the `clear` command) +
-`undo` (reverses the `delete 1` command) +
-`redo` (reapplies the `delete 1` command) +
+`undo` (reverses the `deleteE 1` command) +
+`redo` (reapplies the `deleteE 1` command) +
 `redo` (reapplies the `clear` command) +
 // end::undoredo[]
 
@@ -271,11 +373,22 @@ There is no need to save manually.
 
 * *Add* `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]...` +
 e.g. `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
+* *AddE* `addE h/HEADER de/DESCRIPTION d/DATE` +
+e.g. `addE h/Meeting de/Business meeting at work for upcoming project. d/2017-11-20`
 * *Clear* : `clear`
 * *Delete* : `delete INDEX` +
 e.g. `delete 3`
+* *DeleteE* : `deleteE INDEX` +
+e.g. `deleteE 2`
 * *Edit* : `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]...` +
 e.g. `edit 2 n/James Lee e/jameslee@example.com`
+* *EditE* : `editE INDEX [h/HEADER] [de/DESCRIPTION] [d/DATE]` +
+e.g. `editE 2 h/Party d/2018-01-12`
+* *UpdateProfilePic* : `updateProfilePic INDEX [u/imageUrl]` +
+e.g. `updateProfilePic 1 u/file:///C:/Users/Bobby/image.jpg` +
+e.g. `updateProfilePic 2 u/http://www.google.com/images/image.png` +
+* *DeleteProfilePic* : `deleteProfilePic INDEX` +
+e.g. `deleteProfilePic 3 +
 * *Find* : `find KEYWORD [MORE_KEYWORDS]` +
 e.g. `find James Jake`
 * *List* : `list`
