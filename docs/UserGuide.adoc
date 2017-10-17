@@ -96,6 +96,9 @@ WARNING: Number of persons imported is limited to 1000 +
 
 image::importpic.png[width="1000"]
 
+You can enter your credentials and grant permission to DoC to access your Google contacts, as highlighted by the
+red boxes in the picture above
+
 === Listing all persons : `list`
 
 Shows a list of all persons in the address book. +
