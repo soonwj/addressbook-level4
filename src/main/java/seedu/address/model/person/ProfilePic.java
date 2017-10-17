@@ -5,7 +5,6 @@ import static java.util.Objects.requireNonNull;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 
