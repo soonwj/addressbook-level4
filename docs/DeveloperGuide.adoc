@@ -719,72 +719,80 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (unlikely to have) - `*`
 
-[width="59%",cols="22%,<23%,<25%,<30%",options="header",]
+[width="59%",cols="22%,<23%,<25%,<30%,<20%",options="header",]
 |=======================================================================
-|Priority |As a ... |I want to ... |So that I can...
-|`* * *` |new user |see usage instructions |refer to instructions when I forget how to use the App
+|Priority |As a ... |I want to ... |So that I can... |Status
+|`* * *` |new user |see usage instructions |refer to instructions when I forget how to use the App |
 
-|`* * *` |user |add more fields to a contact |cater to contacts with multiple emails, phone numbers, etc
+|`* * *` |user |add more fields to a contact |cater to contacts with multiple emails, phone numbers, etc |
 
-|`* * *` |new user |sort contacts |look through the list easier
+|`* * *` |new user |sort contacts |look through the list easier |
 
-|`* * *` |user |view frequently contacted contacts on the top of the list |
+|`* * *` |user |view frequently contacted contacts on the top of the list | |
 
-|`* * *` |user |delete multiple people |delete groups faster
+|`* * *` |user |delete multiple people |delete groups faster |
 
-|`* * *` |user |create a backup of my contacts |avoid losing them
+|`* * *` |user |create a backup of my contacts |avoid losing them |
 
-|`* * *` |user |list all my contacts |
+|`* * *` |user |list all my contacts | |
 
-|`* * *` |user |update each contact's information |
+|`* * *` |user |update each contact's information | |
 
-|`* * *` |user |search for contacts by common tags |
+|`* * *` |user |search for contacts by common tags | |
 
-|`* * *` |user |favourite a contact |
+|`* * *` |user |favourite a contact | |
 
-|`* * *` |user |search for a particular contact |
+|`* * *` |user |search for a particular contact | |
 
-|`* * *` |user |view history of recent commands |
+|`* * *` |user |view history of recent commands | |
 
-|`* * *` |user |add new contacts |
+|`* * *` |user |add new contacts | |
 
-|`* * *` |user |delete a person |remove entries that I no longer need
+|`* * *` |user |delete a person |remove entries that I no longer need |
 
-|`* * *` |user |find a person by name |locate details of persons without having to go through the entire list
+|`* * *` |user |find a person by name |locate details of persons without having to go through the entire list |
 
-|`* *` |user |call a person |
 
-|`* *` |user |email a person |
+|`* * *` |user |delete a person |remove entries that I no longer need |
 
-|`* *` |user |retrieve physical location of a person |
 
-|`* *` |user |send feedback to the developer |to improve the app
 
-|`* *` |user |import all existing contacts |use the app with less set-up time
 
-|`* *` |user |use shorthands of commands |use commands faster
 
-|`* *` |user |share my contacts with other users |save time on adding
 
-|`* *` |user |customize the appearance of the app |
+|`* *` |user |call a person | |
 
-|`* *` |user |swap two contacts in the list |view in the desired order
+|`* *` |user |email a person | |
 
-|`* *` |user |view user page of contacts who also use the app |
+|`* *` |user |retrieve physical location of a person | |
 
-|`* *` |user |view the profile picture of a contact |
+|`* *` |user |send feedback to the developer |to improve the app |
 
-|`* *` |user |enable auto-correct for slightly mistyped commands |
+|`* *` |user |import all existing contacts |use the app with less set-up time |
 
-|`* *` |user |store my contacts on an online database |
+|`* *` |user |use shorthands of commands |use commands faster |
 
-|`* *` |user |access the app using my mobile phone |
+|`* *` |user |share my contacts with other users |save time on adding |
 
-|`* *` |user |undo my latest command |
+|`* *` |user |customize the appearance of the app | |
 
-|`* *` |user |hide link:#private-contact-detail[private contact details] by default |minimize chance of someone else seeing them by accident
+|`* *` |user |swap two contacts in the list |view in the desired order |
 
-|`*` |user with many persons in the address book |sort persons by name |locate a person easily
+|`* *` |user |view user page of contacts who also use the app | |
+
+|`* *` |user |view the profile picture of a contact | |
+
+|`* *` |user |enable auto-correct for slightly mistyped commands | |
+
+|`* *` |user |store my contacts on an online database | |
+
+|`* *` |user |access the app using my mobile phone | |
+
+|`* *` |user |undo my latest command | |
+
+|`* *` |user |hide link:#private-contact-detail[private contact details] by default |minimize chance of someone else seeing them by accident |
+
+|`*` |user with many persons in the address book |sort persons by name |locate a person easily |
 |=======================================================================
 
 {More to be added}
