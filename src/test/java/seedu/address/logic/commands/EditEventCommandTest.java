@@ -4,8 +4,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_BIRTHDAY;
 import static seedu.address.logic.commands.CommandTestUtil.DESC_MEETING;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_DESC_BIRTHDAY;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_DESC_MEETING;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_HEADER_BIRTHDAY;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
@@ -47,26 +45,6 @@ public class EditEventCommandTest {
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.updateEvent(model.getFilteredEventList().get(0), editedEvent);
-
-        assertCommandSuccess(editEventCommand, model, expectedMessage, expectedModel);
-    }
-
-    @Test
-    public void execute_someFieldsSpecifiedUnfilteredList_success() throws Exception {
-        Index indexLastEvent = Index.fromOneBased(model.getFilteredEventList().size());
-        ReadOnlyEvent lastEvent = model.getFilteredEventList().get(indexLastEvent.getZeroBased());
-
-        EventBuilder eventInList = new EventBuilder(lastEvent);
-        Event editedEvent = eventInList.withHeader(VALID_HEADER_BIRTHDAY).withDesc(VALID_DESC_BIRTHDAY).build();
-
-        EditEventDescriptor descriptor = new EditEventDescriptorBuilder().withHeader(VALID_HEADER_BIRTHDAY)
-                .withDesc(VALID_DESC_MEETING).build();
-        EditEventCommand editEventCommand = prepareCommand(indexLastEvent, descriptor);
-
-        String expectedMessage = String.format(EditEventCommand.MESSAGE_EDIT_EVENT_SUCCESS, editedEvent);
-
-        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.updateEvent(lastEvent, editedEvent);
 
         assertCommandSuccess(editEventCommand, model, expectedMessage, expectedModel);
     }
