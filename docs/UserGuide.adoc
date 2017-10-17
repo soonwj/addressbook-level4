@@ -1,4 +1,4 @@
-= AddressBook Level 4 - User Guide
+= Directory of Contacts (DoC) - User Guide
 :toc:
 :toc-title:
 :toc-placement: preamble
@@ -12,7 +12,8 @@ ifdef::env-github[]
 endif::[]
 :repoURL: https://github.com/se-edu/addressbook-level4
 
-By: `Team SE-EDU`      Since: `Jun 2016`      Licence: `MIT`
+By: `CS2103AUG2017-T11-B1`      Since: `Sep 2017` +
+Adapted from AddressBook-Level4, by: `Team SE-EDU`      Since: `Jun 2016`      Licence: `MIT`
 
 == Quick Start
 
