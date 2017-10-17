@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 
 import seedu.address.commons.exceptions.IllegalValueException;
@@ -26,8 +27,7 @@ public class ProfilePic {
     public final String source;
 
     public ProfilePic() {
-        source = "file:///D:/D_/Users/Assassin Ranger/Documents/SWJ/NUS/Yr 2 Sem 1/CS2103T/addressbook-level4/src/main"
-                + "/resources/images/fail.png";
+        source = "file://" + Paths.get("src/main/resources/images/fail.png").toAbsolutePath().toUri().getPath();
     }
 
     /**

@@ -4,6 +4,8 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_IMAGE_URL;
 
+import java.nio.file.Paths;
+
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.UpdateProfilePicCommand;
@@ -43,8 +45,8 @@ public class UpdateProfilePicCommandParser implements Parser<UpdateProfilePicCom
             throw new ParseException(ive.getMessage(), ive);
         }
 
-        if (updatedPerson.getProfilePic().toString().equals("file:///D:/D_/Users/Assassin Ranger/Documents/SWJ/NUS"
-                + "/Yr 2 Sem 1/CS2103T/addressbook-level4/src/main/resources/images/fail.png")) {
+        if (updatedPerson.getProfilePic().toString().equals("file://"
+                + Paths.get("src/main/resources/images/fail.png").toAbsolutePath().toUri().getPath())) {
             throw new ParseException(UpdateProfilePicCommand.MESSAGE_NOT_UPDATED);
         }
 
