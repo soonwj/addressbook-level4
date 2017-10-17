@@ -172,7 +172,6 @@ task nonGuiTests(type: AddressBookTest) {
 
 // Test mode depends on whether headless task has been run
 task allTests(type: AddressBookTest) {
-    include 'lib/*.jar'
     jacoco {
         destinationFile = new File("${buildDir}/jacoco/test.exec")
     }
