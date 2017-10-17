@@ -11,6 +11,11 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.event.Desc;
+import seedu.address.model.person.event.Event;
+import seedu.address.model.person.event.EventDate;
+import seedu.address.model.person.event.Header;
+import seedu.address.model.person.exceptions.DuplicateEventException;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.tag.Tag;
 
@@ -45,15 +50,31 @@ public class SampleDataUtil {
         }
     }
 
+    public static Event[] getSampleEvents() {
+        try {
+            return new Event[] {
+                new Event(new Header("Birthday party"), new Desc("location"), new EventDate("2017-06-12")),
+                new Event(new Header("Meeting"), new Desc("location"), new EventDate("2017-10-23"))
+            };
+        } catch (IllegalValueException e) {
+            throw new AssertionError("sample data cannot be invalid", e);
+        }
+    }
+
     public static ReadOnlyAddressBook getSampleAddressBook() {
         try {
             AddressBook sampleAb = new AddressBook();
             for (Person samplePerson : getSamplePersons()) {
                 sampleAb.addPerson(samplePerson);
             }
+            for (Event sampleEvent : getSampleEvents()) {
+                sampleAb.addEvent(sampleEvent);
+            }
             return sampleAb;
         } catch (DuplicatePersonException e) {
             throw new AssertionError("sample data cannot contain duplicate persons", e);
+        } catch (DuplicateEventException e) {
+            throw new AssertionError("sample data cannot contain duplicate events", e);
         }
     }
 
