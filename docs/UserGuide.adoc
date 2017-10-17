@@ -379,6 +379,7 @@ There is no need to save manually.
 e.g. `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
 * *AddE* `addE h/HEADER de/DESCRIPTION d/DATE` +
 e.g. `addE h/Meeting de/Business meeting at work for upcoming project. d/2017-11-20`
+* *Import* : `import`
 * *Clear* : `clear`
 * *Delete* : `delete INDEX` +
 e.g. `delete 3`
