@@ -451,7 +451,7 @@ image::deleteProfilePicSD.jpg[width="200"]
 **Cons:** Users have to remember another command. +
 **Alternative 2:** Just add the function to the `add` and `edit` commands +
 **Pros:** Users do not have to remember a new command +
-**Cons:** The image might take a while to load, so all the data takes longer to be updated 
+**Cons:** The image might take a while to load, so all the data takes longer to be updated
 
 ---
 
@@ -461,7 +461,7 @@ image::deleteProfilePicSD.jpg[width="200"]
 **Cons:** updateProfilePic can technically do the same job, albeit slower. +
 **Alternative 2:** Not have this command at all +
 **Pros:** Lesser commands for the user to remember +
-**Cons:** The user might not know what the default image URL is 
+**Cons:** The user might not know what the default image URL is
 
 === Logging
 
