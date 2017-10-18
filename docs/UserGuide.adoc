@@ -1,4 +1,4 @@
-= AddressBook Level 4 - User Guide
+= Directory of Contacts (DoC) - User Guide
 :toc:
 :toc-title:
 :toc-placement: preamble
@@ -12,7 +12,8 @@ ifdef::env-github[]
 endif::[]
 :repoURL: https://github.com/se-edu/addressbook-level4
 
-By: `Team SE-EDU`      Since: `Jun 2016`      Licence: `MIT`
+By: `CS2103AUG2017-T11-B1`      Since: `Sep 2017` +
+Adapted from AddressBook-Level4, by: `Team SE-EDU`      Since: `Jun 2016`      Licence: `MIT`
 
 == Quick Start
 
@@ -95,6 +96,9 @@ WARNING: Number of persons imported is limited to 1000 +
 **Picture guide**
 
 image::importpic.png[width="1000"]
+
+You can enter your credentials and grant permission to DoC to access your Google contacts, as highlighted by the
+red boxes in the picture above
 
 === Listing all persons : `list`
 
@@ -375,6 +379,7 @@ There is no need to save manually.
 e.g. `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
 * *AddE* `addE h/HEADER de/DESCRIPTION d/DATE` +
 e.g. `addE h/Meeting de/Business meeting at work for upcoming project. d/2017-11-20`
+* *Import* : `import`
 * *Clear* : `clear`
 * *Delete* : `delete INDEX` +
 e.g. `delete 3`
