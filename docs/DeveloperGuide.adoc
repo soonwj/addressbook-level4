@@ -356,9 +356,9 @@ Once the Address book parser identifies the user command as a valid location com
 
 The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function. 
 
-This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested target person. 
+This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested person. 
 
-This rendering of Google Maps uses URL in the browser panel.
+This rendering of Google Maps is done via calling the URL.
 
 === Logging
 
