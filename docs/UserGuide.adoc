@@ -395,7 +395,7 @@ e.g. `find James Jake`
 * *History* : `history`
 * *Import* : `import`
 * *List* : `list`
-* *Location* : `location INDEX` + 
+* *Location* : `location INDEX` +
 e.g.`select 2`
 * *Redo* : `redo`
 * *Remove Tag* : `removeTag KEYWORD [MORE_KEYWORDS]` +
