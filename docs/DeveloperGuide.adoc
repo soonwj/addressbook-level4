@@ -377,7 +377,7 @@ This is a summary of the steps in the execution flow: +
 3. The user successfully authenticates and grants Google Contacts access permission to DoC, automatically redirecting the `BrowserPanel` to the success landing page(https://cs2103tdummyendpoint.herokuapp.com) +
 4. The `BrowserPanel` detects the URL change to the success landing page, extracts the authentication code appended to the URL, and passes the authentication code to its' `GoogleApiAuth` service,
  which then builds a `GoogleCredential` object from the it +
-5. Once completed, the `BrowserPanel` fires an event to 
+5. Once completed, the `BrowserPanel` fires an event to
 
 
 

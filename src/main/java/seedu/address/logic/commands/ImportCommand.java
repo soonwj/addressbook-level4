@@ -73,7 +73,7 @@ public class ImportCommand extends Command {
     }
 
     /**
-     * Final step of the import procedure, converts all Google Person the list connections, to a model.person
+     * Final step of the import procedure, converts all Google Person in the list connections, to a model.person
      * .Person, then adds it to the model.
      * @param connections
      */
