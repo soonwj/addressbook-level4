@@ -346,6 +346,45 @@ image::UndoRedoActivityDiagram.png[width="200"]
 **Cons:** Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two different things. +
 // end::undoredo[]
 
+=== Import & authentication mechanism
+==== Description
+The import command uses `Google Contacts` as a source and performs the OAuth2 authentication protocol to retrieve
+and import a user's contacts. This is done with the help of the inbuilt `BrowserPanel`,
+an instance of the `GoogleApiAuth` service, and the `GooglePersonConverterUtil` utility class. +
+
+This mechanism requires cross-component interaction with the `BrowserPanel` of the `UI` component. This is handled in an event driven manner, as shown in the extensive sequence diagram below: +
+
+image::import_devguide.jpg[width=100%]
+
+==== Roles of objects introduced
+Three main objects were introduced to fulfil the import and authentication functionality, their roles are described as such:
+
+===== ImportCommand
+The `ImportCommand` is the main driver of this functionality. It maintains control over the flow of authentication and and conversion of Person objects.
+
+===== GoogleApiAuth
+The `GoogleApiAuth` is a service used to facilitate the start to end of an OAuth 2 procedure with Google's APIs. It maintains key client
+information, and provides on demand, authentication URLs, and also a GoogleCredential object. Each command intending to go through the OAuth2 procedure with Google's APIs, is expected to maintain
+its' own instance of this service. This service is provided to the `ImportCommand`.
+
+===== GooglePersonConverterUtil
+The `GooglePersonConverterUtil` is a utility object, providing the functionality of conversion between a Google `Person` and a DoC `Person`.
+
+==== Execution flow
+This is a summary of the steps in the execution flow: +
+1. An `ImportCommand` is triggered from the users' UI input, firing an event to the `BrowserPanel` +
+2. The BrowserPanel detects the event and navigates to the authentication url provided by the `GoogleApiAuth` service +
+3. The user successfully authenticates and grants Google Contacts access permission to DoC, automatically redirecting the `BrowserPanel` to the success landing page(https://cs2103tdummyendpoint.herokuapp.com) +
+4. The `BrowserPanel` detects the URL change to the success landing page, extracts the authentication code appended to the URL, and passes the authentication code to its' `GoogleApiAuth` service,
+ which then builds a `GoogleCredential` object from the it +
+5. Once completed, the `BrowserPanel` fires an event to 
+
+
+
+
+
+
+
 === Logging
 
 We are using `java.util.logging` package for logging. The `LogsCenter` class is used to manage the logging levels and logging destinations.
