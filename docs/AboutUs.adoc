@@ -21,7 +21,7 @@ Role: Developer
 
 === Royce Lim
 image::RoyceLim.jpg[width="150", align="left"]
-{empty}[https://github.com/royceljh[github]] [https://github.com/damithc[github]] [<<royceljh#, portfolio>>]
+{empty}[https://github.com/royceljh[github]] [<<royceljh#, portfolio>>]
 
 Role: Developer
 
