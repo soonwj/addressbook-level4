@@ -17,6 +17,7 @@ import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.logic.GoogleApiAuthServiceCredentialsSetupCompleted;
 import seedu.address.commons.events.logic.GoogleAuthRequestEvent;
 import seedu.address.commons.events.logic.GoogleAuthSuccessEvent;
+import seedu.address.commons.events.ui.FindLocationRequestEvent;
 import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
 import seedu.address.model.person.ReadOnlyPerson;
 
@@ -27,6 +28,7 @@ import seedu.address.model.person.ReadOnlyPerson;
 public class BrowserPanel extends UiPart<Region> {
 
     public static final String DEFAULT_PAGE = "default.html";
+    public static final String GOOGLE_MAPS_URL = "https://www.google.com.sg/maps/place/";
     public static final String GOOGLE_SEARCH_URL_PREFIX = "https://www.google.com.sg/search?safe=off&q=";
     public static final String GOOGLE_SEARCH_URL_SUFFIX = "&cad=h";
 
@@ -54,6 +56,17 @@ public class BrowserPanel extends UiPart<Region> {
     private void loadPersonPage(ReadOnlyPerson person) {
         loadPage(GOOGLE_SEARCH_URL_PREFIX + person.getName().fullName.replaceAll(" ", "+")
                 + GOOGLE_SEARCH_URL_SUFFIX);
+    }
+
+    private void loadPersonLocation(ReadOnlyPerson person) {
+        String add = person.getAddress().toString();
+        String[] address = add.split("\\s");
+        String location = "";
+        for (String s: address) {
+            location += s;
+            location += "+";
+        }
+        loadPage(GOOGLE_MAPS_URL + location);
     }
 
     public void loadPage(String url) {
@@ -115,5 +128,11 @@ public class BrowserPanel extends UiPart<Region> {
 
     private boolean authSuccessUrlDetected(String currentUrl) {
         return currentUrl.contains(GoogleApiAuth.REDIRECT_URL);
+    }
+
+    @Subscribe
+    private void handleFindLocationRequestEvent(FindLocationRequestEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event, "Getting location of " + event.targetPerson.getName().fullName));
+        loadPersonLocation(event.targetPerson);
     }
 }
