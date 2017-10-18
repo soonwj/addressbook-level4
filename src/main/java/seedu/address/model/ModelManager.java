@@ -14,6 +14,7 @@ import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.model.AddressBookChangedEvent;
+import seedu.address.commons.events.ui.FindLocationRequestEvent;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.ReadOnlyPerson;
 import seedu.address.model.person.event.ReadOnlyEvent;
@@ -122,6 +123,11 @@ public class ModelManager extends ComponentManager implements Model {
         addressBook.updateEvent(target, editedEvent);
         indicateAddressBookChanged();
 
+    }
+
+    @Override
+    public void findLocation(ReadOnlyPerson person) throws PersonNotFoundException {
+        raise(new FindLocationRequestEvent(person));
     }
 
     //=========== Filtered Person List Accessors =============================================================

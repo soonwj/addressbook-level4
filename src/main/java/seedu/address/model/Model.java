@@ -50,6 +50,8 @@ public interface Model {
             throws DuplicatePersonException, PersonNotFoundException;
 
     void deleteTag(Tag tag) throws PersonNotFoundException, DuplicatePersonException;
+
+    void findLocation(ReadOnlyPerson person) throws PersonNotFoundException;
     /**
      * Replaces the given event {@code target} with {@code editedEvent}.
      *
