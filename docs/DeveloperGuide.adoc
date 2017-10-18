@@ -350,13 +350,13 @@ image::UndoRedoActivityDiagram.png[width="200"]
 
 image::Location.png[width="800"]
 
-As seen above, an event based approach is used to display the location of the person. 
+As seen above, an event based approach is used to display the location of the person.
 
-Once the Address book parser identifies the user command as a valid location command, it will make use of the Google Event bus to transmit the event. 
+Once the Address book parser identifies the user command as a valid location command, it will make use of the Google Event bus to transmit the event.
 
-The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function. 
+The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function.
 
-This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested person. 
+This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested person.
 
 This rendering of Google Maps is done via calling the URL.
 
