@@ -346,7 +346,87 @@ image::UndoRedoActivityDiagram.png[width="200"]
 **Cons:** Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two different things. +
 // end::undoredo[]
 
-// tag::updatedeleteProfilePic[]
+=== Event(feature)
+
+The event feature is implemented with similar logic as a person. The commands created for this feature are "addE", "editE" and "deleteE". As such, the methods from events are extended from the model.
+
+Commands such as clear, undo and redo will apply to the events in the list as these commands directly alter the address book on a higher level without calling person methods. Therefore, further coupling of these methods and event feature is not required.
+
+image::EventPersonModelClassDiagram.png[width="900"]
+
+As you can see from the diagram, the sub component of Event include a PersonList that fetches persons from the ReadOnlyPerson and add them into the list without any modification. In the Ui, upon clicking on the person tagged under an event, the logic will execute "select" command which will bring the user to the respective person in the person panel.
+
+==== Design Consideration
+**Aspect:** How to implement adding of persons into the event's person list +
+**Alternative 1:** Add by the name of person in the person list +
+**Pros:** Easier for users to add using names, do not need to refer to the person list. +
+**Cons:** System have to check through the list to check if the person name exist in the current address book. +
+**Alternative 2 (current choice):** Add by the index of person shown in the person list panel +
+**Pros:** System only have to check for validity of index. Better performance compared to Alternative 1. +
+**Cons:** Requires user to refer to the person list panel before executing command to add person into event's person list. +
+
+
+=== Import & authentication mechanism
+==== Description
+The import command uses `Google Contacts` as a source and performs the OAuth2 authentication protocol to retrieve
+and import a user's contacts. This is done with the help of the inbuilt `BrowserPanel`,
+an instance of the `GoogleApiAuth` service, and the `GooglePersonConverterUtil` utility class. +
+
+This mechanism requires cross-component interaction with the `BrowserPanel` of the `UI` component. This is handled in an event driven manner, as shown in the extensive sequence diagram below: +
+
+image::import_devguide.jpg[width=100%]
+
+==== Roles of objects introduced
+Three main objects were introduced to fulfil the import and authentication functionality, their roles are described as such:
+
+===== ImportCommand
+The `ImportCommand` is the main driver of this functionality. It maintains control over the flow of authentication and and conversion of Person objects.
+
+===== GoogleApiAuth
+The `GoogleApiAuth` is a service used to facilitate the start to end of an OAuth 2 procedure with Google's APIs. It maintains key client
+information, and provides on demand, authentication URLs, and also a GoogleCredential object. Each command intending to go through the OAuth2 procedure with Google's APIs, is expected to maintain
+its' own instance of this service. This service is provided to the `ImportCommand`.
+
+===== GooglePersonConverterUtil
+The `GooglePersonConverterUtil` is a utility object, providing the functionality of conversion between a Google `Person` and a DoC `Person`.
+
+==== Execution flow
+This is a summary of the steps in the execution flow: +
+**1.** An `ImportCommand` is triggered from the users' UI input, firing an event to the `BrowserPanel` +
+**2.** The `BrowserPanel` detects the event and navigates to the authentication url provided by the `GoogleApiAuth` service +
+**3.** The user successfully authenticates and grants Google Contacts access permission to DoC, automatically redirecting the `BrowserPanel` to the success landing page(https://cs2103tdummyendpoint.herokuapp.com) +
+**4.** The `BrowserPanel` detects the URL change to the success landing page, extracts the authentication code appended to the URL, and passes the authentication code to its' `GoogleApiAuth` service,
+ which then builds a `GoogleCredential` object from the it +
+**5.** Once completed, the `BrowserPanel` fires an event to the `ImportCommand` +
+**6.** The `ImportCommand` detects the event and proceeds to build a `PeopleService` object using the `GoogleCredential` within its' `GoogleApiAuth` service +
+**7.** Finally, the `PeopleService` object fetches the list of Google `Person` from the users' Google Contacts, which are then converted to DoC `Person` objects +
+**8.** This converted list of DoC `Person` objects are then added to the `Model` component
+
+==== Design Considerations
+**Aspect:** How a successful authentication is detected +
+
+**Alternative 1 (Chosen for security):** Redirect to a hosted domain +
+**Pros:** The underlying `HTTP GET` is sent to a domain under DoC's control -> risk of authentication code leak is controlled +
+**Cons:** The BrowserPanel will display an error page if the hosted domain is down. However, the successful authentication will still be detected correctly
+
+**Alternative 2:** Redirect to an external domain, like `https://contacts.google.com` +
+**Pros:** We are able to display the users' incoming `Google Contacts` +
+**Cons:** The underlying `HTTP GET` containing the users' authentication code is sent to an external domain
+
+=== Location
+
+image::Location.png[width="800"]
+
+As seen above, an event based approach is used to display the location of the person.
+
+Once the Address book parser identifies the user command as a valid location command, it will make use of the Google Event bus to transmit the event.
+
+The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function.
+
+This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested person.
+
+This rendering of Google Maps is done via calling the URL.
+
 === UpdateProfilePic/DeleteProfilePic mechanism
 
 The UpdateProfilePic/DeleteProfilePic mechanism is facilitated by a `ProfilePic` class, which is a property class of the `Person` class. It supports the updating and deleting of profile pictures of each Person. These two commands inherit from `UndoableCommand`.
@@ -371,7 +451,7 @@ image::deleteProfilePicSD.jpg[width="200"]
 **Cons:** Users have to remember another command. +
 **Alternative 2:** Just add the function to the `add` and `edit` commands +
 **Pros:** Users do not have to remember a new command +
-**Cons:** The image might take a while to load, so all the data takes longer to be updated +
+**Cons:** The image might take a while to load, so all the data takes longer to be updated 
 
 ---
 
@@ -381,8 +461,7 @@ image::deleteProfilePicSD.jpg[width="200"]
 **Cons:** updateProfilePic can technically do the same job, albeit slower. +
 **Alternative 2:** Not have this command at all +
 **Pros:** Lesser commands for the user to remember +
-**Cons:** The user might not know what the default image URL is +
-// tag::updatedeleteProfilePic[]
+**Cons:** The user might not know what the default image URL is 
 
 === Logging
 
@@ -809,7 +888,7 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 (For all use cases below, the *System* is the `AddressBook` and the *Actor* is the `user`, unless specified otherwise)
 
-[discrete]
+[none]
 === Use case: Delete person
 
 *MSS*
@@ -867,7 +946,7 @@ Use case ends.
 +
 Use case ends.
 
-[discrete]
+[none]
 === Use case: Swap Persons
 
 *MSS*
@@ -892,7 +971,7 @@ Use case ends.
 +
 Use case resumes at step 2.
 
-[discrete]
+[none]
 === Use case: Sort command
 
 *MSS*
@@ -910,7 +989,7 @@ Use case ends.
 +
 Use case resumes at step 2.
 
-[discrete]
+[none]
 === Use case: Delete multiple persons
 
 *MSS*
@@ -936,7 +1015,7 @@ Use case ends.
 +
 Use case resumes at step 2.
 
-[discrete]
+[none]
 === Use case: Import existing contacts from google
 
 *MSS*
@@ -962,7 +1041,7 @@ Use case resumes at step 2.
 Use case ends
 
 
-[discrete]
+[none]
 === Use case: Add person
 
 *MSS*
@@ -982,7 +1061,7 @@ Use case ends.
 +
 Use case resumes at step 2.
 
-[discrete]
+[none]
 === Use case: Favourite person
 
 *MSS*
