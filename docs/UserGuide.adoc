@@ -180,7 +180,7 @@ Edits the header and date of the 1st event to be `Birthday party` and `2017-06-1
 Exits the program. +
 Format: `exit`
 
-=== Locating persons by name and tags: `find`
+=== Finding persons by name and tags: `find`
 
 Finds persons whose names or tags contain any of the given keywords. +
 Format: `find KEYWORD [MORE_KEYWORDS]`
@@ -204,11 +204,11 @@ Returns any person having tag `Family`
 * `find Family Friend Brother` +
 Returns any person having tags `Family`, `Friend`, or `Brother`
 
-=== Viewing help : `help`
+=== Help : `help`
 
 Format: `help`
 
-=== Listing entered commands : `history`
+=== History : `history`
 
 Lists all the commands that you have entered in reverse chronological order. +
 Format: `history`
@@ -243,7 +243,7 @@ red boxes in the picture above
 Shows a list of all persons in the address book. +
 Format: `list`
 
-=== Address of a person : `location`
+=== Location of a person : `location`
 
 Shows the address of the person in Google Maps. +
 Format: `location INDEX`
