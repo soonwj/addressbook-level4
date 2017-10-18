@@ -771,7 +771,7 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 (For all use cases below, the *System* is the `AddressBook` and the *Actor* is the `user`, unless specified otherwise)
 
-[discrete]
+[none]
 === Use case: Delete person
 
 *MSS*
@@ -829,7 +829,7 @@ Use case ends.
 +
 Use case ends.
 
-[discrete]
+[none]
 === Use case: Swap Persons
 
 *MSS*
@@ -854,7 +854,7 @@ Use case ends.
 +
 Use case resumes at step 2.
 
-[discrete]
+[none]
 === Use case: Sort command
 
 *MSS*
@@ -872,7 +872,7 @@ Use case ends.
 +
 Use case resumes at step 2.
 
-[discrete]
+[none]
 === Use case: Delete multiple persons
 
 *MSS*
@@ -898,7 +898,7 @@ Use case ends.
 +
 Use case resumes at step 2.
 
-[discrete]
+[none]
 === Use case: Import existing contacts from google
 
 *MSS*
@@ -924,7 +924,7 @@ Use case resumes at step 2.
 Use case ends
 
 
-[discrete]
+[none]
 === Use case: Add person
 
 *MSS*
@@ -944,7 +944,7 @@ Use case ends.
 +
 Use case resumes at step 2.
 
-[discrete]
+[none]
 === Use case: Favourite person
 
 *MSS*
