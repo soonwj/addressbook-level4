@@ -108,7 +108,7 @@ public class AddressBookParser {
 
         case RemoveTagCommand.COMMAND_WORD:
             return new RemoveTagCommandParser().parse(arguments);
-            
+
         case ImportCommand.COMMAND_WORD:
             return new ImportCommand();
 
