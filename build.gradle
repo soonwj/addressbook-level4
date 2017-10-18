@@ -27,6 +27,7 @@ allprojects {
 
     repositories {
         jcenter()
+        maven {url 'lib'}
         mavenCentral()
         maven { url "https://repo.eclipse.org/content/repositories/egit-releases/" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
@@ -60,13 +61,22 @@ allprojects {
     }
 
     dependencies {
+//       compile files("lib/google-api-services-people-v1-rev153-1.23.0.jar")
+//        compile fileTree(dir: 'lib/google-api-services-people-v1-rev153-1.23.0.jar')
+//        runtime fileTree(dir: 'lib', include: '*.jar')
+//        testCompile fileTree(dir: 'lib', include: '*.jar')
+//        testRuntime fileTree(dir: 'lib', include: '*.jar')
+
+        compile fileTree(dir: 'lib', include: '*.jar')
+        runtime fileTree(dir: 'lib', include: '*.jar')
+        testCompile fileTree(dir: 'lib', include: '*.jar')
+        testRuntime fileTree(dir: 'lib', include: '*.jar')
+
         compile group: 'org.fxmisc.easybind', name: 'easybind', version: '1.0.3'
         compile "org.controlsfx:controlsfx:$controlsFxVersion"
         compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonDataTypeVersion"
         compile "com.google.guava:guava:$guavaVersion"
-        compile 'com.google.apis:google-api-services-people:v1-rev149-1.23.0'
-        compile fileTree(dir: 'libs', include: ['*.jar'])
 
         testCompile "junit:junit:$junitVersion"
         testCompile "org.testfx:testfx-core:$testFxVersion"
@@ -75,6 +85,11 @@ allprojects {
             exclude group: "junit", module: "junit"
         }
         testCompile "org.testfx:openjfx-monocle:$monocleVersion"
+
+//        compile group: 'com.google.apis', name: 'google-api-services-people', version: 'v1-rev153-1.23.0'
+//        runtime group: 'com.google.apis', name: 'google-api-services-people', version: 'v1-rev153-1.23.0'
+//        testCompile group: 'com.google.apis', name: 'google-api-services-people', version: 'v1-rev153-1.23.0'
+//        testRuntime group: 'com.google.apis', name: 'google-api-services-people', version: 'v1-rev153-1.23.0'
     }
 
     sourceSets {
@@ -94,6 +109,13 @@ allprojects {
         destinationDir = file("${buildDir}/jar/")
     }
 }
+
+task listJars << {
+    configurations.compile.each {
+        File file -> println file.name
+    }
+}
+
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.12'
