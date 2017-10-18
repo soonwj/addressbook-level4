@@ -167,6 +167,11 @@ public class AddCommandTest {
         public void updateFilteredEventList(Predicate<ReadOnlyEvent> predicate) {
             fail("This method should not be called.");
         }
+
+        @Override
+        public void findLocation(ReadOnlyPerson person) {
+            fail("This method should not be called.");
+        }
     }
 
     /**
