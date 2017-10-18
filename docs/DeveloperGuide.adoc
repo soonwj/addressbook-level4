@@ -346,6 +346,16 @@ image::UndoRedoActivityDiagram.png[width="200"]
 **Cons:** Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two different things. +
 // end::undoredo[]
 
+=== Location
+
+image::Location.png[width="800"]
+
+As seen above, an event based approach is used to display the location of the person. 
+Once the Address book parser identifies the user command as a valid location command, it will make use of the Google Event bus to transmit the event. 
+The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function. 
+This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested target person. 
+This rendering of Google Maps uses URL in the browser panel.
+
 === Logging
 
 We are using `java.util.logging` package for logging. The `LogsCenter` class is used to manage the logging levels and logging destinations.
