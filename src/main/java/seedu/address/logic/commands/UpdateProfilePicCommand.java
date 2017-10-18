@@ -28,7 +28,7 @@ public class UpdateProfilePicCommand extends UndoableCommand {
             + "by the index number used in the last person listing. "
             + "Existing profile picture will be overwritten by the input.\n"
             + "Parameters: INDEX (must be a positive integer) "
-            + "[valid URL of image]\n"
+            + "[u/valid URL of image]\n"
             + "Example of image stored locally: " + COMMAND_WORD + " 1 "
             + PREFIX_IMAGE_URL + "file:///C:/Users/Bobby/Images/picture.jpg\n"
             + "Example of image stored on the internet: " + COMMAND_WORD + " 1 "
@@ -75,5 +75,13 @@ public class UpdateProfilePicCommand extends UndoableCommand {
         }
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(String.format(MESSAGE_UPDATE_PROFILE_PIC_SUCCESS, personToUpdateProfilePic));
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other == this // short circuit if same object
+                || (other instanceof UpdateProfilePicCommand // instanceof handles nulls
+                && this.index.equals(((UpdateProfilePicCommand) other).index)
+                && this.profilePic.equals(((UpdateProfilePicCommand) other).profilePic)); // state check
     }
 }

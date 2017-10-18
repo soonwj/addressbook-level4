@@ -427,6 +427,42 @@ This will eventually render the browser panel with Google Maps and a marker poin
 
 This rendering of Google Maps is done via calling the URL.
 
+=== UpdateProfilePic/DeleteProfilePic mechanism
+
+The UpdateProfilePic/DeleteProfilePic mechanism is facilitated by a `ProfilePic` class, which is a property class of the `Person` class. It supports the updating and deleting of profile pictures of each Person. These two commands inherit from `UndoableCommand`.
+
+`ProfilePic` essentially stores a **valid** `URL` of an image that will be displayed as the Person’s profile picture. Whenever a new Person is added, the Person’s `ProfilePic` property will be that of a default image. The command, `updateProfilePic` can then be called to change this property. When the command `deleteProfilePic` is called, the `ProfilePic` property of the selected Person will be changed back to the default profile picture.
+
+Like the other properties of the `Person` class, the `ProfilePic` property will also be saved to the chosen storage file.
+
+Both the `updateProfilePic` and the `deleteProfilePic` commands work by taking in the index of the chosen Person and updating this Person as necessary. The `updateProfilePic` command also takes in a URL of the image that the profile picture is to be changed to. This will cause the app to instantiate a new `ProfilePic` object and check if the URL is valid and if it is valid, the app will proceed to update the Person with the new profile picture, otherwise an IllegalValueException will be thrown. As for the `deleteProfilePic` command, once it is called, the app will instantiate a default `ProfilePic` object and update the Person chosen.
+
+Below are the sequence diagrams of each command to illustrate how they work:
+
+image::updateProfilePicSD.jpg[width="200"]
+
+image::deleteProfilePicSD.jpg[width="200"]
+
+==== Design Considerations
+
+**Aspect:** Implementation of `updateProfilePic` +
+**Alternative 1 (current choice):** Add a new class that extends `UndoableCommand` +
+**Pros:** The other properties of a `Person` can be quickly updated, using the `add` or `edit` commands, without waiting for an image to be loaded  +
+**Cons:** Users have to remember another command. +
+**Alternative 2:** Just add the function to the `add` and `edit` commands +
+**Pros:** Users do not have to remember a new command +
+**Cons:** The image might take a while to load, so all the data takes longer to be updated
+
+---
+
+**Aspect:** Implementation of `deleteProfilePic` +
+**Alternative 1 (current choice):** Add a new class that extends `UndoableCommand` +
+**Pros:** A quick way to revert the profile picture back to default  +
+**Cons:** updateProfilePic can technically do the same job, albeit slower. +
+**Alternative 2:** Not have this command at all +
+**Pros:** Lesser commands for the user to remember +
+**Cons:** The user might not know what the default image URL is
+
 === Logging
 
 We are using `java.util.logging` package for logging. The `LogsCenter` class is used to manage the logging levels and logging destinations.

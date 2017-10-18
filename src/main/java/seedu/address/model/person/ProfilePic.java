@@ -39,24 +39,29 @@ public class ProfilePic {
         requireNonNull(url);
         if (!isValidUrl(url)) {
             throw new IllegalValueException(MESSAGE_PROFILE_PIC_CONSTRAINTS);
-        } else {
-            try {
-                Image img = ImageIO.read(new URL(url));
-                if (img == null) {
-                    throw new IllegalValueException(MESSAGE_PROFILE_PIC_CONSTRAINTS);
-                }
-            } catch (IOException e) {
-                throw new IllegalValueException(MESSAGE_PROFILE_PIC_CONSTRAINTS);
-            }
         }
+
         this.source = url;
     }
 
     /**
      * Returns true if a given string is a valid image URL.
      */
-    private boolean isValidUrl(String test) {
-        return test.matches(PROFILE_PIC_VALIDATION_REGEX);
+    public static boolean isValidUrl(String test) {
+        if (test.matches(PROFILE_PIC_VALIDATION_REGEX)) {
+            try {
+                Image img = ImageIO.read(new URL(test));
+                if (img == null) {
+                    return false;
+                }
+            } catch (IOException e) {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
