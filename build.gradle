@@ -61,12 +61,6 @@ allprojects {
     }
 
     dependencies {
-//       compile files("lib/google-api-services-people-v1-rev153-1.23.0.jar")
-//        compile fileTree(dir: 'lib/google-api-services-people-v1-rev153-1.23.0.jar')
-//        runtime fileTree(dir: 'lib', include: '*.jar')
-//        testCompile fileTree(dir: 'lib', include: '*.jar')
-//        testRuntime fileTree(dir: 'lib', include: '*.jar')
-
         compile fileTree(dir: 'lib', include: '*.jar')
         runtime fileTree(dir: 'lib', include: '*.jar')
         testCompile fileTree(dir: 'lib', include: '*.jar')
@@ -85,11 +79,6 @@ allprojects {
             exclude group: "junit", module: "junit"
         }
         testCompile "org.testfx:openjfx-monocle:$monocleVersion"
-
-//        compile group: 'com.google.apis', name: 'google-api-services-people', version: 'v1-rev153-1.23.0'
-//        runtime group: 'com.google.apis', name: 'google-api-services-people', version: 'v1-rev153-1.23.0'
-//        testCompile group: 'com.google.apis', name: 'google-api-services-people', version: 'v1-rev153-1.23.0'
-//        testRuntime group: 'com.google.apis', name: 'google-api-services-people', version: 'v1-rev153-1.23.0'
     }
 
     sourceSets {
