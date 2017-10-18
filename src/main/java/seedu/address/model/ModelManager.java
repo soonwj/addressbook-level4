@@ -92,14 +92,16 @@ public class ModelManager extends ComponentManager implements Model {
 
     @Override
     public void deleteTag(Tag tag) throws PersonNotFoundException, DuplicatePersonException {
-        for (ReadOnlyPerson person: addressBook.getPersonList()) {
+        for (ReadOnlyPerson person : addressBook.getPersonList()) {
             Person newPerson = new Person(person);
             Set<Tag> newTags = new HashSet<>(person.getTags());
             newTags.remove(tag);
             newPerson.setTags(newTags);
             updatePerson(person, newPerson);
         }
+    }
 
+    @Override
     public synchronized void deleteEvent(ReadOnlyEvent target) throws EventNotFoundException {
         addressBook.removeEvent(target);
         indicateAddressBookChanged();
