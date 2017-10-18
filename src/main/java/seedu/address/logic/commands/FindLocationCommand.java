@@ -38,7 +38,8 @@ public class FindLocationCommand extends Command {
             assert false : "The target person cannot be missing";
         }
 
-        return new CommandResult(String.format(MESSAGE_FIND_LOCATION_SUCCESS, personToFind.getName().fullName, personToFind.getAddress()));
+        return new CommandResult(String.format(MESSAGE_FIND_LOCATION_SUCCESS,
+                personToFind.getName().fullName, personToFind.getAddress()));
     }
 
     @Override

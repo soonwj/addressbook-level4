@@ -58,6 +58,9 @@ public class BrowserPanel extends UiPart<Region> {
                 + GOOGLE_SEARCH_URL_SUFFIX);
     }
 
+    /**
+     * Loads Google Maps.
+     */
     private void loadPersonLocation(ReadOnlyPerson person) {
         String add = person.getAddress().toString();
         String[] address = add.split("\\s");
@@ -130,9 +133,14 @@ public class BrowserPanel extends UiPart<Region> {
         return currentUrl.contains(GoogleApiAuth.REDIRECT_URL);
     }
 
+    /**
+     * Event listener for Find Location Events
+     * @param event
+     */
     @Subscribe
     private void handleFindLocationRequestEvent(FindLocationRequestEvent event) {
-        logger.info(LogsCenter.getEventHandlingLogMessage(event, "Getting location of " + event.targetPerson.getName().fullName));
+        logger.info(LogsCenter.getEventHandlingLogMessage(event,
+                "Getting location of " + event.targetPerson.getName().fullName));
         loadPersonLocation(event.targetPerson);
     }
 }
