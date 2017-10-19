@@ -439,9 +439,9 @@ Both the `updateProfilePic` and the `deleteProfilePic` commands work by taking i
 
 Below are the sequence diagrams of each command to illustrate how they work:
 
-image::updateProfilePicSD.jpg[width="200"]
+image::updateProfilePicSD.jpg[width="100%"]
 
-image::deleteProfilePicSD.jpg[width="200"]
+image::deleteProfilePicSD.jpg[width="100%"]
 
 ==== Design Considerations
 
