@@ -12,9 +12,9 @@ public abstract class GoogleCommand extends Oauth2Command {
     protected static final String CLIENT_ID =
             "591065149112-69ikmid17q2trahg28gip4o8srmo47pv.apps.googleusercontent.com";
     private static final String SERVICE_SOURCE = "GOOGLE";
-    private String accessScope;
-    private TokenResponse authToken;
-    private GoogleCredential credential;
+    protected String accessScope;
+    protected TokenResponse authToken;
+    protected GoogleCredential credential;
 
     protected GoogleCommand(String googleCommandType, String inputAccessScope) throws IOException {
         super(SERVICE_SOURCE + "_" + googleCommandType);
