@@ -56,14 +56,18 @@ public class ExportCommand extends ImportCommand {
         ContactGroup newGroup = new ContactGroup();
         newGroup.setName("DoC Contacts");
         newRequest.setContactGroup(new ContactGroup());
-        try {
-            peopleService.contactGroups().create(newRequest);
-        } catch (IOException E) {
-            System.out.println(E);
-        }
+//        try {
+//            peopleService.contactGroups().create(newRequest);
+//        } catch (IOException E) {
+//            System.out.println(E);
+//        }
 
         for(com.google.api.services.people.v1.model.Person p : googlePersonList) {
-//            peopleService.contactGroups().create(new CreateContactGroupRequest())
+            try {
+                peopleService.people().createContact(p).execute();
+            } catch (IOException E) {
+                System.out.println(E);
+            }
         }
     }
 
@@ -74,6 +78,8 @@ public class ExportCommand extends ImportCommand {
                     new com.google.api.services.people.v1.model.Person();
 
             Name googleName = new Name().setDisplayName(p.getName().fullName);
+            googleName.setGivenName(p.getName().fullName);
+//            googleName.setPhoneticFullName(p.getName().fullName);
             PhoneNumber googleNumber = new PhoneNumber().setValue(p.getPhone().value);
             EmailAddress googleEmail = new EmailAddress().setValue(p.getEmail().value);
             Address googleAddress = new Address().setFormattedValue(p.getAddress().value);
@@ -101,7 +107,7 @@ public class ExportCommand extends ImportCommand {
             tempPerson.setEmailAddresses(googleEmailAddressList);
             tempPerson.setAddresses(googleAddressList);
             tempPerson.setUserDefined(googleTagList);
-            tempPerson.setPhotos(googlePhotoList);
+//            tempPerson.setPhotos(googlePhotoList);
             googleList.add(tempPerson);
         }
     }
