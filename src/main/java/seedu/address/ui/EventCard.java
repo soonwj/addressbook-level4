@@ -1,5 +1,7 @@
 package seedu.address.ui;
 
+import java.awt.*;
+
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -13,6 +15,7 @@ import seedu.address.model.person.event.ReadOnlyEvent;
 public class EventCard extends UiPart<Region> {
 
     private static final String FXML = "EventListCard.fxml";
+    private static int daysBeforeEvent;
 
     /**
      * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX.
@@ -49,6 +52,19 @@ public class EventCard extends UiPart<Region> {
         header.textProperty().bind(Bindings.convert(event.headerProperty()));
         desc.textProperty().bind(Bindings.convert(event.descProperty()));
         eventDate.textProperty().bind(Bindings.convert(event.eventDateProperty()));
+        daysBeforeEvent = event.getEventDate().period.getDays();
+        buildEventBackground(daysBeforeEvent);
+    }
+
+    /**
+     * Change the background color of an event based on daysBeforeEvent.
+     */
+    private void buildEventBackground(int daysBeforeEvent) {
+        String colorDate;
+        if (daysBeforeEvent < 0) colorDate = "#CE5A57;"; // Red
+        else if (daysBeforeEvent < 3) colorDate = "#E1B16A;"; // Orange
+        else colorDate = "#78A5A3;"; // Green
+        eventPane.setStyle("-fx-background-color: " + colorDate + "-fx-border-width: 2;" + "-fx-border-color: black;");
     }
 
     @Override
