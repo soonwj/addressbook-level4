@@ -110,7 +110,11 @@ public class ExportCommand extends ImportCommand {
         }
     }
 
-    public <E> List<E> makeListFromOne(E singlePropertyInput) {
+    /**
+     * Helper method that returns an ArrayList<E> created with a single E instance.
+     * This is required when instantiating a Google Person
+     */
+    private <E> List<E> makeListFromOne(E singlePropertyInput) {
         ArrayList<E> tempList = new ArrayList<>();
         tempList.add(singlePropertyInput);
         return tempList;
