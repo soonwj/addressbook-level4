@@ -12,15 +12,70 @@ import seedu.address.model.util.SampleDataUtil;
 
 
 
-/**This class is a service to convert Person objects from Google's API, to the Person object declared in
- * seedu.address.model.person.Person. Both classes in different packages have the same name.
+/**This class provides the service of two-way conversion between Google Person(s) and Doc Person(s)
+ * Both classes in each package have the same name.
  * Handling: Google's API Person is imported, while seedu.address.model.person.Person has to be fully qualified
  * Created by Philemon1 on 12/10/2017.
  */
-public class GooglePersonConverterUtil {
+public abstract class GooglePersonConverterUtil {
     public static final String DEFAULT_TAGS = "ImportedFromGoogle";
     public static final String DEFAULT_EMAIL = "INVALID_EMAIL@INVALID.COM";
     public static final String DEFAULT_ADDRESS = "INVALID_ADDRESS PLEASE UPDATE THIS";
+
+
+    /**
+     * Conversion: (Single) Google Person -> DoC Person
+     * @param person input parameter of a single Google Person
+     * @return the converted DoC version of the Google Person
+     * @throws InvalidGooglePersonException if the Google Person instance has a null name or phone
+     */
+    public static seedu.address.model.person.Person singleGoogleToDocPersonConversion(Person person) throws
+            InvalidGooglePersonException {
+        //Property declarations for the DoC Person
+        String tempName = null;
+        String tempPhoneNumber = null;
+        String tempEmailAddress = null;
+        String tempAddress = null;
+        seedu.address.model.person.Person tempPerson;
+
+        //Try block to extract required properties
+        try {
+            tempName = person.getNames().get(0).getDisplayName();
+            tempPhoneNumber = person.getPhoneNumbers().get(0).getValue();
+            tempEmailAddress = person.getEmailAddresses().get(0).getValue();
+            tempAddress = person.getAddresses().get(0).getFormattedValue();
+        } catch (IndexOutOfBoundsException | NullPointerException E) {
+            if (tempName == null | tempPhoneNumber == null) {
+                throw new InvalidGooglePersonException("Name and Phone number cannot be null");
+            }
+        }
+
+        //Process Name and Number in accordance to DoC Name and Number regex
+        tempName = processName(tempName);
+        tempPhoneNumber = processNumber(tempPhoneNumber);
+
+        //Setting optional properties to default constants if null
+        if (tempEmailAddress == null) {
+            tempEmailAddress = DEFAULT_EMAIL;
+        }
+        if (tempAddress == null) {
+            tempAddress = DEFAULT_ADDRESS;
+        }
+
+        //Instantiating DoC person to return
+        try {
+            Name nameObj = new Name(tempName);
+            Email emailAddressObj = new Email(tempEmailAddress);
+            Phone phoneObj = new Phone(tempPhoneNumber);
+            Address addressObj = new Address(tempAddress);
+            tempPerson = new seedu.address.model.person.Person(nameObj,
+                    phoneObj, emailAddressObj, addressObj, SampleDataUtil.getTagSet(DEFAULT_TAGS));
+            return tempPerson;
+        } catch (IllegalValueException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
 
     /**
      * Main functionality of the Util: converts a Google Person to a ..model.person.Person
@@ -84,6 +139,9 @@ public class GooglePersonConverterUtil {
     public static String processNumber(String tempNumber) {
         if (tempNumber == null) {
             tempNumber = "00000000";
+        }
+        if (tempNumber.contains("+65")) {
+            tempNumber.replace("+65", "");
         }
         return tempNumber.replaceAll("[^0-9]", "");
     }
