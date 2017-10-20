@@ -16,6 +16,7 @@ import seedu.address.logic.commands.DeleteProfilePicCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditEventCommand;
 import seedu.address.logic.commands.ExitCommand;
+import seedu.address.logic.commands.ExportCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.FindLocationCommand;
 import seedu.address.logic.commands.HelpCommand;
@@ -115,6 +116,9 @@ public class AddressBookParser {
 
         case ImportCommand.COMMAND_WORD:
             return new ImportCommand();
+
+        case ExportCommand.COMMAND_WORD:
+            return new ExportCommand();
 
         default:
             throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
