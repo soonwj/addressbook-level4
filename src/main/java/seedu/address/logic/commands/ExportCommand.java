@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jws.soap.SOAPBinding;
-
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.people.v1.PeopleService;
@@ -62,7 +60,7 @@ public class ExportCommand extends ImportCommand {
 //            System.out.println(E);
 //        }
 
-        for(com.google.api.services.people.v1.model.Person p : googlePersonList) {
+        for (com.google.api.services.people.v1.model.Person p : googlePersonList) {
             try {
                 peopleService.people().createContact(p).execute();
             } catch (IOException E) {
@@ -73,7 +71,7 @@ public class ExportCommand extends ImportCommand {
 
     private void listConvertDocToGooglePerson(List<ReadOnlyPerson>docList,
                                               List<com.google.api.services.people.v1.model.Person> googleList) {
-        for(ReadOnlyPerson p : docList) {
+        for (ReadOnlyPerson p : docList) {
             com.google.api.services.people.v1.model.Person tempPerson =
                     new com.google.api.services.people.v1.model.Person();
 
@@ -92,7 +90,7 @@ public class ExportCommand extends ImportCommand {
             List<UserDefined> googleTagList = new ArrayList<UserDefined>();
             List<Photo> googlePhotoList = new ArrayList<Photo>();
             //set tags
-            for(Tag t : p.getTags()) {
+            for (Tag t : p.getTags()) {
                 UserDefined tempGoogleTag = new UserDefined();
                 tempGoogleTag.setKey("tag");
                 tempGoogleTag.setValue(t.tagName);
@@ -112,7 +110,7 @@ public class ExportCommand extends ImportCommand {
         }
     }
 
-    public<E> List<E> makeListFromOne(E singlePropertyInput) {
+    public <E> List<E> makeListFromOne(E singlePropertyInput) {
         ArrayList<E> tempList = new ArrayList<>();
         tempList.add(singlePropertyInput);
         return tempList;
