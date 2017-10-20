@@ -30,10 +30,10 @@ public class ImportCommand extends Command {
 
     public static final String COMMAND_WORD = "import";
     public static final String MESSAGE_SUCCESS = "Please proceed to login";
-    private GoogleApiAuth authService;
-    private PeopleService peopleService;
-    private HttpTransport httpTransport;
-    private JacksonFactory jsonFactory;
+    protected GoogleApiAuth authService;
+    protected PeopleService peopleService;
+    protected HttpTransport httpTransport;
+    protected JacksonFactory jsonFactory;
 
     public ImportCommand() {
         authService = new GoogleApiAuth();
