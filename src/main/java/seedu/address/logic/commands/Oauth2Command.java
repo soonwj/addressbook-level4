@@ -2,12 +2,14 @@ package seedu.address.logic.commands;
 
 import java.io.IOException;
 
+import com.google.common.eventbus.Subscribe;
 import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.ui.Oauth2BrowserRequestEvent;
 
 
 /**This class is the parent class for all commands requiring OAuth2 authentication using the BrowserPanel.
  * This class cannot be instantiated, as it is requires child classes with a defined COMMAND_TYPE.
+ * Child classes are also expected to implement the event listener: handleAuthenticationSuccessEvent()
  * Created by Philemon1 on 21/10/2017.
  */
 public abstract class Oauth2Command extends Command {
@@ -42,5 +44,10 @@ public abstract class Oauth2Command extends Command {
         }
         EventsCenter.getInstance().post(new Oauth2BrowserRequestEvent(commandType));
     }
+
+    /**
+     * Event listener to be implemented by child classes
+     */
+    protected abstract void handleAuthenticationSuccessEvent();
 
 }

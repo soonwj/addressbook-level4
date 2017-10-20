@@ -5,8 +5,6 @@ import java.io.IOException;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 
-
-
 /**This class is the parent class for all commands calling Google's APIs
  * Created by Philemon1 on 21/10/2017.
  */
@@ -42,6 +40,4 @@ public abstract class GoogleCommand extends Oauth2Command {
         authToken.setAccessToken(authCode);
         credential = new GoogleCredential().setFromTokenResponse(authToken);
     }
-
-
 }
