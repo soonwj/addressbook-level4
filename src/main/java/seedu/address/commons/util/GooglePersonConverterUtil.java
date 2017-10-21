@@ -1,20 +1,23 @@
 package seedu.address.commons.util;
 
-import com.google.api.services.people.v1.model.Person;
+//import com.google.api.services.people.v1.model.Person;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.exceptions.InvalidGooglePersonException;
+
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+
 import seedu.address.model.util.SampleDataUtil;
 
 
 
 /**This class provides the service of two-way conversion between Google Person(s) and Doc Person(s)
- * Both classes in each package have the same name.
- * Handling: Google's API Person is imported, while seedu.address.model.person.Person has to be fully qualified
+ * Both classes and their composed classes in each package have the same name;
+ * Handling: seedu.address.model.person.Person will be imported, while Gooogle classes have to be fully qualified.
  * Created by Philemon1 on 12/10/2017.
  */
 public abstract class GooglePersonConverterUtil {
@@ -29,7 +32,7 @@ public abstract class GooglePersonConverterUtil {
      * @return the converted DoC version of the Google Person
      * @throws InvalidGooglePersonException if the Google Person instance has a null name or phone
      */
-    public static seedu.address.model.person.Person singleGoogleToDocPersonConversion(Person person) throws
+    public static Person singleGoogleToDocPersonConversion(com.google.api.services.people.v1.model.Person person) throws
             InvalidGooglePersonException {
         //Property declarations for the DoC Person
         String tempName = null;
@@ -82,11 +85,9 @@ public abstract class GooglePersonConverterUtil {
      * @param person input parameter of a single Google Person
      * @return the converted Google version of the input DoC Person
      */
-    public static Person singleDocToGooglePersonConversion(seedu.address.model.person.Person person) {
+    public static com.google.api.services.people.v1.model.Person singleDocToGooglePersonConversion(Person person) {
         //new Google Person properties
-//        com.google.api.services.people.v1.model.Name
 
-        Person tempGooglePerson = new Person();
         return null;
 
     }
