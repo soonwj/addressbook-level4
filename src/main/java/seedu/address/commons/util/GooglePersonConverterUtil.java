@@ -110,6 +110,7 @@ public abstract class GooglePersonConverterUtil {
         com.google.api.services.people.v1.model.Person tempPerson =
                 new com.google.api.services.people.v1.model.Person();
 
+
         /**
          * Creating Lists from single properties, to fulfil Google Person requirements
          */
@@ -118,7 +119,6 @@ public abstract class GooglePersonConverterUtil {
         List<com.google.api.services.people.v1.model.EmailAddress> googleEmailAddressList =
                 makeListFromOne(googleEmail);
         List<com.google.api.services.people.v1.model.Address> googleAddressList = makeListFromOne(googleAddress);
-
 
         /**
          * Creating a List of Google UserDefined objects, to use as DoC Person Tags
@@ -189,7 +189,7 @@ public abstract class GooglePersonConverterUtil {
      * Helper method that returns an ArrayList of generic type E created with a single E instance.
      * This is required when instantiating a Google Person
      */
-    private static  <E> List<E> makeListFromOne(E singlePropertyInput) {
+    public static  <E> List<E> makeListFromOne(E singlePropertyInput) {
         ArrayList<E> tempList = new ArrayList<>();
         tempList.add(singlePropertyInput);
         return tempList;
