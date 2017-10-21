@@ -22,7 +22,7 @@ public class EventDate {
 
     public final String value;
     public final LocalDate eventLocalDate;
-    public Period period;
+    private Period period;
     private String countDown;
 
     /**

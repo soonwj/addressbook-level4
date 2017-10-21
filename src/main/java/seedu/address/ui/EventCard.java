@@ -1,6 +1,8 @@
 package seedu.address.ui;
 
-import java.awt.*;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -15,7 +17,6 @@ import seedu.address.model.person.event.ReadOnlyEvent;
 public class EventCard extends UiPart<Region> {
 
     private static final String FXML = "EventListCard.fxml";
-    private static int daysBeforeEvent;
 
     /**
      * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX.
@@ -52,18 +53,24 @@ public class EventCard extends UiPart<Region> {
         header.textProperty().bind(Bindings.convert(event.headerProperty()));
         desc.textProperty().bind(Bindings.convert(event.descProperty()));
         eventDate.textProperty().bind(Bindings.convert(event.eventDateProperty()));
-        daysBeforeEvent = event.getEventDate().period.getDays();
-        buildEventBackground(daysBeforeEvent);
+        buildEventBackground();
     }
 
     /**
-     * Change the background color of an event based on daysBeforeEvent.
+     * Change the background color of an event.
      */
-    private void buildEventBackground(int daysBeforeEvent) {
+    private void buildEventBackground() {
+        ZoneId sgt = ZoneId.of("GMT+8");
+        LocalDate currentDate = LocalDate.now(sgt);
+        Period period = currentDate.until(event.getEventDate().eventLocalDate);
         String colorDate;
-        if (daysBeforeEvent < 0) colorDate = "#CE5A57;"; // Red
-        else if (daysBeforeEvent < 3) colorDate = "#E1B16A;"; // Orange
-        else colorDate = "#78A5A3;"; // Green
+        if (period.getDays() < 0) {
+            colorDate = "#CE5A57;"; // Red
+        } else if (period.getDays() < 3 && period.getMonths() == 0 && period.getYears() == 0) {
+            colorDate = "#E1B16A;"; // Orange
+        } else {
+            colorDate = "#78A5A3;"; // Green
+        }
         eventPane.setStyle("-fx-background-color: " + colorDate + "-fx-border-width: 2;" + "-fx-border-color: black;");
     }
 
