@@ -28,6 +28,10 @@ public class Oauth2BrowserRequestEvent extends BaseEvent {
         return this.commandType;
     }
 
+    public String getRequestUrl() {
+        return requestUrl;
+    }
+
     @Override
     public String toString() {
         return this.getClass().getSimpleName();

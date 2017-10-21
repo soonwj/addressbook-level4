@@ -18,6 +18,7 @@ import seedu.address.commons.events.logic.GoogleApiAuthServiceCredentialsSetupCo
 import seedu.address.commons.events.logic.GoogleAuthRequestEvent;
 import seedu.address.commons.events.logic.GoogleAuthSuccessEvent;
 import seedu.address.commons.events.ui.FindLocationRequestEvent;
+import seedu.address.commons.events.ui.Oauth2BrowserRequestEvent;
 import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
 import seedu.address.model.person.ReadOnlyPerson;
 
@@ -96,6 +97,12 @@ public class BrowserPanel extends UiPart<Region> {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         loadPersonPage(event.getNewSelection().person);
     }
+
+    @Subscribe
+    private void handleOauth2BrowserRequestEvent(Oauth2BrowserRequestEvent event) {
+        loadPage(event.getRequestUrl());
+    }
+
 
     /**
      * Event listener for Google Auth Requests Events
