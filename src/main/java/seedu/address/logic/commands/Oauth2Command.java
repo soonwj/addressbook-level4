@@ -3,7 +3,9 @@ package seedu.address.logic.commands;
 import java.io.IOException;
 
 import com.google.common.eventbus.Subscribe;
+
 import seedu.address.commons.core.EventsCenter;
+import seedu.address.commons.events.logic.GoogleAuthenticationSuccessEvent;
 import seedu.address.commons.events.ui.Oauth2BrowserRequestEvent;
 
 
@@ -48,6 +50,7 @@ public abstract class Oauth2Command extends Command {
     /**
      * Event listener to be implemented by child classes
      */
-    protected abstract void handleAuthenticationSuccessEvent();
+    @Subscribe
+    protected abstract void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event);
 
 }

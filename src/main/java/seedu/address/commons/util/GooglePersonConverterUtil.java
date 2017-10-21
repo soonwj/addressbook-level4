@@ -5,13 +5,12 @@ import java.util.List;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.exceptions.InvalidGooglePersonException;
-
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
-
+import seedu.address.model.person.ReadOnlyPerson;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
 
@@ -89,7 +88,8 @@ public abstract class GooglePersonConverterUtil {
      * @param person input parameter of a single Google Person
      * @return the converted Google version of the input DoC Person
      */
-    public static com.google.api.services.people.v1.model.Person singleDocToGooglePersonConversion(Person person) {
+    public static com.google.api.services.people.v1.model.Person singleDocToGooglePersonConversion(
+            ReadOnlyPerson person) {
         /**
          * Creating Google Person properties, excluding tags
          */
@@ -124,7 +124,7 @@ public abstract class GooglePersonConverterUtil {
          * Creating a List of Google UserDefined objects, to use as DoC Person Tags
          */
         List<com.google.api.services.people.v1.model.UserDefined> googleTagList =
-                new ArrayList<com.google.api.services.people.v1.model.UserDefined>();
+                new ArrayList<>();
 
         for (Tag t : person.getTags()) {
             com.google.api.services.people.v1.model.UserDefined tempGoogleTag =
@@ -173,10 +173,10 @@ public abstract class GooglePersonConverterUtil {
      * @return the converted list of Google Person
      */
     public static List<com.google.api.services.people.v1.model.Person> listDocToGooglePersonConversion(
-            List<Person> docPersonList) {
+            List<ReadOnlyPerson> docPersonList) {
         ArrayList<com.google.api.services.people.v1.model.Person> googlePersonList = new ArrayList<>();
 
-        for (Person p: docPersonList) {
+        for (ReadOnlyPerson p: docPersonList) {
             com.google.api.services.people.v1.model.Person tempGooglePerson = singleDocToGooglePersonConversion(p);
             googlePersonList.add(tempGooglePerson);
         }
