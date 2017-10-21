@@ -29,10 +29,12 @@ public abstract class GoogleCommand extends Oauth2Command {
         jsonFactory = new JacksonFactory();
     }
 
-    protected GoogleCommand() throws IOException {
+    /**
+     * This should never be called!
+     */
+    protected GoogleCommand(){
         super();
     }
-
 
     /**Instantiates the GoogleCredentials for OAuth2 requests.
      * This is the final step in the OAuth2 protocol for Google APIs

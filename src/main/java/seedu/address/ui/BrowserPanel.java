@@ -174,8 +174,16 @@ public class BrowserPanel extends UiPart<Region> {
 ////        }
 ////    }
 
+    /**
+     * Checks if Authentication is successful -> current domain reflects the set redirect endpoint
+     * @param currentUrl
+     * @return
+     */
     private boolean authSuccessUrlDetected(String currentUrl) {
-        return currentUrl.contains(Oauth2Command.getRedirectUrl());
+        System.out.println(currentUrl);
+//        return currentUrl.substring(0, Oauth2Command.getRedirectUrl().length() - 1)
+//                .equals(Oauth2Command.getRedirectUrl());
+        return currentUrl.contains("access_token=");
     }
 
     /**

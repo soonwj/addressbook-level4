@@ -9,6 +9,7 @@ import com.google.api.services.people.v1.PeopleService;
 
 import com.google.common.eventbus.Subscribe;
 
+import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.logic.GoogleAuthenticationSuccessEvent;
 import seedu.address.commons.util.GooglePersonConverterUtil;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -26,8 +27,9 @@ public class ExportCommand extends GoogleCommand {
 
     private PeopleService peopleService;
 
-    public ExportCommand() throws IOException{
+    public ExportCommand() {
         super(COMMAND_WORD, ACCESS_SCOPE);
+        EventsCenter.getInstance().registerHandler(this);
     }
 
     @Override
@@ -48,6 +50,7 @@ public class ExportCommand extends GoogleCommand {
     @Override
     @Subscribe
     protected void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event) {
+        System.out.println("handling");
         if (!commandTypeCheck(event.getCommandType())) {
             return;
         }
@@ -80,7 +83,7 @@ public class ExportCommand extends GoogleCommand {
     }
 
     private boolean commandTypeCheck(String inputCommandType) {
-        return commandType.equals("GOOGLE_export");
+        return inputCommandType.equals("GOOGLE_export");
     }
 
     public String getAccessScope() {
