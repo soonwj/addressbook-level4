@@ -1,5 +1,8 @@
 package seedu.address.commons.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.exceptions.InvalidGooglePersonException;
 
@@ -12,8 +15,7 @@ import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 /**This class provides the service of two-way conversion between Google Person(s) and Doc Person(s)
@@ -113,7 +115,8 @@ public abstract class GooglePersonConverterUtil {
          */
         List<com.google.api.services.people.v1.model.Name> googleNameList = makeListFromOne(googleName);
         List<com.google.api.services.people.v1.model.PhoneNumber> googlePhoneNumberList = makeListFromOne(googleNumber);
-        List<com.google.api.services.people.v1.model.EmailAddress> googleEmailAddressList = makeListFromOne(googleEmail);
+        List<com.google.api.services.people.v1.model.EmailAddress> googleEmailAddressList =
+                makeListFromOne(googleEmail);
         List<com.google.api.services.people.v1.model.Address> googleAddressList = makeListFromOne(googleAddress);
 
 
@@ -144,7 +147,45 @@ public abstract class GooglePersonConverterUtil {
     }
 
     /**
-     * Helper method that returns an ArrayList<E> created with a single E instance.
+     * Conversion: (List) Google Person -> Doc person
+     * @param googlePersonList
+     * @return the converted list of DoC person
+     * @throws InvalidGooglePersonException
+     */
+    public static List<Person> listGoogleToDoCPersonConversion(List<com.google.api.services.people.v1.model.Person>
+                                                               googlePersonList) throws InvalidGooglePersonException {
+        ArrayList<Person> docPersonList = new ArrayList<>();
+
+        for (com.google.api.services.people.v1.model.Person p : googlePersonList) {
+            try {
+                Person tempDocPerson = singleGoogleToDocPersonConversion(p);
+                docPersonList.add(tempDocPerson);
+            } catch (InvalidGooglePersonException e) {
+                throw new InvalidGooglePersonException("List Google to Doc person conversion failed");
+            }
+        }
+        return docPersonList;
+    }
+
+    /**
+     * Conversion: (List) DoC Person -> Google Person
+     * @param docPersonList the input list of DoC Person to be converted
+     * @return the converted list of Google Person
+     */
+    public static List<com.google.api.services.people.v1.model.Person> listDocToGooglePersonConversion(
+            List<Person> docPersonList) {
+        ArrayList<com.google.api.services.people.v1.model.Person> googlePersonList = new ArrayList<>();
+
+        for (Person p: docPersonList) {
+            com.google.api.services.people.v1.model.Person tempGooglePerson = singleDocToGooglePersonConversion(p);
+            googlePersonList.add(tempGooglePerson);
+        }
+        return googlePersonList;
+    }
+
+
+    /**
+     * Helper method that returns an ArrayList of generic type E created with a single E instance.
      * This is required when instantiating a Google Person
      */
     private static  <E> List<E> makeListFromOne(E singlePropertyInput) {
