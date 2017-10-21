@@ -22,14 +22,8 @@ public abstract class GoogleCommand extends Oauth2Command {
     protected JacksonFactory jsonFactory;
     protected String authenticationUrl;
 
-    protected GoogleCommand(String googleCommandType, String inputAccessScope) throws IOException {
+    protected GoogleCommand(String googleCommandType, String inputAccessScope)  {
         super(SERVICE_SOURCE + "_" + googleCommandType);
-        if (googleCommandType == null) {
-            throw new IOException("Unknown Google Command type");
-        }
-        if (inputAccessScope == null) {
-            throw new IOException("Unknown Google Command scope");
-        }
         accessScope = inputAccessScope;
         httpTransport = new NetHttpTransport();
         jsonFactory = new JacksonFactory();

@@ -19,17 +19,17 @@ public abstract class Oauth2Command extends Command {
     private static final String REDIRECT_URL = "https://cs2103tdummyendpoint.herokuapp.com";
     protected final String commandType;
 
-    protected Oauth2Command(String inputType) throws IOException {
-        if (inputType == null) {
-            throw new IOException(INVALID_COMMAND_TYPE_MESSAGE);
+    protected Oauth2Command(String inputType)  {
+        if (inputType == null || inputType.charAt(inputType.length() - 1) == '_') {
+            assert true : "Child classes of Oauth2Command must provide a valid command type!";
         }
         commandType = inputType;
     }
-    protected Oauth2Command() throws IOException {
-        throw new IOException(INVALID_COMMAND_TYPE_MESSAGE);
+    protected Oauth2Command() {
+        this(null);
     }
 
-    public String getRedirectUrl() {
+    public static String getRedirectUrl() {
         return REDIRECT_URL;
     }
 
