@@ -78,6 +78,29 @@ public abstract class GooglePersonConverterUtil {
     }
 
     /**
+     * Conversion: (Single) DoC Person -> Google Person
+     * @param person input parameter of a single Google Person
+     * @return the converted Google version of the input DoC Person
+     */
+    public static Person singleDocToGooglePersonConversion(seedu.address.model.person.Person person) {
+        //new Google Person properties
+//        com.google.api.services.people.v1.model.Name
+
+        Person tempGooglePerson = new Person();
+        return null;
+
+    }
+
+
+
+
+
+
+
+
+
+
+    /**
      * Main functionality of the Util: converts a Google Person to a ..model.person.Person
      * @param person
      * @return Returns a model.person.Person instance, converted from the Google Person instance
