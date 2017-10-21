@@ -16,8 +16,8 @@ import seedu.address.logic.commands.exceptions.CommandException;
 
 import seedu.address.model.person.ReadOnlyPerson;
 
-/**
- * This class fulfils the exporting of DoC Persons to Google
+/**Purpose: Exports contacts to Google Contacts, fulfilling Google's OAuth2 protocol.
+ * Inherits from GoogleCommand & Oauth2Command
  */
 public class ExportCommand extends GoogleCommand {
     public static final String COMMAND_WORD = "export";
