@@ -9,7 +9,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUr
 import com.google.api.services.people.v1.PeopleService;
 
 import com.google.api.services.people.v1.model.ContactGroup;
-import com.google.api.services.people.v1.model.ContactGroupResponse;
 import com.google.api.services.people.v1.model.CreateContactGroupRequest;
 import com.google.api.services.people.v1.model.ModifyContactGroupMembersRequest;
 import com.google.common.eventbus.Subscribe;
@@ -70,81 +69,13 @@ public class ExportCommand extends GoogleCommand {
         List<com.google.api.services.people.v1.model.Person> googlePersonList =
                 GooglePersonConverterUtil.listDocToGooglePersonConversion(docPersonList);
 
-        //HTTP calls - create contact group
-        String contactGroupId = null;
+        //Set contactGroupId for exporting to a specific contact group: `Imported From DoC`
+        String contactGroupId = retrieveExistingContractGroupResourceName();
 
-        /**
-         * Tries to fetch the ResourceName String required to add the exported contacts to the Google Contact group,
-         * failing which, it creates the Contact group instead
-         */
-//        try {
-////            contactGroupId = peopleService.contactGroups().get("contactGroups/Imported From DoC").execute().getResourceName();
-//            List<ContactGroupResponse> testList = new ArrayList<>();
-//            List<String> testlist2 = new ArrayList<>();
-//            testlist2.add(new String("contactGroups/*"));
-//            testList = peopleService.contactGroups().batchGet().setResourceNames(testlist2).execute().getResponses();
-//            for (ContactGroupResponse p : testList) {
-//                System.out.println(p.getRequestedResourceName());
-//            }
-//        } catch (IOException e1) {
-//            System.out.print(e1);
-//            // Contact Group does not already exist, we will now create it
-//            try {
-//                Object contactGroupCreateResponse;
-//                contactGroupId = peopleService.contactGroups().create(
-//                        new CreateContactGroupRequest()
-//                                .setContactGroup(new ContactGroup().setName("Imported From DoC")))
-//                        .execute().getResourceName();
-//                System.out.println(contactGroupId);
-//            } catch (IOException e2) {
-//                assert true : "Contact Group name is wrongly set";
-//            }
-//        }
-        //Fetch all Contact Groups
-        List<ContactGroup> contactGroupList = new ArrayList<>();
-        try {
-            contactGroupList = peopleService.contactGroups().list().execute().getContactGroups();
-        } catch (IOException e4) {
-            System.out.println(e4);
-        }
-        for (ContactGroup c : contactGroupList) {
-            if (c.getFormattedName().equals("Imported From DoC")) {
-                contactGroupId = c.getResourceName();
-                break;
-            }
-        }
-        //if contactGroupId is still now, we will create the new contact group
+        //Create a new contact group titled `Imported From DoC`, if still not set
         if (contactGroupId == null) {
-            try {
-                contactGroupId = peopleService.contactGroups().create(
-                        new CreateContactGroupRequest()
-                                .setContactGroup(new ContactGroup().setName("Imported From DoC")))
-                        .execute().getResourceName();
-            } catch (IOException e7) {
-                System.out.println(e7);
-                assert true : "google server error";
-            }
+            contactGroupId = createNewContactGroup();
         }
-        System.out.println(contactGroupId);
-
-
-//        try {
-//            Object contactGroupCreateResponse;
-//            contactGroupId = peopleService.contactGroups().create(
-//                    new CreateContactGroupRequest()
-//                            .setContactGroup(new ContactGroup().setName("Imported From DoC")))
-//                    .execute().getResourceName();
-//            System.out.println(contactGroupId);
-//        } catch (IOException e2) {
-//            System.out.println(e2);
-//            try {
-//                System.out.println(peopleService.contactGroups().list().execute());
-//            }  catch (IOException e3) {
-//                System.out.println(e3);
-//            }
-//        }
-//
-//    }
 
         //HTTP calls - exporting
         for (com.google.api.services.people.v1.model.Person p : googlePersonList) {
@@ -159,11 +90,50 @@ public class ExportCommand extends GoogleCommand {
                                 .setResourceNamesToAdd(GooglePersonConverterUtil
                                         .makeListFromOne(newPersonId)))
                                 .execute();
-//                System.out.print(response.getMetadata().getSources());
             } catch (IOException E) {
                 System.out.println(E);
             }
         }
+    }
+
+    /**
+     * Helper Method, executed when no existing Contact Group with the name: "ImportedFromGoogle" is found
+     * @return the ResourceName String of the newly created Contact Group ID
+     */
+    private String createNewContactGroup() {
+        String contactGroupId = null;
+        try {
+            contactGroupId = peopleService.contactGroups().create(
+                    new CreateContactGroupRequest()
+                            .setContactGroup(new ContactGroup().setName("Imported From DoC")))
+                    .execute().getResourceName();
+        } catch (IOException e7) {
+            System.out.println(e7);
+            assert true : "google server error";
+        }
+        return contactGroupId;
+    }
+
+    /**
+     * Helper Method, tries to fetch the ResourceName String of an existing Contact Group named: "ImportedFromGoogle"
+     * @return the ResourceName String of the existing Contact Group
+     */
+    private String retrieveExistingContractGroupResourceName() {
+        String contactGroupId = null;
+        //Fetch all Contact Groups
+        List<ContactGroup> contactGroupList = new ArrayList<>();
+        try {
+            contactGroupList = peopleService.contactGroups().list().execute().getContactGroups();
+        } catch (IOException e4) {
+            System.out.println(e4);
+        }
+        for (ContactGroup c : contactGroupList) {
+            if (c.getFormattedName().equals("Imported From DoC")) {
+                contactGroupId = c.getResourceName();
+                break;
+            }
+        }
+        return contactGroupId;
     }
 
     @Override
