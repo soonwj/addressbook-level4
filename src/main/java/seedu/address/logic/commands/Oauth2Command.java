@@ -58,7 +58,4 @@ public abstract class Oauth2Command extends Command {
      * @return the authentication URL, based on the scope required of the command
      */
     public abstract String getAuthenticationUrl ();
-
-
-
 }

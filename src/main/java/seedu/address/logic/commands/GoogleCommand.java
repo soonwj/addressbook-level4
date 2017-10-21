@@ -1,7 +1,5 @@
 package seedu.address.logic.commands;
 
-import java.io.IOException;
-
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpTransport;
@@ -20,7 +18,6 @@ public abstract class GoogleCommand extends Oauth2Command {
     protected GoogleCredential credential;
     protected HttpTransport httpTransport;
     protected JacksonFactory jsonFactory;
-    protected String authenticationUrl;
 
     protected GoogleCommand(String googleCommandType, String inputAccessScope)  {
         super(SERVICE_SOURCE + "_" + googleCommandType);
@@ -28,14 +25,6 @@ public abstract class GoogleCommand extends Oauth2Command {
         httpTransport = new NetHttpTransport();
         jsonFactory = new JacksonFactory();
     }
-
-    /**
-     * This should never be called!
-     */
-    protected GoogleCommand(){
-        super();
-    }
-
     /**Instantiates the GoogleCredentials for OAuth2 requests.
      * This is the final step in the OAuth2 protocol for Google APIs
      * @param authCode
