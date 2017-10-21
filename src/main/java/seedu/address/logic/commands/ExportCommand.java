@@ -15,6 +15,7 @@ import com.google.common.eventbus.Subscribe;
 
 import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.logic.GoogleAuthenticationSuccessEvent;
+import seedu.address.commons.events.logic.GoogleExportCompleteEvent;
 import seedu.address.commons.util.GooglePersonConverterUtil;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.ReadOnlyPerson;
@@ -28,6 +29,7 @@ public class ExportCommand extends GoogleCommand {
     //Scope includes write access to a users' Google Contacts
     public static final String ACCESS_SCOPE = "https://www.googleapis.com/auth/contacts";
 
+    private static final String googleContactsGroupView = "https://contacts.google.com/label/";
     private PeopleService peopleService;
 
     public ExportCommand() {
@@ -94,6 +96,7 @@ public class ExportCommand extends GoogleCommand {
                 System.out.println(E);
             }
         }
+        EventsCenter.getInstance().post(new GoogleExportCompleteEvent(googleContactsGroupView + contactGroupId));
     }
 
     /**
