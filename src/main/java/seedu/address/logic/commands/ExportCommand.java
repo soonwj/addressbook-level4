@@ -45,12 +45,11 @@ public class ExportCommand extends GoogleCommand {
 
     /**
      * Event listener for a successful authentication
-     * @param event Should be fired from the BrowserPanel, with an authcode.
+     * @param event Should be fired from the BrowserPanel, with an authcode
      */
     @Override
     @Subscribe
     protected void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event) {
-        System.out.println("handling");
         if (!commandTypeCheck(event.getCommandType())) {
             return;
         }

@@ -153,7 +153,7 @@ public abstract class GooglePersonConverterUtil {
      * @throws InvalidGooglePersonException
      */
     public static List<Person> listGoogleToDoCPersonConversion(List<com.google.api.services.people.v1.model.Person>
-                                                               googlePersonList) throws InvalidGooglePersonException {
+                                                               googlePersonList) {
         ArrayList<Person> docPersonList = new ArrayList<>();
 
         for (com.google.api.services.people.v1.model.Person p : googlePersonList) {
@@ -161,7 +161,8 @@ public abstract class GooglePersonConverterUtil {
                 Person tempDocPerson = singleGoogleToDocPersonConversion(p);
                 docPersonList.add(tempDocPerson);
             } catch (InvalidGooglePersonException e) {
-                throw new InvalidGooglePersonException("List Google to Doc person conversion failed");
+                //Invalid Google Person (No name or no number) shall be ignored
+                continue;
             }
         }
         return docPersonList;
