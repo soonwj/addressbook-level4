@@ -40,11 +40,11 @@ public abstract class Oauth2Command extends Command {
      */
     protected void triggerBrowserAuth() throws IOException {
         try {
-            Oauth2BrowserRequestEvent trigger = new Oauth2BrowserRequestEvent(commandType);
+            Oauth2BrowserRequestEvent trigger = new Oauth2BrowserRequestEvent(commandType, getAuthenticationUrl());
+            EventsCenter.getInstance().post(trigger);
         } catch (IOException E) {
             throw E;
         }
-        EventsCenter.getInstance().post(new Oauth2BrowserRequestEvent(commandType));
     }
 
     /**
@@ -52,5 +52,13 @@ public abstract class Oauth2Command extends Command {
      */
     @Subscribe
     protected abstract void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event);
+
+    /**
+     * All child classes should provide this URL based on their scope required
+     * @return the authentication URL, based on the scope required of the command
+     */
+    public abstract String getAuthenticationUrl ();
+
+
 
 }
