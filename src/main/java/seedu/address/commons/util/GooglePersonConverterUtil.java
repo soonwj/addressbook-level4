@@ -1,7 +1,5 @@
 package seedu.address.commons.util;
 
-//import com.google.api.services.people.v1.model.Person;
-
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.exceptions.InvalidGooglePersonException;
 
@@ -11,8 +9,11 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 
+import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**This class provides the service of two-way conversion between Google Person(s) and Doc Person(s)
@@ -82,21 +83,75 @@ public abstract class GooglePersonConverterUtil {
 
     /**
      * Conversion: (Single) DoC Person -> Google Person
+     * Note: Google Person Photo is read only and cannot be set from the Google People API
      * @param person input parameter of a single Google Person
      * @return the converted Google version of the input DoC Person
      */
     public static com.google.api.services.people.v1.model.Person singleDocToGooglePersonConversion(Person person) {
-        //new Google Person properties
+        /**
+         * Creating Google Person properties, excluding tags
+         */
+        //Google Name
+        com.google.api.services.people.v1.model.Name googleName = new com.google.api.services.people.v1.model.Name()
+                .setGivenName(person.getName().fullName);
+        //Google Phone Number
+        com.google.api.services.people.v1.model.PhoneNumber googleNumber =
+                new com.google.api.services.people.v1.model.PhoneNumber().setValue(person.getPhone().value);
+        //Google Email Address
+        com.google.api.services.people.v1.model.EmailAddress googleEmail =
+                new com.google.api.services.people.v1.model.EmailAddress()
+                .setValue(person.getEmail().value);
+        //Google Address
+        com.google.api.services.people.v1.model.Address googleAddress =
+                new com.google.api.services.people.v1.model.Address().setFormattedValue(person.getAddress().value);
+        //Google Person
+        com.google.api.services.people.v1.model.Person tempPerson =
+                new com.google.api.services.people.v1.model.Person();
 
-        return null;
+        /**
+         * Creating Lists from single properties, to fulfil Google Person requirements
+         */
+        List<com.google.api.services.people.v1.model.Name> googleNameList = makeListFromOne(googleName);
+        List<com.google.api.services.people.v1.model.PhoneNumber> googlePhoneNumberList = makeListFromOne(googleNumber);
+        List<com.google.api.services.people.v1.model.EmailAddress> googleEmailAddressList = makeListFromOne(googleEmail);
+        List<com.google.api.services.people.v1.model.Address> googleAddressList = makeListFromOne(googleAddress);
 
+
+        /**
+         * Creating a List of Google UserDefined objects, to use as DoC Person Tags
+         */
+        List<com.google.api.services.people.v1.model.UserDefined> googleTagList =
+                new ArrayList<com.google.api.services.people.v1.model.UserDefined>();
+
+        for (Tag t : person.getTags()) {
+            com.google.api.services.people.v1.model.UserDefined tempGoogleTag =
+                    new com.google.api.services.people.v1.model.UserDefined();
+            tempGoogleTag.setKey("tag");
+            tempGoogleTag.setValue(t.tagName);
+            googleTagList.add(tempGoogleTag);
+        }
+
+        /**
+         * Finalizing the return Google Person object
+         */
+        tempPerson.setNames(googleNameList);
+        tempPerson.setPhoneNumbers(googlePhoneNumberList);
+        tempPerson.setEmailAddresses(googleEmailAddressList);
+        tempPerson.setAddresses(googleAddressList);
+        tempPerson.setUserDefined(googleTagList);
+
+        return tempPerson;
     }
 
-
-
-
-
-
+    /**
+     * Helper method that returns an ArrayList<E> created with a single E instance.
+     * This is required when instantiating a Google Person
+     */
+    private static  <E> List<E> makeListFromOne(E singlePropertyInput) {
+        ArrayList<E> tempList = new ArrayList<>();
+        tempList.add(singlePropertyInput);
+        return tempList;
+    }
 
 
 
@@ -107,7 +162,8 @@ public abstract class GooglePersonConverterUtil {
      * @return Returns a model.person.Person instance, converted from the Google Person instance
      * @throws InvalidGooglePersonException if input parameter Person has null name or phone
      */
-    public static seedu.address.model.person.Person convertPerson(Person person) throws InvalidGooglePersonException {
+    public static Person convertPerson(com.google.api.services.people.v1.model.Person person)
+            throws InvalidGooglePersonException {
         String tempName = new String();
         String tempPhoneNumber = new String();
         String tempEmailAddress;
@@ -150,6 +206,7 @@ public abstract class GooglePersonConverterUtil {
         }
         return null;
     }
+
 
     public static String processName(String tempName) {
         return tempName.replaceAll("[^a-zA-Z0-9]", " ");
