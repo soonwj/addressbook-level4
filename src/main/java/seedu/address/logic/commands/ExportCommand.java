@@ -13,7 +13,6 @@ import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.logic.GoogleAuthenticationSuccessEvent;
 import seedu.address.commons.util.GooglePersonConverterUtil;
 import seedu.address.logic.commands.exceptions.CommandException;
-
 import seedu.address.model.person.ReadOnlyPerson;
 
 /**Purpose: Exports contacts to Google Contacts, fulfilling Google's OAuth2 protocol.
