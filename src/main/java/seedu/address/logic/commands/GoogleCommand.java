@@ -20,6 +20,7 @@ public abstract class GoogleCommand extends Oauth2Command {
     protected GoogleCredential credential;
     protected HttpTransport httpTransport;
     protected JacksonFactory jsonFactory;
+    protected String authenticationUrl;
 
     protected GoogleCommand(String googleCommandType, String inputAccessScope) throws IOException {
         super(SERVICE_SOURCE + "_" + googleCommandType);
@@ -37,6 +38,12 @@ public abstract class GoogleCommand extends Oauth2Command {
     protected GoogleCommand() throws IOException {
         super();
     }
+
+    /**
+     * All child classes should provide this URL based on their scope required
+     * @return the authentication URL, based on the scope required of the command
+     */
+    public abstract String getAuthenticationUrl ();
 
     /**Instantiates the GoogleCredentials for OAuth2 requests.
      * This is the final step in the OAuth2 protocol for Google APIs

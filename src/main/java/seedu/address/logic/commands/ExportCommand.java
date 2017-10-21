@@ -36,11 +36,25 @@ public class ExportCommand extends GoogleCommand {
 
     private PeopleService peopleService;
 
-
-    public ExportCommand(String commandWord, String accessScope) throws IOException{
+    public ExportCommand() throws IOException{
         super(COMMAND_WORD, ACCESS_SCOPE);
     }
 
+    @Override
+    public CommandResult execute() throws CommandException {
+        //Fires an event to the BrowserPanel
+        try {
+            triggerBrowserAuth();
+        } catch (IOException e) {
+            throw new CommandException("Failed to trigger browser auth");
+        }
+        return new CommandResult("Authentication in process");
+    }
+
+    /**
+     * Event listener for a successful authentication
+     * @param event Should be fired from the BrowserPanel, with an authcode.
+     */
     @Override
     @Subscribe
     protected void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event) {
@@ -50,6 +64,10 @@ public class ExportCommand extends GoogleCommand {
         //set up credentials
         setupCredentials(event.getAuthCode());
 
+        //set up people service
+        peopleService = new PeopleService.Builder(httpTransport, jsonFactory, credential)
+                .setApplicationName("CS2103T - Doc")
+                .build();
 
         //Conversion calls
         List<ReadOnlyPerson> docPersonList = model.getAddressBook().getPersonList();
@@ -65,15 +83,17 @@ public class ExportCommand extends GoogleCommand {
             }
         }
     }
+
     private boolean commandTypeCheck(String inputCommandType) {
         return commandType.equals("GOOGLE_export");
     }
-
-    @Override
-    public CommandResult execute() throws CommandException {
-        EventsCenter.getInstance().post(new GoogleAuthRequestEvent(authService));
-        return null;
+    public String getCommandType() {
+        return commandType;
     }
+    public String getAccessScope() {
+        return accessScope;
+    }
+
 
     /**
      * Event listener for successful setup of authService's credentials
@@ -87,7 +107,7 @@ public class ExportCommand extends GoogleCommand {
 
         List<ReadOnlyPerson> docPersonList = model.getAddressBook().getPersonList();
         List<com.google.api.services.people.v1.model.Person> googlePersonList = new ArrayList<>();
-        listConvertDocToGooglePerson(docPersonList, googlePersonList);
+//        listConvertDocToGooglePerson(docPersonList, googlePersonList);
 
 //        CreateContactGroupRequest newRequest = new CreateContactGroupRequest();
 //        ContactGroup newGroup = new ContactGroup();
@@ -103,47 +123,5 @@ public class ExportCommand extends GoogleCommand {
             }
         }
     }
-//
-//    private void listConvertDocToGooglePerson(List<ReadOnlyPerson>docList,
-//                                              List<com.google.api.services.people.v1.model.Person> googleList) {
-//        for (ReadOnlyPerson p : docList) {
-//            com.google.api.services.people.v1.model.Person tempPerson =
-//                    new com.google.api.services.people.v1.model.Person();
-//
-//            Name googleName = new Name().setDisplayName(p.getName().fullName);
-//            googleName.setGivenName(p.getName().fullName);
-////            googleName.setPhoneticFullName(p.getName().fullName);
-//            PhoneNumber googleNumber = new PhoneNumber().setValue(p.getPhone().value);
-//            EmailAddress googleEmail = new EmailAddress().setValue(p.getEmail().value);
-//            Address googleAddress = new Address().setFormattedValue(p.getAddress().value);
-//
-//
-//            List<Name> googleNameList = makeListFromOne(googleName);
-//            List<PhoneNumber> googlePhoneNumberList = makeListFromOne(googleNumber);
-//            List<EmailAddress> googleEmailAddressList = makeListFromOne(googleEmail);
-//            List<Address> googleAddressList = makeListFromOne(googleAddress);
-//            List<UserDefined> googleTagList = new ArrayList<UserDefined>();
-//            List<Photo> googlePhotoList = new ArrayList<Photo>();
-//            //set tags
-//            for (Tag t : p.getTags()) {
-//                UserDefined tempGoogleTag = new UserDefined();
-//                tempGoogleTag.setKey("tag");
-//                tempGoogleTag.setValue(t.tagName);
-//                googleTagList.add(tempGoogleTag);
-//            }
-//            //set photo
-//            googlePhotoList.add(new Photo().setUrl(p.getProfilePic().source));
-//
-//            //finalize Google Person
-//            tempPerson.setNames(googleNameList);
-//            tempPerson.setPhoneNumbers(googlePhoneNumberList);
-//            tempPerson.setEmailAddresses(googleEmailAddressList);
-//            tempPerson.setAddresses(googleAddressList);
-//            tempPerson.setUserDefined(googleTagList);
-////            tempPerson.setPhotos(googlePhotoList);
-//            googleList.add(tempPerson);
-//        }
-//    }
-
 
 }
