@@ -26,7 +26,7 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
  * Each instance of this method will maintain it's own GoogleApiAuth authService. Token re-use is not supported.
  * Created by Philemon1 on 11/10/2017.
  */
-public class ImportCommand extends Command {
+public class ImportCommand extends GoogleCommand {
 
     public static final String COMMAND_WORD = "import";
     public static final String MESSAGE_SUCCESS = "Please proceed to login";
