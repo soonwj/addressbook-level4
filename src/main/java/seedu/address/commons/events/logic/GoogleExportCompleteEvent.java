@@ -11,6 +11,9 @@ public class GoogleExportCompleteEvent extends BaseEvent {
     public GoogleExportCompleteEvent(String inputExportedContactsViewUrl) {
         exportedContactsViewUrl = inputExportedContactsViewUrl;
     }
+    public String getExportedContactsViewUrl() {
+        return exportedContactsViewUrl;
+    }
 
     @Override
     public String toString() {

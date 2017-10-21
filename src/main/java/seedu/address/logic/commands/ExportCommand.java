@@ -96,7 +96,8 @@ public class ExportCommand extends GoogleCommand {
                 System.out.println(E);
             }
         }
-        EventsCenter.getInstance().post(new GoogleExportCompleteEvent(googleContactsGroupView + contactGroupId));
+        EventsCenter.getInstance().post(new GoogleExportCompleteEvent(
+                googleContactsGroupView + contactGroupId.split("/")[1]));
     }
 
     /**
