@@ -2,8 +2,10 @@ package seedu.address.logic.commands;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.people.v1.PeopleService;
@@ -83,6 +85,12 @@ public class ExportCommand extends GoogleCommand {
             }
         }
     }
+
+    @Override
+    public String getAuthenticationUrl() {
+        return new GoogleBrowserClientRequestUrl(CLIENT_ID, getRedirectUrl(), Arrays.asList(getAccessScope())).build();
+    }
+
 
     private boolean commandTypeCheck(String inputCommandType) {
         return commandType.equals("GOOGLE_export");

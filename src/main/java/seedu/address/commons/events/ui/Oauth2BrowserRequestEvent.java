@@ -10,11 +10,13 @@ import seedu.address.commons.events.BaseEvent;
 public class Oauth2BrowserRequestEvent extends BaseEvent {
     public static final String INVALID_INPUT_MESSAGE = "This event must be created with a COMMAND_TYPE";
     private final String commandType;
+    private final String requestUrl;
 
-    public Oauth2BrowserRequestEvent(String inputType) throws IOException {
+    public Oauth2BrowserRequestEvent(String inputType, String inputRequestUrl) throws IOException {
         if (inputType == null) {
             throw new IOException(INVALID_INPUT_MESSAGE);
         }
+        this.requestUrl = inputRequestUrl;
         this.commandType = inputType;
     }
 
