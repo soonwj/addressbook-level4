@@ -7,13 +7,18 @@ import seedu.address.commons.events.BaseEvent;
  */
 public class GoogleAuthenticationSuccessEvent extends BaseEvent {
     private String commandType;
+    private String authCode;
 
-    public GoogleAuthenticationSuccessEvent(String inputCommandType){
+    public GoogleAuthenticationSuccessEvent(String inputCommandType, String inputAuthCode){
         commandType = inputCommandType;
+        authCode = inputAuthCode;
     }
 
     public String getCommandType() {
         return commandType;
+    }
+    public String getAuthCode () {
+        return authCode;
     }
 
     @Override

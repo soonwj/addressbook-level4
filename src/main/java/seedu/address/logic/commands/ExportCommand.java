@@ -34,6 +34,9 @@ public class ExportCommand extends GoogleCommand {
     //Scope includes write access to a users' Google Contacts
     public static final String ACCESS_SCOPE = "https://www.googleapis.com/auth/contacts";
 
+    private PeopleService peopleService;
+
+
     public ExportCommand(String commandWord, String accessScope) throws IOException{
         super(COMMAND_WORD, ACCESS_SCOPE);
     }
@@ -44,12 +47,23 @@ public class ExportCommand extends GoogleCommand {
         if (!commandTypeCheck(event.getCommandType())) {
             return;
         }
+        //set up credentials
+        setupCredentials(event.getAuthCode());
 
+
+        //Conversion calls
         List<ReadOnlyPerson> docPersonList = model.getAddressBook().getPersonList();
         List<com.google.api.services.people.v1.model.Person> googlePersonList =
-//                GooglePersonConverterUtil.listDocToGooglePersonConversion(docPersonList);
+                GooglePersonConverterUtil.listDocToGooglePersonConversion(docPersonList);
 
-
+        //HTTP calls
+        for (com.google.api.services.people.v1.model.Person p : googlePersonList) {
+            try {
+                peopleService.people().createContact(p).execute();
+            } catch (IOException E) {
+                System.out.println(E);
+            }
+        }
     }
     private boolean commandTypeCheck(String inputCommandType) {
         return commandType.equals("GOOGLE_export");
