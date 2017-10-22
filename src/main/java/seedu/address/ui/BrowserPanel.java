@@ -16,6 +16,7 @@ import seedu.address.MainApp;
 import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.logic.GoogleAuthenticationSuccessEvent;
+import seedu.address.commons.events.logic.GoogleCommandCompleteEvent;
 import seedu.address.commons.events.logic.GoogleExportCompleteEvent;
 import seedu.address.commons.events.ui.FindLocationRequestEvent;
 import seedu.address.commons.events.ui.Oauth2BrowserRequestEvent;
@@ -144,12 +145,11 @@ public class BrowserPanel extends UiPart<Region> {
     }
 
     /**
-     * Reloads page to view Google Contacts that were exported by DoC
-     * @param event
+     * Reloads page according to the completed Google Command
      */
     @Subscribe
-    private void handleGoogleExportCompleteEvent(GoogleExportCompleteEvent event) {
-        loadPage(event.getExportedContactsViewUrl());
+    private void handleGoogleCOmmandCompleteEvent(GoogleCommandCompleteEvent event) {
+        loadPage(event.getRedirectUrl());
     }
 
     /**
