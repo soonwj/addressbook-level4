@@ -13,6 +13,7 @@ import com.google.common.eventbus.Subscribe;
 import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.logic.GoogleAuthenticationSuccessEvent;
 import seedu.address.commons.events.logic.GoogleCommandCompleteEvent;
+import seedu.address.commons.events.ui.NewResultAvailableEvent;
 import seedu.address.commons.util.GooglePersonConverterUtil;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Person;
@@ -54,6 +55,10 @@ public class ImportCommand extends GoogleCommand {
     @Override
     @Subscribe
     protected void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event) {
+        //Fire event to alert status bar of conversion process
+        EventsCenter.getInstance().post(
+                new NewResultAvailableEvent("Successfully authenticated - Conversion in process now"));
+
         //Incoming Google Person List
         List<com.google.api.services.people.v1.model.Person> googlePersonList = new ArrayList<>();
 
@@ -94,7 +99,8 @@ public class ImportCommand extends GoogleCommand {
                 continue;
             }
         }
-        EventsCenter.getInstance().post(new GoogleCommandCompleteEvent("https://contacts.google.com/"));
+        EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
+                "https://contacts.google.com/", commandType));
     }
     @Override
     public String getAuthenticationUrl() {
