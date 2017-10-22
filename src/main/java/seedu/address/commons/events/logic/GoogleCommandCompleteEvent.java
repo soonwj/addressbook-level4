@@ -14,9 +14,7 @@ public class GoogleCommandCompleteEvent extends BaseEvent {
     public GoogleCommandCompleteEvent(String inputUrl, String inputCommandType) {
         redirectUrl = inputUrl;
         commandType = inputCommandType;
-
-        EventsCenter.getInstance().post(new NewResultAvailableEvent(commandType+ " has successfully completed"));
-
+        EventsCenter.getInstance().post(new NewResultAvailableEvent(commandType + " has successfully completed"));
     }
     public String getRedirectUrl() {
         return redirectUrl;
