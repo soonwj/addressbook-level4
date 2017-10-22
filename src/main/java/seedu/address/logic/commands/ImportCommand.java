@@ -12,6 +12,7 @@ import com.google.common.eventbus.Subscribe;
 
 import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.logic.GoogleAuthenticationSuccessEvent;
+import seedu.address.commons.events.logic.GoogleCommandCompleteEvent;
 import seedu.address.commons.util.GooglePersonConverterUtil;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Person;
@@ -93,6 +94,7 @@ public class ImportCommand extends GoogleCommand {
                 continue;
             }
         }
+        EventsCenter.getInstance().post(new GoogleCommandCompleteEvent("https://contacts.google.com/"));
     }
     @Override
     public String getAuthenticationUrl() {
