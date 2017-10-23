@@ -91,7 +91,7 @@ public class ModelManager extends ComponentManager implements Model {
         requireAllNonNull(target, editedPerson);
 
         addressBook.updatePerson(target, editedPerson);
-        indicateAddressBookChanged();
+        if (target.getViewCount() == editedPerson.getViewCount())indicateAddressBookChanged();
     }
 
     @Override
