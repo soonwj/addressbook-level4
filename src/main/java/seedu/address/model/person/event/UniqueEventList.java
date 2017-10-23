@@ -2,6 +2,7 @@ package seedu.address.model.person.event;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.util.CollectionUtil;
 import seedu.address.model.person.exceptions.DuplicateEventException;
 import seedu.address.model.person.exceptions.EventNotFoundException;
+import seedu.address.model.util.EventDateComparator;
 
 /**
  * A list of events that enforces uniqueness between its elements and does not allow nulls.
@@ -46,6 +48,7 @@ public class UniqueEventList implements Iterable<Event> {
             throw new DuplicateEventException();
         }
         internalList.add(new Event(toAdd));
+        Collections.sort(internalList, new EventDateComparator());
     }
 
     /**
@@ -68,6 +71,7 @@ public class UniqueEventList implements Iterable<Event> {
         }
 
         internalList.set(index, new Event(editedEvent));
+        Collections.sort(internalList, new EventDateComparator());
     }
 
     /**

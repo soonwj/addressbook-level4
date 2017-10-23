@@ -172,6 +172,12 @@ public class AddCommandTest {
         public void findLocation(ReadOnlyPerson person) {
             fail("This method should not be called.");
         }
+
+        @Override
+        public String updateEmailRecipient(Predicate<ReadOnlyPerson> predicate) {
+            fail("This method should not be called.");
+            return null;
+        }
     }
 
     /**
