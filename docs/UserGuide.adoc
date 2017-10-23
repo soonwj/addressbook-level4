@@ -196,14 +196,14 @@ adds the `subject` as `SUBJECT` and `body` as `BODY`.
 
 **Picture guide**
 
-image::Email_UG.png[width="1000"]
+image::Email_UG.PNG[width="1000"]
 
 * `email to/Adam` +
 Opens the default emailing client and adds Adam to the `to` field and has the subject and body as null.
 
 **Picture guide**
 
-image::Email_UG_1.png[width="1000"]
+image::Email_UG_1.PNG[width="1000"]
 
 As shown above
 
@@ -290,7 +290,7 @@ Examples:
 
 **Picture guide**
 
-image::Location_UG.png[width="1000"]
+image::Location_UG.PNG[width="1000"]
 
 Shows the address of the 1st person in Google Maps as shown above.
 
