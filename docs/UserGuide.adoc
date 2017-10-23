@@ -192,7 +192,7 @@ Examples:
 
 * `email to/friends subject/SUBJECT body/BODY` +
 Opens the default emailing client and adds all the person who has the tag `friends` into the `to` area,
-adds the `subject` as `SUBJECT` and `body` as `BODY`.
+adds the `subject` as `SUBJECT` and `body` as `BODY` .
 
 **Picture guide**
 
