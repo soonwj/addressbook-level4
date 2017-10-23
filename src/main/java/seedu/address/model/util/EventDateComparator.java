@@ -6,6 +6,11 @@ import java.util.Comparator;
 
 import seedu.address.model.person.event.Event;
 
+/**
+ * EventDateComparator compares events based on the LocalDate eventDate.
+ * It sorts events starting from the dates that are closest to the currentDate.
+ * Expired eventDate will be sorted last.
+ */
 public class EventDateComparator implements Comparator<Event> {
 
     @Override
