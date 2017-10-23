@@ -4,7 +4,6 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -103,16 +102,6 @@ public class ParserUtil {
             tagSet.add(new Tag(tagName));
         }
         return tagSet;
-    }
-
-    /**
-     * Parses {@code Optional<String> names} into a {@code String[]}.
-     */
-    public static String[] parseEmailToCommand(List<String> names) throws IllegalValueException {
-        requireNonNull(names);
-        String trimmedArgs = String.join(" ", names).trim();
-        String[] result = trimmedArgs.split("\\s+");
-        return result;
     }
 
     /**
