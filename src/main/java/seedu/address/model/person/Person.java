@@ -129,9 +129,13 @@ public class Person implements ReadOnlyPerson {
     }
 
     @Override
-    public int getViewCount() { return viewCount; }
+    public int getViewCount() {
+        return viewCount;
+    }
 
-    public void setViewCount(int newViewCount) { viewCount = newViewCount; }
+    public void setViewCount(int newViewCount) {
+        viewCount = newViewCount;
+    }
 
     /**
      * Returns an immutable tag set, which throws {@code UnsupportedOperationException}
