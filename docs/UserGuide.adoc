@@ -205,8 +205,6 @@ Opens the default emailing client and adds Adam to the `to` field and has the su
 
 image::Email_UG_1.PNG[width="1000"]
 
-As shown above
-
 === Exiting the program : `exit`
 
 Exits the program. +
@@ -426,8 +424,6 @@ e.g. `deleteProfilePic 3`
 e.g. `edit 2 n/James Lee e/jameslee@example.com`
 * *EditE* : `editE INDEX [h/HEADER] [de/DESCRIPTION] [d/DATE]` +
 e.g. `editE 2 h/Party d/2018-01-12`
-* *Email* : `email  [to/TO] [subject/SUBJECT] [body/BODY]` +
-e.g. `email to/Friends subject/SUBJECT body/BODY`
 * *Find* : `find KEYWORD [MORE_KEYWORDS]` +
 e.g. `find James Jake`
 * *Help* : `help`
