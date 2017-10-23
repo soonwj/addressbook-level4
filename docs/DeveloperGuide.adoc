@@ -348,13 +348,13 @@ image::UndoRedoActivityDiagram.png[width="200"]
 
 === Event(feature)
 
-The event feature is implemented with similar logic as a person. The commands created for this feature are "addE", "editE" and "deleteE". As such, the methods from events are extended from the model.
+The `Event` feature is implemented with similar logic as a `Person`. The featured commands that modifies the address book include `addE`, `editE` and `deleteE`. As such, the methods from events are extended from `Model`.
 
-Commands such as clear, undo and redo will apply to the events in the list as these commands directly alter the address book on a higher level without calling person methods. Therefore, further coupling of these methods and event feature is not required.
+Commands such as `clear`, `undo` and `redo` will apply to the events in the list as these commands extends `UndoableCommand`. Therefore, further coupling of these user commands and event feature is not introduced.
 
 image::EventPersonModelClassDiagram.png[width="900"]
 
-As you can see from the diagram, the sub component of Event include a PersonList that fetches persons from the ReadOnlyPerson and add them into the list without any modification. In the Ui, upon clicking on the person tagged under an event, the logic will execute "select" command which will bring the user to the respective person in the person panel.
+As you can see from the diagram, the sub component of `Event` include a `PersonList` that fetches persons from the `ReadOnlyPerson` and add them into the list without any modification. In the Ui, upon clicking on the person tagged under an event, the logic will execute `select` command which will bring the user to the respective person in the person panel.
 
 ==== Design Consideration
 **Aspect:** How to implement adding of persons into the event's person list +
@@ -431,7 +431,7 @@ This rendering of Google Maps is done via calling the URL.
 
 The UpdateProfilePic/DeleteProfilePic mechanism is facilitated by a `ProfilePic` class, which is a property class of the `Person` class. It supports the updating and deleting of profile pictures of each Person. These two commands inherit from `UndoableCommand`.
 
-`ProfilePic` essentially stores a **valid** `URL` of an image that will be displayed as the Person’s profile picture. Whenever a new Person is added, the Person’s `ProfilePic` property will be that of a default image. The command, `updateProfilePic` can then be called to change this property. When the command `deleteProfilePic` is called, the `ProfilePic` property of the selected Person will be changed back to the default profile picture.
+`ProfilePic` essentially stores a **valid** `URL` of an image that will be displayed as the Person?s profile picture. Whenever a new Person is added, the Person?s `ProfilePic` property will be that of a default image. The command, `updateProfilePic` can then be called to change this property. When the command `deleteProfilePic` is called, the `ProfilePic` property of the selected Person will be changed back to the default profile picture.
 
 Like the other properties of the `Person` class, the `ProfilePic` property will also be saved to the chosen storage file.
 
