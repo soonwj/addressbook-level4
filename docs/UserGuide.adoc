@@ -52,13 +52,13 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 * Parameters can be in any order e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
 ====
 
-=== Adding a person: `add`
+=== Adding a contact: `add`
 
-Adds a person to the address book. +
+Adds a contact to the address book. +
 Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]...`
 
 [TIP]
-A person can have any number of tags (including 0)
+A contact can have any number of tags (including 0)
 
 Examples:
 
@@ -98,13 +98,13 @@ Format: `clear`
 
 <PICTURE GUIDE PENDING UI UPDATE>
 
-=== Deleting a person : `delete`
+=== Deleting a contact : `delete`
 
-Deletes the specified person from the address book. +
+Deletes the specified contact from the address book. +
 Format: `delete INDEX`
 
 ****
-* Deletes the person at the specified `INDEX`.
+* Deletes the contact at the specified `INDEX`.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* 1, 2, 3, ...
 ****
@@ -113,10 +113,10 @@ Examples:
 
 * `list` +
 `delete 2` +
-Deletes the 2nd person in the address book.
+Deletes the 2nd contact in the address book.
 * `find Betsy` +
 `delete 1` +
-Deletes the 1st person in the results of the `find` command.
+Deletes the 1st contact in the results of the `find` command.
 
 **Picture guide**
 
@@ -142,13 +142,13 @@ Deletes the 3rd event in the address book.
 
 <PICTURE GUIDE PENDING UI UPDATE>
 
-=== Deleting the profile picture of a person : `deleteProfilePic`
+=== Deleting the profile picture of a contact : `deleteProfilePic`
 
-Deletes the profile picture of the specified person from the address book. +
+Deletes the profile picture of the specified contact from the address book. +
 Format: `deleteProfilePic INDEX`
 
 ****
-* Deletes the profile picture of the person at the specified `INDEX`.
+* Deletes the profile picture of the contact at the specified `INDEX`.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* 1, 2, 3, ...
 * The index must be valid as well.
@@ -158,30 +158,30 @@ Examples:
 
 * `list` +
 `deleteProfilePic 2` +
-Deletes the profile picture of the 2nd person in the address book.
+Deletes the profile picture of the 2nd contact in the address book.
 * `find Bobby` +
 `delete 1` +
-Deletes the profile picture of the 1st person in the results of the `find` command.
+Deletes the profile picture of the 1st contact in the results of the `find` command.
 
-=== Editing a person : `edit`
+=== Editing a contact : `edit`
 
-Edits an existing person in the address book. +
+Edits an existing contact in the address book. +
 Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...`
 
 ****
-* Edits the person at the specified `INDEX`. The index refers to the index number shown in the last person listing. The index *must be a positive integer* 1, 2, 3, ...
+* Edits the contact at the specified `INDEX`. The index refers to the index number shown in the last contact listing. The index *must be a positive integer* 1, 2, 3, ...
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
-* When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
-* You can remove all the person's tags by typing `t/` without specifying any tags after it.
+* When editing tags, the existing tags of the contact will be removed i.e adding of tags is not cumulative.
+* You can remove all the contact's tags by typing `t/` without specifying any tags after it.
 ****
 
 Examples:
 
 * `edit 1 p/91234567 e/johndoe@example.com` +
-Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
+Edits the phone number and email address of the 1st contact to be `91234567` and `johndoe@example.com` respectively.
 * `edit 2 n/Betsy Crower t/` +
-Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+Edits the name of the 2nd contact to be `Betsy Crower` and clears all existing tags.
 
 **Picture guide**
 
