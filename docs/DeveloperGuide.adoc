@@ -436,7 +436,7 @@ The `EmailCommand` is the main driver of this functionality. It links the logic 
 
 image::EmailSequenceDiagram.png[width="800"]
 
-As seen from the picture above, the `AddressParser` will be able to distinguish the email command and direct it to the `EmailCommandParser`. Over there the recipient, subject and the body from the command line input is identified. Once identified, the `execute` function is called. This function in the `EmailCommand` would call the `updateEmailRecipient` function in the Model. Once the fields are updated properly, the `EmailCommand` will call the desktop mail app and fill in the necessary details. 
+As seen from the picture above, the `AddressParser` will be able to distinguish the email command and direct it to the `EmailCommandParser`. Over there the recipient, subject and the body from the command line input is identified. Once identified, the `execute` function is called. This function in the `EmailCommand` would call the `updateEmailRecipient` function in the Model. Once the fields are updated properly, the `EmailCommand` will call the desktop mail app and fill in the necessary details.
 
 ==== Design Considerations
 
