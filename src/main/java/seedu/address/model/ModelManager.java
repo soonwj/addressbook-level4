@@ -3,9 +3,7 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
@@ -35,7 +33,6 @@ public class ModelManager extends ComponentManager implements Model {
 
     private final AddressBook addressBook;
     private final FilteredList<ReadOnlyPerson> filteredPersons;
-    private final FilteredList<ReadOnlyPerson> filteredEmailTo;
     private final FilteredList<ReadOnlyEvent> filteredEvents;
 
     /**
@@ -49,7 +46,6 @@ public class ModelManager extends ComponentManager implements Model {
 
         this.addressBook = new AddressBook(addressBook);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
-        filteredEmailTo = new FilteredList<>(this.addressBook.getPersonList());
         filteredEvents = new FilteredList<>(this.addressBook.getEventList());
     }
 
@@ -134,7 +130,7 @@ public class ModelManager extends ComponentManager implements Model {
         raise(new FindLocationRequestEvent(person));
     }
 
-    //=========== Filtered List Accessors =============================================================
+    //=========== Filtered Person List Accessors =============================================================
 
     /**
      * Returns an unmodifiable view of the list of {@code ReadOnlyPerson} backed by the internal list of
@@ -149,20 +145,6 @@ public class ModelManager extends ComponentManager implements Model {
     public void updateFilteredPersonList(Predicate<ReadOnlyPerson> predicate) {
         requireNonNull(predicate);
         filteredPersons.setPredicate(predicate);
-    }
-
-    @Override
-    public String updateEmailRecipient(Predicate<ReadOnlyPerson> predicate) {
-        requireNonNull(predicate);
-        filteredEmailTo.setPredicate(predicate);
-        List<String> validPeeps = new ArrayList<>();
-        for (ReadOnlyPerson person : filteredEmailTo) {
-            if (person.getEmail() != null && !person.getEmail().value.equalsIgnoreCase("INVALID_EMAIL@INVALID.COM")
-                    && !validPeeps.contains(person.getEmail().value)) {
-                validPeeps.add(person.getEmail().value);
-            }
-        }
-        return String.join(",", validPeeps);
     }
 
     /**
