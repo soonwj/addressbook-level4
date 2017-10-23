@@ -404,8 +404,21 @@ The order is exactly reversed for an `export` command
  Only the 3 bolded processes will be discussed in further detail as the process for step 1 is the same as all other commands in DoC.
 
 ===== Authentication process
-The authentication process is the more involved process of the 3. We can understand it better with the help of the following sequence diagram:
+The authentication process is the more involved process of the 3. We can understand it better with the help of the following sequence diagram: +
 
+image::AuthenticationSequenceDiagram.png[width=100%]
+
+This is a summary of the steps in the execution flow: +
+**1.** The `execute()` method of the `ImportCommand` is called from the `LogicManager`, firing an `Oauth2BrowserRequestEvent` to the `BrowserPanel` +
+**2.** The `BrowserPanel` handles this event and navigates to the **authentication URL*** provided by the event +
+**3.** The user successfully authenticates and grants DoC read permission of the users' Google Contacts +
+**4.** The `BrowserPanel` is redirected to the success landing page(https://cs2103tdummyendpoint.herokuapp.com) +
+**4.** The `BrowserPanel` detects the URL change to the success landing page, extracts the authentication code appended to the URL, and passes the authentication code to its' `GoogleApiAuth` service,
+ which then builds a `GoogleCredential` object from the it +
+**5.** Once completed, the `BrowserPanel` fires an event to the `ImportCommand` +
+**6.** The `ImportCommand` detects the event and proceeds to build a `PeopleService` object using the `GoogleCredential` within its' `GoogleApiAuth` service +
+**7.** Finally, the `PeopleService` object fetches the list of Google `Person` from the users' Google Contacts, which are then converted to DoC `Person` objects +
+**8.** This converted list of DoC `Person` objects are then added to the `Model` component
 
 
 ===== HTTP request process
