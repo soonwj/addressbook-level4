@@ -3,6 +3,8 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -23,6 +25,7 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.EventNotFoundException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.tag.Tag;
+import seedu.address.model.util.ViewCountComparator;
 
 /**
  * Represents the in-memory model of the address book data.
@@ -128,6 +131,25 @@ public class ModelManager extends ComponentManager implements Model {
     @Override
     public void findLocation(ReadOnlyPerson person) throws PersonNotFoundException {
         raise(new FindLocationRequestEvent(person));
+    }
+
+    @Override
+    public void sortByViewCount() {
+        AddressBook addressBookToSort = new AddressBook(addressBook);
+        ObservableList<ReadOnlyPerson> listToSort = addressBookToSort.getPersonList();
+        ArrayList<ReadOnlyPerson> listToSortedCopy = new ArrayList<>();
+        for (ReadOnlyPerson r : listToSort) {
+            listToSortedCopy.add(r);
+        }
+        Collections.sort(listToSortedCopy, new ViewCountComparator());
+
+        try {
+            addressBookToSort.setPersons(listToSortedCopy);
+        } catch (DuplicatePersonException dpe) {
+            assert false : "Impossible to be duplicate";
+        }
+
+        resetData(addressBookToSort);
     }
 
     //=========== Filtered Person List Accessors =============================================================

@@ -24,6 +24,7 @@ public interface ReadOnlyPerson {
     Set<Tag> getTags();
     ObjectProperty<ProfilePic> profilePicProperty();
     ProfilePic getProfilePic();
+    int getViewCount();
 
     /**
      * Returns true if both have the same state. (interfaces cannot override .equals)

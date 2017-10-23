@@ -18,6 +18,8 @@ import seedu.address.logic.commands.UndoCommand;
 import seedu.address.model.Model;
 
 public class SelectCommandSystemTest extends AddressBookSystemTest {
+    private int prevIndex = -1;
+
     @Test
     public void select() {
         /* Case: select the first card in the person list, command with leading spaces and trailing spaces
@@ -105,6 +107,12 @@ public class SelectCommandSystemTest extends AddressBookSystemTest {
      * @see AddressBookSystemTest#assertSelectedCardChanged(Index)
      */
     private void assertCommandSuccess(String command, Index expectedSelectedCardIndex) {
+        int currentIndex;
+        try {
+            currentIndex = Integer.parseInt(command.trim().substring(command.trim().length() - 1));
+        } catch (NumberFormatException nfe) {
+            currentIndex = prevIndex;
+        }
         Model expectedModel = getModel();
         String expectedResultMessage = String.format(
                 MESSAGE_SELECT_PERSON_SUCCESS, expectedSelectedCardIndex.getOneBased());
@@ -120,7 +128,13 @@ public class SelectCommandSystemTest extends AddressBookSystemTest {
         }
 
         assertCommandBoxShowsDefaultStyle();
-        assertStatusBarUnchanged();
+        if (prevIndex == currentIndex) {
+            assertStatusBarUnchanged();
+        } else {
+            assertStatusBarUnchangedExceptSyncStatus();
+        }
+
+        prevIndex = currentIndex;
     }
 
     /**
