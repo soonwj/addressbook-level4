@@ -307,10 +307,10 @@ image::UndoRedoActivityDiagram.png[width="200"]
 ==== Design Considerations
 
 **Aspect:** Implementation of `UndoableCommand` +
-**Alternative 1 (current choice):** Add a new abstract method `executeUndoableCommand()` +
+**Alternative 1 (current choice):** Add a new abstract method `executeUndoableCommand().` +
 **Pros:** We will not lose any undone/redone functionality as it is now part of the default behaviour. Classes that deal with `Command` do not have to know that `executeUndoableCommand()` exist. +
 **Cons:** Hard for new developers to understand the template pattern. +
-**Alternative 2:** Just override `execute()` +
+**Alternative 2:** Just override `execute().` +
 **Pros:** Does not involve the template pattern, easier for new developers to understand. +
 **Cons:** Classes that inherit from `UndoableCommand` must remember to call `super.execute()`, or lose the ability to undo/redo.
 
@@ -338,10 +338,10 @@ image::UndoRedoActivityDiagram.png[width="200"]
 ---
 
 **Aspect:** Data structure to support the undo/redo commands +
-**Alternative 1 (current choice):** Use separate stack for undo and redo +
+**Alternative 1 (current choice):** Use separate stack for undo and redo. +
 **Pros:** Easy to understand for new Computer Science student undergraduates to understand, who are likely to be the new incoming developers of our project. +
 **Cons:** Logic is duplicated twice. For example, when a new command is executed, we must remember to update both `HistoryManager` and `UndoRedoStack`. +
-**Alternative 2:** Use `HistoryManager` for undo/redo +
+**Alternative 2:** Use `HistoryManager` for undo/redo. +
 **Pros:** We do not need to maintain a separate stack, and just reuse what is already in the codebase. +
 **Cons:** Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two different things. +
 // end::undoredo[]
@@ -358,13 +358,12 @@ As you can see from the diagram, the sub component of Event include a PersonList
 
 ==== Design Consideration
 **Aspect:** How to implement adding of persons into the event's person list +
-**Alternative 1:** Add by the name of person in the person list +
-**Pros:** Easier for users to add using names, do not need to refer to the person list. +
-**Cons:** System have to check through the list to check if the person name exist in the current address book. +
-**Alternative 2 (current choice):** Add by the index of person shown in the person list panel +
-**Pros:** System only have to check for validity of index. Better performance compared to Alternative 1. +
+**Alternative 1 (current choice):** Add by the index of person shown in the person list panel. +
+**Pros:** System only have to check for validity of index. Better performance compared to Alternative 2. +
 **Cons:** Requires user to refer to the person list panel before executing command to add person into event's person list. +
-
+**Alternative 2:** Add by the name of person in the person list. +
+**Pros:** Easier for users to add using names, do not need to refer to the person list. +
+**Cons:** System have to check through the list to check if the person name exist in the current address book.
 
 === Import & authentication mechanism
 ==== Description
@@ -404,28 +403,52 @@ This is a summary of the steps in the execution flow: +
 
 ==== Design Considerations
 **Aspect:** How a successful authentication is detected +
-
-**Alternative 1 (Chosen for security):** Redirect to a hosted domain +
-**Pros:** The underlying `HTTP GET` is sent to a domain under DoC's control -> risk of authentication code leak is controlled +
-**Cons:** The BrowserPanel will display an error page if the hosted domain is down. However, the successful authentication will still be detected correctly
-
-**Alternative 2:** Redirect to an external domain, like `https://contacts.google.com` +
-**Pros:** We are able to display the users' incoming `Google Contacts` +
-**Cons:** The underlying `HTTP GET` containing the users' authentication code is sent to an external domain
+**Alternative 1 (Chosen for security):** Redirect to a hosted domain. +
+**Pros:** The underlying `HTTP GET` is sent to a domain under DoC's control -> risk of authentication code leak is controlled. +
+**Cons:** The BrowserPanel will display an error page if the hosted domain is down. However, the successful authentication will still be detected correctly.
+**Alternative 2:** Redirect to an external domain, like `https://contacts.google.com`. +
+**Pros:** We are able to display the users' incoming `Google Contacts`. +
+**Cons:** The underlying `HTTP GET` containing the users' authentication code is sent to an external domain.
 
 === Location
 
 image::Location.png[width="800"]
 
 As seen above, an event based approach is used to display the location of the person.
-
 Once the Address book parser identifies the user command as a valid location command, it will make use of the Google Event bus to transmit the event.
-
 The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function.
-
 This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested person.
-
 This rendering of Google Maps is done via calling the URL.
+
+==== Design Considerations
+
+**Aspect:** Implementation of `location` +
+**Alternative 1 (current choice):** Add a new class that extends `Command` that uses the Google Maps URL +
+**Pros:** The map can be easily loaded without needing to call the GoogleMaps API  +
+**Cons:** Only functions that can be sent via URL can be used. +
+**Alternative 2:** Make use of Google Maps API +
+**Pros:** More functions such as radius and many more could have been added +
+**Cons:** Take a longer time to load the map.
+
+=== Email
+
+image::EmailSequenceDiagram.png[width="800"]
+
+As seen above, an event based approach is used to display the location of the person.
+Once the Address book parser identifies the user command as a valid location command, it will make use of the Google Event bus to transmit the event.
+The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function.
+This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested person.
+This rendering of Google Maps is done via calling the URL.
+
+==== Design Considerations
+
+**Aspect:** Implementation of `location` +
+**Alternative 1 (current choice):** Add a new class that extends `Command` that uses the Google Maps URL +
+**Pros:** The map can be easily loaded without needing to call the GoogleMaps API  +
+**Cons:** Only functions that can be sent via URL can be used. +
+**Alternative 2:** Make use of Google Maps API +
+**Pros:** More functions such as radius and many more could have been added +
+**Cons:** Take a longer time to load the map.
 
 === UpdateProfilePic/DeleteProfilePic mechanism
 
