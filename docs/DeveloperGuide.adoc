@@ -397,15 +397,21 @@ The implementation of `import` and `export` are very similar. There are 3 sequen
  which then calls the instances' `execute()` method +
 **2.** The execute() method of `import` and `export` then triggers the **authentication process** with the `BrowserPanel` +
 **3.** Upon successful authentication on an `import` command, the **HTTP request process** is executed, followed by the  **conversion process**.
-This order is reversed for an `export` command
+The list of converted DoC `Person` objects are then added to the `Model` component.
+The order is exactly reversed for an `export` command
 
 
  Only the 3 bolded processes will be discussed in further detail as the process for step 1 is the same as all other commands in DoC.
 
 ===== Authentication process
+The authentication process is the more involved process of the 3. We can understand it better with the help of the following sequence diagram:
+
 
 
 ===== HTTP request process
+With the `GoogleCredential` object, we can now send HTTP requests quite easily using Google's Java API client, specifically
+its `PeopleService` class. Its documentation can be found in the following url: +
+https://developers.google.com/resources/api-libraries/documentation/people/v1/java/latest/com/google/api/services/people/v1/PeopleService.html
 
 
 ===== Conversion process
@@ -414,8 +420,18 @@ The conversion process is handled entirely by the `GooglePersonConverterUtil`. N
 
 * Only Google `Person` objects with a non-null name, and a non-null phone number are accepted
 * Google `Person` objects without an email or an address are given the constants `INVALID_EMAIL@INVALID.COM`, and
- `INVALID_ADDRESS PLEASE UPDATE THIS` respectively, in the resulting DoC `Person`.
+ `INVALID_ADDRESS PLEASE UPDATE THIS` respectively, in the resulting DoC `Person`
 * All DoC `Person` objects produced are given the tag `ImportedFromGoogle`
+
+**DoC Person -> Google Person** +
+
+* DoC's `Name`, `Phone`, `Email` and `Address` are added as native Google `Person` properties, with similar names. `Tag`
+objects are added under the Google `Person` object's `UserDefined` property
+* `ProfilePic` cannot be exported due to Google Contact's restrictions
+* The produced Google `Person` objects are added to a contact group titled `Imported from DoC`
+
+
+
 
 image::import_devguide.jpg[width=100%]
 
