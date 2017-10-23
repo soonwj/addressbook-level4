@@ -366,7 +366,7 @@ As you can see from the diagram, the sub component of Event include a PersonList
 **Cons:** Requires user to refer to the person list panel before executing command to add person into event's person list. +
 
 
-=== Import & authentication mechanism
+=== OAuth2 fulfilment mechanism
 ==== Description
 The import command uses `Google Contacts` as a source and performs the OAuth2 authentication protocol to retrieve
 and import a user's contacts. This is done with the help of the inbuilt `BrowserPanel`,
