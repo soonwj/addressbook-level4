@@ -377,8 +377,7 @@ which is implemented in an event-driven manner.
 
 The following class diagram illustrates the structure of this mechanism, and its' current applications: +
 
-<Insert Picture here> +
-
+image::Oauth2ClassDiagram.png[width=100%]
 
 ==== Current usages
 
