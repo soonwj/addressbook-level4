@@ -175,6 +175,36 @@ Examples:
 * `editE 1 h/Birthday party d/2017-06-12` +
 Edits the header and date of the 1st event to be `Birthday party` and `2017-06-12` respectively.
 
+=== Emailing a person : `email`
+
+Emails an existing person/ a group in the address book. +
+Format: `email [to/TO] [subject/SUBJECT] [body/BODY]`
+
+****
+* Email `to` must be provided.
+* Email `subject` and `body` is optional.
+* Email `to` contains either the `person's name` or a `tag name`.
+* Email `subject` contains the subject of the email.
+* Email `body` contains the body of the email.
+****
+
+Examples:
+
+* `email to/friends subject/SUBJECT body/BODY` +
+Opens the default emailing client and adds all the person who has the tag `friends` into the `to` area,
+adds the `subject` as `SUBJECT` and `body` as `BODY`.
+
+**Picture guide**
+
+image::Email_UG.PNG[width="1000"]
+
+* `email to/Adam` +
+Opens the default emailing client and adds Adam to the `to` field and has the subject and body as null.
+
+**Picture guide**
+
+image::Email_UG_1.PNG[width="1000"]
+
 === Exiting the program : `exit`
 
 Exits the program. +
@@ -255,7 +285,12 @@ Format: `location INDEX`
 Examples:
 
 * `location 1` +
-Shows the address of the 1st person in Google Maps on the Browser Panel.
+
+**Picture guide**
+
+image::Location_UG.PNG[width="1000"]
+
+Shows the address of the 1st person in Google Maps as shown above.
 
 === Redoing the previously undone command : `redo`
 
