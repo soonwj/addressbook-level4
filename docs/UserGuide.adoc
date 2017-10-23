@@ -135,12 +135,14 @@ Examples:
 `deleteProfilePic 2` +
 Deletes the profile picture of the 2nd person in the address book.
 * `find Bobby` +
-`delete 1` +
+`deleteProfilePic 1` +
 Deletes the profile picture of the 1st person in the results of the `find` command.
 
-Image Example:
+Picture Guide:
 
 image::deleteProfilePicImageExample.jpg[width="1000"]
+
+As shown in the picture above, after entering the `deleteProfilePic` command, the profile picture of the person at the specified index is reverted back to the default.
 
 === Editing a person : `edit`
 
@@ -371,9 +373,11 @@ Updates the profile picture of the 1st person to be the image at `file:///C:/Use
 * `updateProfilePic 2 u/http://www.google.com/images/image.png` +
 Updates the profile picture of the 2nd person to be the image at `http://www.google.com/images/image.png` +
 
-Image Example:
+Picture Guide:
 
 image::updateProfilePicImageExample.jpg[width="1000"]
+
+As shown in the picture above, after entering the `updateProfilePic` command, the profile picture of the person at the specified index is updated to the image stored at the url specified.
 
 == FAQ
 
