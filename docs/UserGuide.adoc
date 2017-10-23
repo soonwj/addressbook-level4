@@ -34,7 +34,8 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 .  Some example commands you can try:
 
 * *`list`* : lists all contacts
-* **`add`**`n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : adds a contact named `John Doe` to the Address Book.
+* **`add`**`n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : adds a contact named `John Doe` to the Address Book
+* **`addE`**`h/Birthday de/John Doe's 21st birthday party d/2017-12-20` : adds an event named `Birthday` to the Address Book
 * **`delete`**`3` : deletes the 3rd contact shown in the current list
 * *`exit`* : exits the app
 
@@ -53,7 +54,7 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 
 === Adding a person: `add`
 
-Adds a person to the address book +
+Adds a person to the address book. +
 Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]...`
 
 [TIP]
@@ -64,22 +65,38 @@ Examples:
 * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
 * `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
 
+**Picture guide**
+
+<PICTURE GUIDE PENDING UI UPDATE>
+
 === Adding an event: `addE`
 
-Adds an event to the address book +
+Adds an event to the address book. +
 Format: `addE h/HEADER de/DESCRIPTION d/DATE`
 
 [TIP]
 The date must a valid date with format: year-month-day
 
-Examples:
+Example:
 
-* `addE h/Meeting de/Business meeting at work d/2017-11-20`
+* `addE h/Meeting de/Business meeting at in the afternoon at 2pm d/2017-11-20`
+
+**Picture guide**
+
+image::addEpic.png[width="1000"]
+
+Your newly created event will be listed in the event panel and will be sorted based on its date. Thus, the earliest event will be displayed at the top of the panel.
+Yellow panel indicates an event upcoming in 2 or less days, Green panel indicates an event that have yet to come (more than 2 days) and Red panel indicates that the event is already overdue.
+
 
 === Clearing all entries : `clear`
 
 Clears all entries from the address book. +
 Format: `clear`
+
+**Picture guide**
+
+<PICTURE GUIDE PENDING UI UPDATE>
 
 === Deleting a person : `delete`
 
@@ -101,6 +118,10 @@ Deletes the 2nd person in the address book.
 `delete 1` +
 Deletes the 1st person in the results of the `find` command.
 
+**Picture guide**
+
+<PICTURE GUIDE PENDING UI UPDATE>
+
 === Deleting an event : `deleteE`
 
 Deletes the specified event from the address book. +
@@ -117,6 +138,10 @@ Examples:
 * `deleteE 3` +
 Deletes the 3rd event in the address book.
 
+**Picture guide**
+
+<PICTURE GUIDE PENDING UI UPDATE>
+
 === Deleting the profile picture of a person : `deleteProfilePic`
 
 Deletes the profile picture of the specified person from the address book. +
@@ -126,7 +151,7 @@ Format: `deleteProfilePic INDEX`
 * Deletes the profile picture of the person at the specified `INDEX`.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* 1, 2, 3, ...
-* The index must be valid as well
+* The index must be valid as well.
 ****
 
 Examples:
@@ -158,6 +183,10 @@ Edits the phone number and email address of the 1st person to be `91234567` and 
 * `edit 2 n/Betsy Crower t/` +
 Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 
+**Picture guide**
+
+<PICTURE GUIDE PENDING UI UPDATE>
+
 === Editing an event : `editE`
 
 Edits an existing event in the address book. +
@@ -174,6 +203,10 @@ Examples:
 
 * `editE 1 h/Birthday party d/2017-06-12` +
 Edits the header and date of the 1st event to be `Birthday party` and `2017-06-12` respectively.
+
+**Picture guide**
+
+<PICTURE GUIDE PENDING UI UPDATE>
 
 === Exiting the program : `exit`
 
