@@ -138,6 +138,10 @@ Deletes the profile picture of the 2nd person in the address book.
 `delete 1` +
 Deletes the profile picture of the 1st person in the results of the `find` command.
 
+Image Example:
+
+image::deleteProfilePicImageExample.jpg[width="1000"]
+
 === Editing a person : `edit`
 
 Edits an existing person in the address book. +
@@ -366,6 +370,10 @@ Examples:
 Updates the profile picture of the 1st person to be the image at `file:///C:/Users/Bobby/image.jpg` +
 * `updateProfilePic 2 u/http://www.google.com/images/image.png` +
 Updates the profile picture of the 2nd person to be the image at `http://www.google.com/images/image.png` +
+
+Image Example:
+
+image::updateProfilePicImageExample.jpg[width="1000"]
 
 == FAQ
 
