@@ -210,6 +210,22 @@ image::Email_UG_1.PNG[width="1000"]
 Exits the program. +
 Format: `exit`
 
+=== Export contacts: `export`
+Export your contacts from DoC to Google Contacts. +
+Format: `export` +
+
+**Steps** +
+**1.** Enter the `export` command +
+**2.** Log in to your Google account on the built-in browser +
+**3.** Grant permission to DoC to access your contacts +
+
+**Picture guide**
+
+image::importpic.png[width="1000"]
+
+You can enter your credentials and grant permission to DoC to access your Google contacts, as highlighted by the
+red boxes in the picture above.
+
 === Finding persons by name and tags: `find`
 
 Finds persons whose names or tags contain any of the given keywords. +
