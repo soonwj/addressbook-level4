@@ -39,7 +39,7 @@ public class GooglePersonConverterUtil {
             tempPhoneNumber = person.getPhoneNumbers().get(0).getValue();
             tempEmailAddress = person.getEmailAddresses().get(0).getValue();
             tempAddress = person.getAddresses().get(0).getFormattedValue();
-        } catch (IndexOutOfBoundsException | NullPointerException E) {
+        } catch (IndexOutOfBoundsException | NullPointerExdception E) {
             tempEmailAddress = null;
             tempAddress = null;
         }
