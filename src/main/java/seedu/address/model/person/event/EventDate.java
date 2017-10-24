@@ -22,6 +22,7 @@ public class EventDate {
 
     public final String value;
     public final LocalDate eventLocalDate;
+    private Period period;
     private String countDown;
 
     /**
@@ -44,7 +45,7 @@ public class EventDate {
     private void getCountDown() {
         ZoneId sgt = ZoneId.of("GMT+8");
         LocalDate currentDate = LocalDate.now(sgt);
-        Period period = currentDate.until(eventLocalDate);
+        this.period = currentDate.until(eventLocalDate);
         int years = period.getYears();
         int months = period.getMonths();
         int days = period.getDays();
