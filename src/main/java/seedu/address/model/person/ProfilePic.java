@@ -27,7 +27,7 @@ public class ProfilePic {
     public final String source;
 
     public ProfilePic() {
-        source = "file://" + Paths.get("src/main/resources/images/fail.png").toAbsolutePath().toUri().getPath();
+        source = "file://" + Paths.get("src/main/resources/images/default.png").toAbsolutePath().toUri().getPath();
     }
 
     /**
