@@ -55,52 +55,56 @@ public class ImportCommand extends GoogleCommand {
     @Override
     @Subscribe
     protected void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event) {
-        //Fire event to alert status bar of conversion process
-        EventsCenter.getInstance().post(
-                new NewResultAvailableEvent("Successfully authenticated - Conversion in process now"));
+        if (!getCommandCompleted()) {
+            //Fire event to alert status bar of conversion process
+            EventsCenter.getInstance().post(
+                    new NewResultAvailableEvent("Successfully authenticated - Conversion in process now"));
 
-        //Incoming Google Person List
-        List<com.google.api.services.people.v1.model.Person> googlePersonList = new ArrayList<>();
+            //Incoming Google Person List
+            List<com.google.api.services.people.v1.model.Person> googlePersonList = new ArrayList<>();
 
-        //List of converted DoC person
-        List<Person> docPersonList = new ArrayList<>();
+            //List of converted DoC person
+            List<Person> docPersonList = new ArrayList<>();
 
-        if (!commandTypeCheck(event.getCommandType())) {
-            return;
-        }
-
-        //set up credentials
-        setupCredentials(event.getAuthCode());
-
-        //set up people service
-        peopleService = new PeopleService.Builder(httpTransport, jsonFactory, credential)
-                .setApplicationName("CS2103T - Doc")
-                .build();
-
-        //HTTP calls
-        try {
-            ListConnectionsResponse response = peopleService.people().connections().list("people/me")
-                    .setPersonFields("names,emailAddresses,phoneNumbers,addresses")
-                    .setPageSize(1000)
-                    .execute();
-            googlePersonList = response.getConnections();
-        } catch (IOException e) {
-            System.out.print(e);
-        }
-        //Conversion call
-        docPersonList = GooglePersonConverterUtil.listGoogleToDoCPersonConversion(googlePersonList);
-
-        //Adding to the model
-        for (Person p : docPersonList) {
-            try {
-                model.addPerson(p);
-            } catch (DuplicatePersonException e) {
-                //Duplicate persons shall be ignored
-                continue;
+            if (!commandTypeCheck(event.getCommandType())) {
+                return;
             }
+
+            //set up credentials
+            setupCredentials(event.getAuthCode());
+
+            //set up people service
+            peopleService = new PeopleService.Builder(httpTransport, jsonFactory, credential)
+                    .setApplicationName("CS2103T - Doc")
+                    .build();
+
+            //HTTP calls
+            try {
+                ListConnectionsResponse response = peopleService.people().connections().list("people/me")
+                        .setPersonFields("names,emailAddresses,phoneNumbers,addresses")
+                        .setPageSize(1000)
+                        .execute();
+                googlePersonList = response.getConnections();
+            } catch (IOException e) {
+                System.out.print(e);
+            }
+            //Conversion call
+            docPersonList = GooglePersonConverterUtil.listGoogleToDoCPersonConversion(googlePersonList);
+
+            //Adding to the model
+            for (Person p : docPersonList) {
+                try {
+                    model.addPerson(p);
+                } catch (DuplicatePersonException e) {
+                    //Duplicate persons shall be ignored
+                    continue;
+                }
+            }
+            EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
+                    "https://contacts.google.com/", commandType));
+            setCommandCompleted();
         }
-        EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
-                "https://contacts.google.com/", commandType));
+
     }
     @Override
     public String getAuthenticationUrl() {
