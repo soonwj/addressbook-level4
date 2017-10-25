@@ -18,12 +18,14 @@ public abstract class Oauth2Command extends Command {
     public static final String INVALID_COMMAND_TYPE_MESSAGE = "The COMMAND_TYPE cannot be null";
     private static final String REDIRECT_URL = "https://cs2103tdummyendpoint.herokuapp.com";
     protected final String commandType;
+    private boolean commandCompleted;
 
     protected Oauth2Command(String inputType)  {
         if (inputType == null || inputType.charAt(inputType.length() - 1) == '_') {
             assert true : "Child classes of Oauth2Command must provide a valid command type!";
         }
         commandType = inputType;
+        commandCompleted = false;
     }
     protected Oauth2Command() {
         this(null);
@@ -31,6 +33,13 @@ public abstract class Oauth2Command extends Command {
 
     public static String getRedirectUrl() {
         return REDIRECT_URL;
+    }
+
+    public void setCommandCompleted() {
+        commandCompleted = true;
+    }
+    public boolean getCommandCompleted() {
+        return commandCompleted;
     }
 
     /**

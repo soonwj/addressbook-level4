@@ -56,53 +56,56 @@ public class ExportCommand extends GoogleCommand {
     @Override
     @Subscribe
     protected void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event) {
-        //Fire event to alert status bar of conversion process
-        EventsCenter.getInstance().post(
-                new NewResultAvailableEvent("Successfully authenticated - Conversion in process now"));
+        if (!getCommandCompleted()) {
+            //Fire event to alert status bar of conversion process
+            EventsCenter.getInstance().post(
+                    new NewResultAvailableEvent("Successfully authenticated - Conversion in process now"));
 
-        if (!commandTypeCheck(event.getCommandType())) {
-            return;
-        }
-        //set up credentials
-        setupCredentials(event.getAuthCode());
-
-        //set up people service
-        peopleService = new PeopleService.Builder(httpTransport, jsonFactory, credential)
-                .setApplicationName("CS2103T - Doc")
-                .build();
-
-        //Conversion calls
-        List<ReadOnlyPerson> docPersonList = model.getAddressBook().getPersonList();
-        List<com.google.api.services.people.v1.model.Person> googlePersonList =
-                GooglePersonConverterUtil.listDocToGooglePersonConversion(docPersonList);
-
-        //Set contactGroupId for exporting to a specific contact group: `Imported From DoC`
-        String contactGroupId = retrieveExistingContractGroupResourceName();
-
-        //Create a new contact group titled `Imported From DoC`, if still not set
-        if (contactGroupId == null) {
-            contactGroupId = createNewContactGroup();
-        }
-
-        //HTTP calls - exporting
-        for (com.google.api.services.people.v1.model.Person p : googlePersonList) {
-            try {
-                //create Contact
-                String newPersonId;
-                newPersonId = peopleService.people().createContact(p).execute().getResourceName();
-
-                //set Contact's group
-                peopleService.contactGroups().members().modify(contactGroupId,
-                        new ModifyContactGroupMembersRequest()
-                                .setResourceNamesToAdd(GooglePersonConverterUtil
-                                        .makeListFromOne(newPersonId)))
-                                .execute();
-            } catch (IOException E) {
-                System.out.println(E);
+            if (!commandTypeCheck(event.getCommandType())) {
+                return;
             }
+            //set up credentials
+            setupCredentials(event.getAuthCode());
+
+            //set up people service
+            peopleService = new PeopleService.Builder(httpTransport, jsonFactory, credential)
+                    .setApplicationName("CS2103T - Doc")
+                    .build();
+
+            //Conversion calls
+            List<ReadOnlyPerson> docPersonList = model.getAddressBook().getPersonList();
+            List<com.google.api.services.people.v1.model.Person> googlePersonList =
+                    GooglePersonConverterUtil.listDocToGooglePersonConversion(docPersonList);
+
+            //Set contactGroupId for exporting to a specific contact group: `Imported From DoC`
+            String contactGroupId = retrieveExistingContractGroupResourceName();
+
+            //Create a new contact group titled `Imported From DoC`, if still not set
+            if (contactGroupId == null) {
+                contactGroupId = createNewContactGroup();
+            }
+
+            //HTTP calls - exporting
+            for (com.google.api.services.people.v1.model.Person p : googlePersonList) {
+                try {
+                    //create Contact
+                    String newPersonId;
+                    newPersonId = peopleService.people().createContact(p).execute().getResourceName();
+
+                    //set Contact's group
+                    peopleService.contactGroups().members().modify(contactGroupId,
+                            new ModifyContactGroupMembersRequest()
+                                    .setResourceNamesToAdd(GooglePersonConverterUtil
+                                            .makeListFromOne(newPersonId)))
+                            .execute();
+                } catch (IOException E) {
+                    System.out.println(E);
+                }
+            }
+            EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
+                    googleContactsGroupView + contactGroupId.split("/")[1], commandType));
+            setCommandCompleted();
         }
-        EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
-                googleContactsGroupView + contactGroupId.split("/")[1], commandType));
     }
 
     /**
