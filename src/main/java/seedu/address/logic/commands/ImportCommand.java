@@ -1,95 +1,119 @@
 package seedu.address.logic.commands;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl;
 import com.google.api.services.people.v1.PeopleService;
 import com.google.api.services.people.v1.model.ListConnectionsResponse;
-import com.google.api.services.people.v1.model.Person;
 import com.google.common.eventbus.Subscribe;
 
-import seedu.address.commons.auth.GoogleApiAuth;
 import seedu.address.commons.core.EventsCenter;
-import seedu.address.commons.events.logic.GoogleApiAuthServiceCredentialsSetupCompleted;
-import seedu.address.commons.events.logic.GoogleAuthRequestEvent;
-import seedu.address.commons.exceptions.InvalidGooglePersonException;
+import seedu.address.commons.events.logic.GoogleAuthenticationSuccessEvent;
+import seedu.address.commons.events.logic.GoogleCommandCompleteEvent;
+import seedu.address.commons.events.ui.NewResultAvailableEvent;
 import seedu.address.commons.util.GooglePersonConverterUtil;
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
-
 
 /**Purpose: Imports contacts from Google Contacts, fulfilling Google's OAuth2 protocol.
  * Limit of contacts retrieved set at : 1000
- * Each instance of this method will maintain it's own GoogleApiAuth authService. Token re-use is not supported.
  * Created by Philemon1 on 11/10/2017.
  */
-public class ImportCommand extends Command {
-
+public class ImportCommand extends GoogleCommand {
     public static final String COMMAND_WORD = "import";
-    public static final String MESSAGE_SUCCESS = "Please proceed to login";
-    private GoogleApiAuth authService;
-    private PeopleService peopleService;
-    private HttpTransport httpTransport;
-    private JacksonFactory jsonFactory;
+
+    //Scope includes read-only access to a users' Google Contacts
+    public static final String ACCESS_SCOPE = "https://www.googleapis.com/auth/contacts.readonly";
+
+    protected PeopleService peopleService;
 
     public ImportCommand() {
-        authService = new GoogleApiAuth();
+        super(COMMAND_WORD, ACCESS_SCOPE);
         EventsCenter.getInstance().registerHandler(this);
-        httpTransport = new NetHttpTransport();
-        jsonFactory = new JacksonFactory();
     }
 
 
     @Override
     public CommandResult execute() throws CommandException {
-        EventsCenter.getInstance().post(new GoogleAuthRequestEvent(authService));
-        return new CommandResult(MESSAGE_SUCCESS);
-    }
-
-    /**
-     * Event listener for successful setup of authService's credentials
-     * @param event
-     */
-    @Subscribe
-    private void handleGoogleApiAuthServiceCredentialsSetupComplete(GoogleApiAuthServiceCredentialsSetupCompleted
-                                                                                event) {
-        peopleService = new PeopleService.Builder(httpTransport, jsonFactory, authService.getCredential())
-                .setApplicationName("CS2103T - Doc")
-                .build();
+        //Fires an event to the BrowserPanel
         try {
-            ListConnectionsResponse response = peopleService.people().connections().list("people/me")
-                    .setPersonFields("names,emailAddresses,phoneNumbers,addresses")
-                    .setPageSize(1000)
-                    .execute();
-            List<Person> connections = response.getConnections();
-            convertAndAddAll(connections);
+            triggerBrowserAuth();
         } catch (IOException e) {
-            System.out.print(e);
+            throw new CommandException("Failed to trigger browser auth");
         }
-
+        return new CommandResult("Authentication in process");
     }
 
     /**
-     * Final step of the import procedure, converts all Google Person in the list connections, to a model.person
-     * .Person, then adds it to the model.
-     * @param connections
+     * Event listener for a successful authentication
+     * @param event Should be fired from the BrowserPanel, with an authcode
      */
-    private void convertAndAddAll(List<Person> connections) {
-        for (Person p: connections) {
-            try {
-                seedu.address.model.person.Person temp = GooglePersonConverterUtil.convertPerson(p);
-                if (temp != null) {
-                    model.addPerson(GooglePersonConverterUtil.convertPerson(p));
-                }
-            } catch (DuplicatePersonException e) {
-                System.out.println(e);
-            } catch (InvalidGooglePersonException e) {
-                System.out.println(e);
-            }
-        }
-    }
+    @Override
+    @Subscribe
+    protected void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event) {
+        if (!getCommandCompleted()) {
+            //Fire event to alert status bar of conversion process
+            EventsCenter.getInstance().post(
+                    new NewResultAvailableEvent("Successfully authenticated - Conversion in process now"));
 
+            //Incoming Google Person List
+            List<com.google.api.services.people.v1.model.Person> googlePersonList = new ArrayList<>();
+
+            //List of converted DoC person
+            List<Person> docPersonList = new ArrayList<>();
+
+            if (!commandTypeCheck(event.getCommandType())) {
+                return;
+            }
+
+            //set up credentials
+            setupCredentials(event.getAuthCode());
+
+            //set up people service
+            peopleService = new PeopleService.Builder(httpTransport, jsonFactory, credential)
+                    .setApplicationName("CS2103T - Doc")
+                    .build();
+
+            //HTTP calls
+            try {
+                ListConnectionsResponse response = peopleService.people().connections().list("people/me")
+                        .setPersonFields("names,emailAddresses,phoneNumbers,addresses")
+                        .setPageSize(1000)
+                        .execute();
+                googlePersonList = response.getConnections();
+            } catch (IOException e) {
+                System.out.print(e);
+            }
+            //Conversion call
+            docPersonList = GooglePersonConverterUtil.listGoogleToDoCPersonConversion(googlePersonList);
+
+            //Adding to the model
+            for (Person p : docPersonList) {
+                try {
+                    model.addPerson(p);
+                } catch (DuplicatePersonException e) {
+                    //Duplicate persons shall be ignored
+                    continue;
+                }
+            }
+            EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
+                    "https://contacts.google.com/", commandType));
+            setCommandCompleted();
+        }
+
+    }
+    @Override
+    public String getAuthenticationUrl() {
+        return new GoogleBrowserClientRequestUrl(CLIENT_ID, getRedirectUrl(), Arrays.asList(getAccessScope())).build();
+    }
+    public String getAccessScope() {
+        return accessScope;
+    }
+    private boolean commandTypeCheck(String inputCommandType) {
+        return inputCommandType.equals("GOOGLE_import");
+    }
 }
