@@ -46,7 +46,7 @@ public class UpdateProfilePicCommandParser implements Parser<UpdateProfilePicCom
         }
 
         if (updatedPerson.getProfilePic().toString().equals("file://"
-                + Paths.get("src/main/resources/images/fail.png").toAbsolutePath().toUri().getPath())) {
+                + Paths.get("src/main/resources/images/default.png").toAbsolutePath().toUri().getPath())) {
             throw new ParseException(UpdateProfilePicCommand.MESSAGE_NOT_UPDATED);
         }
 
