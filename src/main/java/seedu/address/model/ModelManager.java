@@ -133,6 +133,12 @@ public class ModelManager extends ComponentManager implements Model {
     public void findLocation(ReadOnlyPerson person) throws PersonNotFoundException {
         raise(new FindLocationRequestEvent(person));
     }
+    
+    @Override
+    public void sortPersons() {
+        addressBook.sortPersons();
+        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+    }
 
     /**
      * Returns an unmodifiable view of the list of {@code ReadOnlyPerson} backed by the internal list of
