@@ -51,7 +51,8 @@ public class GooglePersonConverterUtilTest {
     public void convertGooglePersonWithNullEmail() throws InvalidGooglePersonException {
         com.google.api.services.people.v1.model.Person testPerson
                 = getGooglePerson("Testee", "12345678", "blk001 Test Ave", null);
-        seedu.address.model.person.Person convertedPerson = GooglePersonConverterUtil.convertPerson(testPerson);
+        seedu.address.model.person.Person convertedPerson =
+                GooglePersonConverterUtil.singleGoogleToDocPersonConversion(testPerson);
         assertEquals(convertedPerson.getEmail().toString(), GooglePersonConverterUtil.DEFAULT_EMAIL);
     }
 
@@ -59,13 +60,19 @@ public class GooglePersonConverterUtilTest {
     public void convertGooglePersonWithNullAddress() throws InvalidGooglePersonException {
         com.google.api.services.people.v1.model.Person testPerson
                 = getGooglePerson("Testee", "12345678", null, "test@gmail.com");
-        seedu.address.model.person.Person convertedPerson = GooglePersonConverterUtil.convertPerson(testPerson);
+        seedu.address.model.person.Person convertedPerson =
+                GooglePersonConverterUtil.singleGoogleToDocPersonConversion(testPerson);
         assertEquals(convertedPerson.getAddress().toString(), GooglePersonConverterUtil.DEFAULT_ADDRESS);
     }
 
     /**
      * DoC Person -> Google Person Conversion Tests
      */
+
+
+
+
+
 
 
     /**
