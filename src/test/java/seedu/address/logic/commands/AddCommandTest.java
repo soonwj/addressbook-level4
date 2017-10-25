@@ -178,7 +178,7 @@ public class AddCommandTest {
             fail("This method should not be called.");
             return null;
         }
-        
+
         @Override
         public void sortPersons() { fail("This method should not be called.");}
     }

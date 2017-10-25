@@ -7,7 +7,7 @@ package seedu.address.logic.commands;
 public class SortCommand extends Command {
 
     public static final String COMMAND_WORD = "sort";
-    
+
     public static final String COMMAND_SUCCESS = "Sorted Successfully";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Sorts the persons based on their name\n "

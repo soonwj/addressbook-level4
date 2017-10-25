@@ -133,7 +133,7 @@ public class ModelManager extends ComponentManager implements Model {
     public void findLocation(ReadOnlyPerson person) throws PersonNotFoundException {
         raise(new FindLocationRequestEvent(person));
     }
-    
+
     @Override
     public void sortPersons() {
         addressBook.sortPersons();
