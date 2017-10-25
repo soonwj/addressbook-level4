@@ -58,7 +58,8 @@ public class ImportCommand extends GoogleCommand {
         if (!getCommandCompleted()) {
             //Fire event to alert status bar of conversion process
             EventsCenter.getInstance().post(
-                    new NewResultAvailableEvent("Successfully authenticated - Conversion in process now"));
+                    new NewResultAvailableEvent("Successfully authenticated - Conversion in process now",
+                            false));
 
             //Incoming Google Person List
             List<com.google.api.services.people.v1.model.Person> googlePersonList = new ArrayList<>();

@@ -59,7 +59,8 @@ public class ExportCommand extends GoogleCommand {
         if (!getCommandCompleted()) {
             //Fire event to alert status bar of conversion process
             EventsCenter.getInstance().post(
-                    new NewResultAvailableEvent("Successfully authenticated - Conversion in process now"));
+                    new NewResultAvailableEvent("Successfully authenticated - Conversion in process now",
+                            false));
 
             if (!commandTypeCheck(event.getCommandType())) {
                 return;
