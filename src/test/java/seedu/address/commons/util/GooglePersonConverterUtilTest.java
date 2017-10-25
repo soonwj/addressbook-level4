@@ -116,7 +116,7 @@ public class GooglePersonConverterUtilTest {
         Person testDocPerson = new PersonBuilder().withName("John Doe").withAddress("Elm Street")
                 .withEmail("jon@gmail.com").withPhone("01234567").withTags("friends").build();
 
-        //test google person listt
+        //test google person list
         ArrayList<com.google.api.services.people.v1.model.Person> testGooglePersonList = new ArrayList<>();
         testGooglePersonList.add(testGooglePerson);
 
@@ -138,6 +138,7 @@ public class GooglePersonConverterUtilTest {
     public void testNameProcessingRegexFitting() {
         String invalidNameString = "?394johnD_oE*&^%#%^*()]";
         String expectedProcessedName = " 394johnD oE           ";
+
         try {
             assertEquals(expectedProcessedName, GooglePersonConverterUtil.processName(invalidNameString));
         } catch (InvalidGooglePersonException E){ assert true: "Unexpected behaviour from GooglePersonConverterUtil"; }
@@ -145,7 +146,6 @@ public class GooglePersonConverterUtilTest {
 
     @Test
     public void testNumberProcessingRegexFitting() {
-
         String invalidNumberString = "23k4n&((#???!sfsd+++6590000000";
         String expectedNumberString = "23490000000";
 
