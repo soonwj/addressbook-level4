@@ -12,7 +12,7 @@ public class SortCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Sorts the persons based on their name\n "
             + "Parameters: KEYWORD \n"
-            + "Example: " + COMMAND_WORD ;
+            + "Example: " + COMMAND_WORD;
 
     public SortCommand() { }
 

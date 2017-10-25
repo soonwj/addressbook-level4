@@ -125,7 +125,7 @@ public class AddressBookParser {
         case EmailCommand.COMMAND_WORD:
             return new EmailCommandParser().parse(arguments);
 
-            case SortCommand.COMMAND_WORD:
+        case SortCommand.COMMAND_WORD:
             return new SortCommand();
 
         default:
