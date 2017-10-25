@@ -158,7 +158,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     //=========== Filtered Person List Accessors =============================================================
-  
+
     public void sortPersons() {
         addressBook.sortPersons();
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
