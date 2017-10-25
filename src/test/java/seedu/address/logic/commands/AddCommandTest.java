@@ -158,6 +158,11 @@ public class AddCommandTest {
         }
 
         @Override
+        public void sortByViewCount() {
+            fail("This method should not be called");
+        }
+
+        @Override
         public ObservableList<ReadOnlyEvent> getFilteredEventList() {
             fail("This method should not be called.");
             return null;

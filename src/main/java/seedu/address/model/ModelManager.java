@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +26,7 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.EventNotFoundException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.tag.Tag;
+import seedu.address.model.util.ViewCountComparator;
 
 /**
  * Represents the in-memory model of the address book data.
@@ -92,7 +94,9 @@ public class ModelManager extends ComponentManager implements Model {
         requireAllNonNull(target, editedPerson);
 
         addressBook.updatePerson(target, editedPerson);
-        indicateAddressBookChanged();
+        if (target.getViewCount() == editedPerson.getViewCount()) {
+            indicateAddressBookChanged();
+        }
     }
 
     @Override
@@ -135,6 +139,29 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
+    public void sortByViewCount() {
+        AddressBook addressBookToSort = new AddressBook(addressBook);
+        ObservableList<ReadOnlyPerson> listToSort = addressBookToSort.getPersonList();
+        ArrayList<ReadOnlyPerson> listToSortedCopy = new ArrayList<>();
+        for (ReadOnlyPerson r : listToSort) {
+            listToSortedCopy.add(r);
+        }
+        Collections.sort(listToSortedCopy, new ViewCountComparator());
+
+        try {
+            addressBookToSort.setPersons(listToSortedCopy);
+        } catch (DuplicatePersonException dpe) {
+            assert false : "Impossible to be duplicate";
+        }
+
+        resetData(addressBookToSort);
+    }
+
+    //=========== Filtered Person List Accessors =============================================================
+
+    /**
+     * Sorts the persons in the address book by name
+     */
     public void sortPersons() {
         addressBook.sortPersons();
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
