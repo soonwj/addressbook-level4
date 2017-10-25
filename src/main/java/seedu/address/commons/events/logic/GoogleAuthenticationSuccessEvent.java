@@ -9,7 +9,7 @@ public class GoogleAuthenticationSuccessEvent extends BaseEvent {
     private String commandType;
     private String authCode;
 
-    public GoogleAuthenticationSuccessEvent(String inputCommandType, String inputAuthCode){
+    public GoogleAuthenticationSuccessEvent(String inputCommandType, String inputAuthCode) {
         commandType = inputCommandType;
         authCode = inputAuthCode;
     }
