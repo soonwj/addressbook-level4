@@ -92,6 +92,7 @@ public class GooglePersonConverterUtilTest {
                 .withEmail("jon@gmail.com").withPhone("01234567").withTags("friends").build();
         com.google.api.services.people.v1.model.Person expectedGooglePerson =
                 getGooglePerson("John Doe", "01234567", "Elm Street", "jon@gmail.com");
+
         List<com.google.api.services.people.v1.model.Person> expectedGooglePersonList = new ArrayList<>();
         expectedGooglePersonList.add(expectedGooglePerson);
 

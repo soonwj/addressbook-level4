@@ -95,7 +95,7 @@ public abstract class GooglePersonConverterUtil {
          */
         //Google Name
         com.google.api.services.people.v1.model.Name googleName = new com.google.api.services.people.v1.model.Name()
-                .setGivenName(person.getName().fullName);
+                .setGivenName(person.getName().fullName).setDisplayName(person.getName().fullName);
         //Google Phone Number
         com.google.api.services.people.v1.model.PhoneNumber googleNumber =
                 new com.google.api.services.people.v1.model.PhoneNumber().setValue(person.getPhone().value);
