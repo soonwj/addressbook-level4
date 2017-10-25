@@ -176,9 +176,13 @@ public class AddEventCommandTest {
             return null;
         }
 
-
         @Override
         public void findLocation(ReadOnlyPerson person) {
+            fail("This method should not be called.");
+        }
+
+        @Override
+        public void sortPersons() {
             fail("This method should not be called.");
         }
     }
