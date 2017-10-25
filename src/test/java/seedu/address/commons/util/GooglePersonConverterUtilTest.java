@@ -4,18 +4,16 @@ import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
+import com.google.api.services.people.v1.model.ListConnectionsResponse;
 import com.google.api.services.people.v1.model.UserDefined;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import seedu.address.commons.exceptions.InvalidGooglePersonException;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Person;
-import seedu.address.model.person.Phone;
+import seedu.address.model.person.*;
 import seedu.address.testutil.PersonBuilder;
 
 
@@ -86,8 +84,76 @@ public class GooglePersonConverterUtilTest {
     }
 
     /**
-     *
+     *  (List) DoC Person -> Google Person Conversion Tests
      */
+    @Test
+    public void convertListGenericDoCPerson() {
+        ReadOnlyPerson docPerson = new PersonBuilder().withName("John Doe").withAddress("Elm Street")
+                .withEmail("jon@gmail.com").withPhone("01234567").withTags("friends").build();
+        com.google.api.services.people.v1.model.Person expectedGooglePerson =
+                getGooglePerson("John Doe", "01234567", "Elm Street", "jon@gmail.com");
+        List<com.google.api.services.people.v1.model.Person> expectedGooglePersonList = new ArrayList<>();
+        expectedGooglePersonList.add(expectedGooglePerson);
+
+        List<ReadOnlyPerson> docPersons = new ArrayList<>();
+        docPersons.add(docPerson);
+
+        List<com.google.api.services.people.v1.model.Person> actualGooglePersonList;
+        actualGooglePersonList = GooglePersonConverterUtil.listDocToGooglePersonConversion(docPersons);
+
+        assertEquals(expectedGooglePersonList, actualGooglePersonList);
+    }
+
+    /**
+     * (List) Google Person -> DoC Person Conversion Tests
+     */
+    @Test
+    public void convertListGooglePerson(){
+        //test google person
+        com.google.api.services.people.v1.model.Person testGooglePerson =
+                getGooglePerson("John Doe", "01234567", "Elm Street", "jon@gmail.com");
+        //test doc person
+        Person testDocPerson = new PersonBuilder().withName("John Doe").withAddress("Elm Street")
+                .withEmail("jon@gmail.com").withPhone("01234567").withTags("friends").build();
+
+        //test google person listt
+        ArrayList<com.google.api.services.people.v1.model.Person> testGooglePersonList = new ArrayList<>();
+        testGooglePersonList.add(testGooglePerson);
+
+        //expected doc person list
+        List<Person> expectedDocPersonList = new ArrayList<>();
+        expectedDocPersonList.add(testDocPerson);
+
+        //actual doc person list
+        List<Person> actualDocPersonList = GooglePersonConverterUtil
+                .listGoogleToDoCPersonConversion(testGooglePersonList);
+
+        assertEquals(expectedDocPersonList, actualDocPersonList);
+    }
+
+    /**
+     * Person Number and Name processing test to fit DoC regex
+     */
+    @Test
+    public void testNameProcessingRegexFitting() {
+        String invalidNameString = "?394johnD_oE*&^%#%^*()]";
+        String expectedProcessedName = " 394johnD oE           ";
+        try {
+            assertEquals(expectedProcessedName, GooglePersonConverterUtil.processName(invalidNameString));
+        } catch (InvalidGooglePersonException E){ assert true: "Unexpected behaviour from GooglePersonConverterUtil"; }
+    }
+
+    @Test
+    public void testNumberProcessingRegexFitting() {
+
+        String invalidNumberString = "23k4n&((#???!sfsd+++6590000000";
+        String expectedNumberString = "23490000000";
+
+        try {
+            assertEquals(expectedNumberString, GooglePersonConverterUtil.processNumber(invalidNumberString));
+        } catch (InvalidGooglePersonException E) { assert true: "Unexpected behaviour from GooglePersonConverterUtil"; }
+    }
+
 
 
 
@@ -112,7 +178,7 @@ public class GooglePersonConverterUtilTest {
         ArrayList<UserDefined> tags = new ArrayList<>();
 
         tags.add(new UserDefined().setKey("tag").setValue("friends"));
-        names.add(new com.google.api.services.people.v1.model.Name().setGivenName(name));
+        names.add(new com.google.api.services.people.v1.model.Name().setGivenName(name).setDisplayName(name));
         phones.add(new com.google.api.services.people.v1.model.PhoneNumber().setValue(number));
         addresses.add(new com.google.api.services.people.v1.model.Address().setFormattedValue(address));
         emails.add(new com.google.api.services.people.v1.model.EmailAddress().setValue(email));

@@ -218,7 +218,7 @@ public abstract class GooglePersonConverterUtil {
             throw new InvalidGooglePersonException("DoC does not accept Google Persons with null phone");
         }
         if (tempNumber.contains("+65")) {
-            tempNumber.replace("+65", "");
+            tempNumber = tempNumber.replace("+65", "");
         }
         return tempNumber.replaceAll("[^0-9]", "");
     }
