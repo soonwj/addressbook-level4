@@ -34,7 +34,8 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 .  Some example commands you can try:
 
 * *`list`* : lists all contacts
-* **`add`**`n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : adds a contact named `John Doe` to the Address Book.
+* **`add`**`n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : adds a contact named `John Doe` to the Address Book
+* **`addE`**`h/Birthday de/John Doe's 21st birthday party d/2017-12-20` : adds an event named `Birthday` to the Address Book
 * **`delete`**`3` : deletes the 3rd contact shown in the current list
 * *`exit`* : exits the app
 
@@ -51,43 +52,59 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 * Parameters can be in any order e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
 ====
 
-=== Adding a person: `add`
+=== Adding a contact: `add`
 
-Adds a person to the address book +
+Adds a contact to the address book. +
 Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]...`
 
 [TIP]
-A person can have any number of tags (including 0)
+A contact can have any number of tags (including 0)
 
 Examples:
 
 * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
 * `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
 
+**Picture guide**
+
+<PICTURE GUIDE PENDING UI UPDATE>
+
 === Adding an event: `addE`
 
-Adds an event to the address book +
+Adds an event to the address book. +
 Format: `addE h/HEADER de/DESCRIPTION d/DATE`
 
 [TIP]
 The date must a valid date with format: year-month-day
 
-Examples:
+Example:
 
-* `addE h/Meeting de/Business meeting at work d/2017-11-20`
+* `addE h/Meeting de/Business meeting at in the afternoon at 2pm d/2017-11-20`
+
+**Picture guide**
+
+image::addEpic.png[width="1000"]
+
+Your newly created event will be listed in the event panel and will be sorted based on its date. Thus, the earliest event will be displayed at the top of the panel.
+As shown in the guide above, yellow panel indicates an event upcoming in 2 or less days, Green panel indicates an event that have yet to come (more than 2 days) and Red panel indicates that the event is already overdue.
+
 
 === Clearing all entries : `clear`
 
 Clears all entries from the address book. +
 Format: `clear`
 
-=== Deleting a person : `delete`
+**Picture guide**
 
-Deletes the specified person from the address book. +
+<PICTURE GUIDE PENDING UI UPDATE>
+
+=== Deleting a contact : `delete`
+
+Deletes the specified contact from the address book. +
 Format: `delete INDEX`
 
 ****
-* Deletes the person at the specified `INDEX`.
+* Deletes the contact at the specified `INDEX`.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* 1, 2, 3, ...
 ****
@@ -96,10 +113,14 @@ Examples:
 
 * `list` +
 `delete 2` +
-Deletes the 2nd person in the address book.
+Deletes the 2nd contact in the address book.
 * `find Betsy` +
 `delete 1` +
-Deletes the 1st person in the results of the `find` command.
+Deletes the 1st contact in the results of the `find` command.
+
+**Picture guide**
+
+<PICTURE GUIDE PENDING UI UPDATE>
 
 === Deleting an event : `deleteE`
 
@@ -117,46 +138,60 @@ Examples:
 * `deleteE 3` +
 Deletes the 3rd event in the address book.
 
-=== Deleting the profile picture of a person : `deleteProfilePic`
+**Picture guide**
 
-Deletes the profile picture of the specified person from the address book. +
+<PICTURE GUIDE PENDING UI UPDATE>
+
+=== Deleting the profile picture of a contact : `deleteProfilePic`
+
+Deletes the profile picture of the specified contact from the address book. +
 Format: `deleteProfilePic INDEX`
 
 ****
-* Deletes the profile picture of the person at the specified `INDEX`.
+* Deletes the profile picture of the contact at the specified `INDEX`.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* 1, 2, 3, ...
-* The index must be valid as well
+* The index must be valid as well.
 ****
 
 Examples:
 
 * `list` +
 `deleteProfilePic 2` +
-Deletes the profile picture of the 2nd person in the address book.
+Deletes the profile picture of the 2nd contact in the address book.
 * `find Bobby` +
-`delete 1` +
+`deleteProfilePic 1` +
 Deletes the profile picture of the 1st person in the results of the `find` command.
+
+Picture Guide:
+
+image::deleteProfilePicImageExample.jpg[width="1000"]
+
+As shown in the picture above, after entering the `deleteProfilePic` command, the profile picture of the person at the specified index is reverted back to the default.
 
 === Editing a person : `edit`
 
-Edits an existing person in the address book. +
+Edits an existing contact in the address book. +
 Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...`
 
 ****
-* Edits the person at the specified `INDEX`. The index refers to the index number shown in the last person listing. The index *must be a positive integer* 1, 2, 3, ...
+* Edits the contact at the specified `INDEX`. The index refers to the index number shown in the last contact listing. The index *must be a positive integer* 1, 2, 3, ...
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
-* When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
-* You can remove all the person's tags by typing `t/` without specifying any tags after it.
+* When editing tags, the existing tags of the contact will be removed i.e adding of tags is not cumulative.
+* You can remove all the contact's tags by typing `t/` without specifying any tags after it.
 ****
 
 Examples:
 
 * `edit 1 p/91234567 e/johndoe@example.com` +
-Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
+Edits the phone number and email address of the 1st contact to be `91234567` and `johndoe@example.com` respectively.
 * `edit 2 n/Betsy Crower t/` +
-Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+Edits the name of the 2nd contact to be `Betsy Crower` and clears all existing tags.
+
+**Picture guide**
+
+<PICTURE GUIDE PENDING UI UPDATE>
 
 === Editing an event : `editE`
 
@@ -175,55 +210,98 @@ Examples:
 * `editE 1 h/Birthday party d/2017-06-12` +
 Edits the header and date of the 1st event to be `Birthday party` and `2017-06-12` respectively.
 
+**Picture guide**
+
+<PICTURE GUIDE PENDING UI UPDATE>
+
+=== Emailing a person : `email`
+
+Emails an existing person/ a group in the address book. +
+Format: `email [to/TO] [subject/SUBJECT] [body/BODY]`
+
+****
+* Email `to` must be provided.
+* Email `subject` and `body` is optional.
+* Email `to` contains either the `person's name` or a `tag name`.
+* Email `subject` contains the subject of the email.
+* Email `body` contains the body of the email.
+****
+
+Examples:
+
+* `email to/friends subject/SUBJECT body/BODY` +
+Opens the default emailing client and adds all the person who has the tag `friends` into the `to` area,
+adds the `subject` as `SUBJECT` and `body` as `BODY` .
+
+**Picture guide**
+
+image::Email_UG.PNG[width="1000"]
+
+* `email to/Adam` +
+Opens the default emailing client and adds Adam to the `to` field and has the subject and body as null.
+
+**Picture guide**
+
+image::Email_UG_1.PNG[width="1000"]
+
 === Exiting the program : `exit`
 
 Exits the program. +
 Format: `exit`
 
+=== Export contacts: `export`
+Export your contacts from DoC to Google Contacts. +
+Format: `export` +
+
+**Steps** +
+**1.** Enter the `export` command +
+**2.** Log in to your Google account on the built-in browser +
+**3.** Grant permission to DoC to access your contacts +
+
+**Picture guide**
+
+image::importpic.png[width="1000"]
+
+You can enter your credentials and grant permission to DoC to access your Google contacts, as highlighted by the
+red boxes in the picture above.
+
 === Finding persons by name and tags: `find`
+Lists all contacts whose name or tags matches any of the given search terms. +
+Format: `find TERM1 [MORE_TERMS]`
 
-Finds persons whose names or tags contain any of the given keywords. +
-Format: `find KEYWORD [MORE_KEYWORDS]`
 
-****
-* The search is case insensitive. e.g `hans` will match `Hans`
-* The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
-* Only the name and tag is searched.
-* Only full words will be matched e.g. `Han` will not match `Hans`
-* Persons matching at least one keyword will be returned (i.e. `OR` search). e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
-****
+NOTE: * The search is case insensitive; e.g a search term of `hans` will match any contact name containing `Hans` +
+ * Only full words will be matched; e.g a search term of `Han` will not match a contact name containing `Hans` +
+ * Name of contacts can be matched partially; e.g a search term of `Han` will match the contact name `Han Solo`
 
-Examples:
+*Picture Guide*
 
-* `find John` +
-Returns `john` and `John Doe`
-* `find Betsy Tim John` +
-Returns any person having names `Betsy`, `Tim`, or `John`
-* `find Family` +
-Returns any person having tag `Family`
-* `find Family Friend Brother` +
-Returns any person having tags `Family`, `Friend`, or `Brother`
+<PICTURE PENDING UI UPDATE>
+
+As demonstrated by the picture guide above, entering the command `find Family han` displays all contacts with a tag or
+part of name, matching any search term.
+
 
 === Help : `help`
-
+Displays this document. +
 Format: `help`
 
 === History : `history`
+Displays the history of commands you have entered, starting from the most recent one.  +
+This feature can be accessed in two different ways: +
 
-Lists all the commands that you have entered in reverse chronological order. +
-Format: `history`
+* Display the history of commands on the status bar +
+Format: `history` +
 
-[NOTE]
-====
-Pressing the kbd:[&uarr;] and kbd:[&darr;] arrows will display the previous and next input respectively in the command box.
-====
+* Paste previous commands directly to the command box +
+Format: the kbd:[&uarr;] and kbd:[&darr;] arrows will paste the previous and next input respectively into the command box
 
-=== Importing persons: `import`
+=== Importing contacts: `import`
 
-Imports persons to DoC from Google Contacts +
+Imports contacts to DoC from Google Contacts. +
 Format: `import`
 
-WARNING: Number of persons imported is limited to 1000 +
+WARNING: Number of contacts imported is limited to 1000 +
 
 
 **Steps** +
@@ -236,17 +314,24 @@ WARNING: Number of persons imported is limited to 1000 +
 image::importpic.png[width="1000"]
 
 You can enter your credentials and grant permission to DoC to access your Google contacts, as highlighted by the
-red boxes in the picture above
+red boxes in the picture above.
 
 === Listing all persons : `list`
 
-Shows a list of all persons in the address book. +
+Display a list of all contacts currently stored in DoC. +
 Format: `list`
 
-=== Location of a person : `location`
+**Picture guide** +
 
-Shows the address of the person in Google Maps. +
+<PENDING UI UPDATE> +
+
+As demonstrated in the picture guide, DoC will display a list of all contacts currently stored in DoC upon receiving the command `list`.
+
+=== Location of a contact : `location`
+
+Shows the address of the contact in Google Maps. +
 Format: `location INDEX`
+
 
 ****
 * Shows the address of the person at the specified `INDEX`. The index refers to the index number shown in the last person listing. The index *must be a positive integer* 1, 2, 3, ...
@@ -255,34 +340,30 @@ Format: `location INDEX`
 Examples:
 
 * `location 1` +
-Shows the address of the 1st person in Google Maps on the Browser Panel.
+
+**Picture guide**
+
+image::Location_UG.PNG[width="1000"]
+
+Shows the address of the 1st person in Google Maps as shown above.
 
 === Redoing the previously undone command : `redo`
 
-Reverses the most recent `undo` command. +
+Reverses the most recent `undo` command, if any. +
 Format: `redo`
 
-Examples:
+**Picture guide** +
 
-* `delete 1` +
-`undo` (reverses the `delete 1` command) +
-`redo` (reapplies the `delete 1` command) +
+<PENDING UI UPDATE>
 
-* `delete 1` +
-`redo` +
-The `redo` command fails as there are no `undo` commands executed previously.
+As demonstrated by the picture guide, a command of 'delete 1' is first entered, deleting the contact listed with an index of 1.
+An `undo` command is then entered, adding the deleted contact back to the list of contacts. Now, the `redo` command entered
+simply deletes the contact with an index of 1 again.
 
-* `deleteE 1` +
-`clear` +
-`undo` (reverses the `clear` command) +
-`undo` (reverses the `deleteE 1` command) +
-`redo` (reapplies the `deleteE 1` command) +
-`redo` (reapplies the `clear` command) +
-// end::undoredo[]
 
 === Removing tags: `removeTag`
 
-Finds persons whose names or tags contain any of the given tag and removes that tag. +
+Finds contacts whose names or tags contain any of the given tag and removes that tag. +
 Format: `removeTag KEYWORD`
 
 ****
@@ -298,55 +379,39 @@ Examples:
 Returns `john` and `John Doe` with Friend tag removed
 
 === Saving the data
+All additions, deletions, and changes performed on the contacts stored in DoC are saved automatically.
 
-Address book data are saved in the hard disk automatically after any command that changes the data. +
-There is no need to save manually.
+=== Selecting a contact : `select`
 
-=== Selecting a person : `select`
+Selects the contact identified by the index number used in the last contact listing, and loads the Google search result of the contact. +
+Format: `select INDEX` +
+Refer to the following picture guide on how you can retrieve the INDEX of a contact: +
 
-Selects the person identified by the index number used in the last person listing. +
-Format: `select INDEX`
+**Picture guide**
 
-****
-* Selects the person and loads the Google search page the person at the specified `INDEX`.
-* The index refers to the index number shown in the most recent listing.
-* The index *must be a positive integer* `1, 2, 3, ...`
-****
+<PENDING UI UPDATE>
 
-Examples:
+As demonstrated by the picture guide, you can first enter the command `list` to display a list of all contacts currently stored in DoC.
+The numbers highlighted in red in the picture are the indexes of each contact.
 
-* `list` +
-`select 2` +
-Selects the 2nd person in the address book.
-* `find Betsy` +
-`select 1` +
-Selects the 1st person in the results of the `find` command.
 
 === Undoing previous command : `undo`
 
-Restores the address book to the state before the previous _undoable_ command was executed. +
+Reverses the changes made by the previous command entered. +
 Format: `undo`
 
 [NOTE]
 ====
-Undoable commands: those commands that modify the address book's content (`add`, `addE`, `delete`, `deleteE`, `edit`, `editE` and `clear`).
+Only these commmands are currently undoable: `add`, `addE`, `delete`, `deleteE`, `edit`, `editE` and `clear`.
 ====
 
-Examples:
+**Picture guide**
 
-* `delete 1` +
-`list` +
-`undo` (reverses the `delete 1` command) +
+<PENDING UI UPDATE> +
 
-* `select 1` +
-`list` +
-`undo` +
-The `undo` command fails as there are no undoable commands executed previously.
+As demonstrated by the picture guide, a command of `delete 1`, deletes the contact listed with an index of 1. A subsequent `undo` command,
+reverses the `delete 1` command by adding back the deleted contact.
 
-* `deleteE 1` +
-`clear` +
-`undo` (reverses the `clear` command) +
-`undo` (reverses the `deleteE 1` command) +
 
 === Updating a person's profile picture: `updateProfilePic`
 
@@ -367,10 +432,17 @@ Updates the profile picture of the 1st person to be the image at `file:///C:/Use
 * `updateProfilePic 2 u/http://www.google.com/images/image.png` +
 Updates the profile picture of the 2nd person to be the image at `http://www.google.com/images/image.png` +
 
-== FAQ
+Picture Guide:
 
-*Q*: How do I transfer my data to another Computer? +
-*A*: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous Address Book folder.
+image::updateProfilePicImageExample.jpg[width="1000"]
+
+As shown in the picture above, after entering the `updateProfilePic` command, the profile picture of the person at the specified index is updated to the image stored at the url specified.
+
+== FAQ
+****
+*How do I transfer my data to another Computer?* +
+Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous Address Book folder.
+****
 
 == Command Summary
 

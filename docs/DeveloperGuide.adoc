@@ -15,6 +15,10 @@ ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 By: `CS2103AUG2017-T11-B1`      Since: `Sep 2017` +
 Adapted from AddressBook-Level4, by: `Team SE-EDU`      Since: `Jun 2016`      Licence: `MIT`
 
+== Introduction
+
+The Directory of Contacts(DoC) allows you to manage your contacts and events all within a single app. This guide will help you get to know the more important functions of the app and how they are implemented. From this, you will be better equipped to navigate around the codebase and further enhance the app as required.
+
 == Setting up
 
 === Prerequisites
@@ -307,10 +311,10 @@ image::UndoRedoActivityDiagram.png[width="200"]
 ==== Design Considerations
 
 **Aspect:** Implementation of `UndoableCommand` +
-**Alternative 1 (current choice):** Add a new abstract method `executeUndoableCommand()` +
+**Alternative 1 (current choice):** Add a new abstract method `executeUndoableCommand().` +
 **Pros:** We will not lose any undone/redone functionality as it is now part of the default behaviour. Classes that deal with `Command` do not have to know that `executeUndoableCommand()` exist. +
 **Cons:** Hard for new developers to understand the template pattern. +
-**Alternative 2:** Just override `execute()` +
+**Alternative 2:** Just override `execute().` +
 **Pros:** Does not involve the template pattern, easier for new developers to understand. +
 **Cons:** Classes that inherit from `UndoableCommand` must remember to call `super.execute()`, or lose the ability to undo/redo.
 
@@ -338,100 +342,159 @@ image::UndoRedoActivityDiagram.png[width="200"]
 ---
 
 **Aspect:** Data structure to support the undo/redo commands +
-**Alternative 1 (current choice):** Use separate stack for undo and redo +
+**Alternative 1 (current choice):** Use separate stack for undo and redo. +
 **Pros:** Easy to understand for new Computer Science student undergraduates to understand, who are likely to be the new incoming developers of our project. +
 **Cons:** Logic is duplicated twice. For example, when a new command is executed, we must remember to update both `HistoryManager` and `UndoRedoStack`. +
-**Alternative 2:** Use `HistoryManager` for undo/redo +
+**Alternative 2:** Use `HistoryManager` for undo/redo. +
 **Pros:** We do not need to maintain a separate stack, and just reuse what is already in the codebase. +
 **Cons:** Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two different things. +
 // end::undoredo[]
 
 === Event(feature)
 
-The event feature is implemented with similar logic as a person. The commands created for this feature are "addE", "editE" and "deleteE". As such, the methods from events are extended from the model.
+The `Event` feature is implemented with similar logic as a `Person`. The featured commands that modifies the address book include `addE`, `editE` and `deleteE`. As such, the methods from events are extended from `Model`.
 
-Commands such as clear, undo and redo will apply to the events in the list as these commands directly alter the address book on a higher level without calling person methods. Therefore, further coupling of these methods and event feature is not required.
+Commands such as `clear`, `undo` and `redo` will apply to the events in the list as these commands extends `UndoableCommand`. Therefore, further coupling of these user commands and event feature is not introduced.
 
 image::EventPersonModelClassDiagram.png[width="900"]
 
-As you can see from the diagram, the sub component of Event include a PersonList that fetches persons from the ReadOnlyPerson and add them into the list without any modification. In the Ui, upon clicking on the person tagged under an event, the logic will execute "select" command which will bring the user to the respective person in the person panel.
+As you can see from the diagram, the sub component of `Event` include a `PersonList` that fetches persons from the `ReadOnlyPerson` and add them into the list without any modification. In the Ui, upon clicking on the person tagged under an event, the logic will execute `select` command which will bring the user to the respective person in the person panel.
 
 ==== Design Consideration
 **Aspect:** How to implement adding of persons into the event's person list +
-**Alternative 1:** Add by the name of person in the person list +
-**Pros:** Easier for users to add using names, do not need to refer to the person list. +
-**Cons:** System have to check through the list to check if the person name exist in the current address book. +
-**Alternative 2 (current choice):** Add by the index of person shown in the person list panel +
-**Pros:** System only have to check for validity of index. Better performance compared to Alternative 1. +
+**Alternative 1 (current choice):** Add by the index of person shown in the person list panel. +
+**Pros:** System only have to check for validity of index. Better performance compared to Alternative 2. +
 **Cons:** Requires user to refer to the person list panel before executing command to add person into event's person list. +
+**Alternative 2:** Add by the name of person in the person list. +
+**Pros:** Easier for users to add using names, do not need to refer to the person list. +
+**Cons:** System have to check through the list to check if the person name exist in the current address book.
+
+=== OAuth2 fulfilment mechanism
+==== Summary
+A command structure has been set-up to fulfil all commands requiring an authentication process against the OAuth2 protocol.
+DoC currently has two such commands, namely, `import` and `export`, which requires this mechanism. This command structure has also been set-up to support possible future
+extensions. +
+
+The OAuth2 authentication process is fulfilled with the help of the inbuilt `BrowserPanel`. This requires cross-component communication,
+which is implemented in an event-driven manner.
+
+The following class diagram illustrates the structure of this mechanism, and its' current applications: +
+
+image::Oauth2ClassDiagram.PNG[width=100%]
+
+==== Current usages
+
+===== Import contacts to DoC from Google Contacts
+The `import` command uses `Google Contacts` as a source, and retrieves all of the authenticated users' Google Contacts.
+A conversion process is then executed with the help of the `GooglePersonConverterUtil`. The newly converted contacts are then stored
+to the `Model` component of DoC.
+
+===== Export contacts in DoC to Google Contacts
+The `export` command converts all contacts currently stored in DoC, with the help of the `GooglePersonConverterUtil`,
+to instances of Googles' `Person` class. The newly converted contacts are then exported to the authenticated users' Google Contacts.
+
+==== Implementation
+The implementation of `import` and `export` are very similar. There are 3 sequential steps in the flow of execution, for both commands: +
+**1.** The user input of `import` or `export` is parsed by the `AddressBookParser`, and a new instance of an `ImportCommand` or `ExportCommand` is returned to the `LogicManager`,
+ which then calls the instances' `execute()` method +
+**2.** The execute() method of `import` and `export` then triggers the **authentication process** with the `BrowserPanel` +
+**3.** Upon successful authentication on an `import` command, the **HTTP request process** is executed, followed by the  **conversion process**.
+The list of converted DoC `Person` objects are then added to the `Model` component.
+The order is exactly reversed for an `export` command
 
 
-=== Import & authentication mechanism
-==== Description
-The import command uses `Google Contacts` as a source and performs the OAuth2 authentication protocol to retrieve
-and import a user's contacts. This is done with the help of the inbuilt `BrowserPanel`,
-an instance of the `GoogleApiAuth` service, and the `GooglePersonConverterUtil` utility class. +
+ Only the 3 bolded processes will be discussed in further detail as the process for step 1 is the same as all other commands in DoC.
 
-This mechanism requires cross-component interaction with the `BrowserPanel` of the `UI` component. This is handled in an event driven manner, as shown in the extensive sequence diagram below: +
+===== Authentication process
+The authentication process is the more involved process of the 3. We can understand it better with the help of the following sequence diagram: +
 
-image::import_devguide.jpg[width=100%]
+image::AuthenticationSequenceDiagram.png[width=100%]
 
-==== Roles of objects introduced
-Three main objects were introduced to fulfil the import and authentication functionality, their roles are described as such:
-
-===== ImportCommand
-The `ImportCommand` is the main driver of this functionality. It maintains control over the flow of authentication and and conversion of Person objects.
-
-===== GoogleApiAuth
-The `GoogleApiAuth` is a service used to facilitate the start to end of an OAuth 2 procedure with Google's APIs. It maintains key client
-information, and provides on demand, authentication URLs, and also a GoogleCredential object. Each command intending to go through the OAuth2 procedure with Google's APIs, is expected to maintain
-its' own instance of this service. This service is provided to the `ImportCommand`.
-
-===== GooglePersonConverterUtil
-The `GooglePersonConverterUtil` is a utility object, providing the functionality of conversion between a Google `Person` and a DoC `Person`.
-
-==== Execution flow
 This is a summary of the steps in the execution flow: +
-**1.** An `ImportCommand` is triggered from the users' UI input, firing an event to the `BrowserPanel` +
-**2.** The `BrowserPanel` detects the event and navigates to the authentication url provided by the `GoogleApiAuth` service +
-**3.** The user successfully authenticates and grants Google Contacts access permission to DoC, automatically redirecting the `BrowserPanel` to the success landing page(https://cs2103tdummyendpoint.herokuapp.com) +
-**4.** The `BrowserPanel` detects the URL change to the success landing page, extracts the authentication code appended to the URL, and passes the authentication code to its' `GoogleApiAuth` service,
- which then builds a `GoogleCredential` object from the it +
-**5.** Once completed, the `BrowserPanel` fires an event to the `ImportCommand` +
-**6.** The `ImportCommand` detects the event and proceeds to build a `PeopleService` object using the `GoogleCredential` within its' `GoogleApiAuth` service +
-**7.** Finally, the `PeopleService` object fetches the list of Google `Person` from the users' Google Contacts, which are then converted to DoC `Person` objects +
-**8.** This converted list of DoC `Person` objects are then added to the `Model` component
+**1.** The `execute()` method of the `ImportCommand` is called from the `LogicManager`, firing an `Oauth2BrowserRequestEvent` to the `BrowserPanel` +
+**2.** The `BrowserPanel` handles this event and navigates to the **authentication URL*** provided by the event +
+**3.** The user successfully authenticates and grants DoC read permission of the users' Google Contacts +
+**4.** The `BrowserPanel` is redirected to the **success URL*** +
+**4.** The `BrowserPanel` detects the URL change to the **success URL*** and extracts the authentication code appended to the URL,
+this code is then attached to a `GoogleAuthenticationSuccessEvent` fired to the instance of `ImportCommand` +
+**5.** The `ImportCommand` instance handles the `GoogleAuthenticationSuccessEvent` and creates the `GoogleCredential` object +
+**6.** The HTTP request process ensues:
+
+===== HTTP request process
+With the `GoogleCredential` object, we can now send HTTP requests quite easily using Google's Java API client, specifically
+its `PeopleService` class. Its documentation can be found in the following url: +
+https://developers.google.com/resources/api-libraries/documentation/people/v1/java/latest/com/google/api/services/people/v1/PeopleService.html
+
+
+===== Conversion process
+The conversion process is handled entirely by the `GooglePersonConverterUtil`. Note-worthy design decisions are listed as follows: +
+**Google Person -> DoC Person** +
+
+* Only Google `Person` objects with a non-null name, and a non-null phone number are accepted
+* Google `Person` objects without an email or an address are given the constants `INVALID_EMAIL@INVALID.COM`, and
+ `INVALID_ADDRESS PLEASE UPDATE THIS` respectively, in the resulting DoC `Person`
+* All DoC `Person` objects produced are given the tag `ImportedFromGoogle`
+
+**DoC Person -> Google Person** +
+
+* DoC's `Name`, `Phone`, `Email` and `Address` are added as native Google `Person` properties, with similar names. `Tag`
+objects are added under the Google `Person` object's `UserDefined` property
+* `ProfilePic` cannot be exported due to Google Contact's restrictions
+* The produced Google `Person` objects are added to a contact group titled `Imported from DoC`
 
 ==== Design Considerations
+
 **Aspect:** How a successful authentication is detected +
-
-**Alternative 1 (Chosen for security):** Redirect to a hosted domain +
-**Pros:** The underlying `HTTP GET` is sent to a domain under DoC's control -> risk of authentication code leak is controlled +
-**Cons:** The BrowserPanel will display an error page if the hosted domain is down. However, the successful authentication will still be detected correctly
-
-**Alternative 2:** Redirect to an external domain, like `https://contacts.google.com` +
-**Pros:** We are able to display the users' incoming `Google Contacts` +
-**Cons:** The underlying `HTTP GET` containing the users' authentication code is sent to an external domain
+**Alternative 1 (Chosen for security):** Redirect to a hosted domain first, then redirect to a Google Contacts page. +
+**Pros:** The underlying `HTTP GET` is sent to a domain under DoC's control -> risk of authentication code leak is controlled. +
+**Cons:** The BrowserPanel may display an error page temporarily if the hosted domain is down, however this will not be noticeable if redirection occurs fast.
+**Alternative 2:** Redirect to a Google Contacts page immediately. +
+**Pros:** No risk of an error page being display. +
+**Cons:** The underlying `HTTP GET` containing the users' authentication code is sent to an external domain.
 
 === Location
 
 image::Location.png[width="800"]
 
 As seen above, an event based approach is used to display the location of the person.
-
 Once the Address book parser identifies the user command as a valid location command, it will make use of the Google Event bus to transmit the event.
-
 The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function.
-
 This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested person.
-
 This rendering of Google Maps is done via calling the URL.
+
+==== Design Considerations
+
+**Aspect:** Implementation of `location` +
+**Alternative 1 (current choice):** Add a new class that extends `Command` that uses the Google Maps URL +
+**Pros:** The map can be easily loaded without needing to call the GoogleMaps API  +
+**Cons:** Only functions that can be sent via URL can be used. +
+**Alternative 2:** Make use of Google Maps API +
+**Pros:** More functions such as radius and many more could have been added +
+**Cons:** Take a longer time to load the map.
+
+=== Email
+
+The `EmailCommand` is the main driver of this functionality. It links the logic in Addressbook and the content displayed on the Email browser.
+
+image::EmailSequenceDiagram.png[width="800"]
+
+As seen from the picture above, the `AddressParser` will be able to distinguish the email command and direct it to the `EmailCommandParser`. Over there the recipient, subject and the body from the command line input is identified. Once identified, the `execute` function is called. This function in the `EmailCommand` would call the `updateEmailRecipient` function in the Model. Once the fields are updated properly, the `EmailCommand` will call the desktop mail app and fill in the necessary details.
+
+==== Design Considerations
+
+**Aspect:** Implementation of `email` +
+**Alternative 1 (current choice):** Uses the inbuilt Email Application. +
+**Pros:** The email authentication is done by that Email Application.  +
+**Cons:** A new application has to be opened. +
+**Alternative 2:** Make use of Gmail API. +
+**Pros:** Can be emailed from the browser panel itself. +
+**Cons:** The UI for Gmail is very poor.
 
 === UpdateProfilePic/DeleteProfilePic mechanism
 
 The UpdateProfilePic/DeleteProfilePic mechanism is facilitated by a `ProfilePic` class, which is a property class of the `Person` class. It supports the updating and deleting of profile pictures of each Person. These two commands inherit from `UndoableCommand`.
 
-`ProfilePic` essentially stores a **valid** `URL` of an image that will be displayed as the Person’s profile picture. Whenever a new Person is added, the Person’s `ProfilePic` property will be that of a default image. The command, `updateProfilePic` can then be called to change this property. When the command `deleteProfilePic` is called, the `ProfilePic` property of the selected Person will be changed back to the default profile picture.
+`ProfilePic` essentially stores a **valid** `URL` of an image that will be displayed as the Person?s profile picture. Whenever a new Person is added, the Person?s `ProfilePic` property will be that of a default image. The command, `updateProfilePic` can then be called to change this property. When the command `deleteProfilePic` is called, the `ProfilePic` property of the selected Person will be changed back to the default profile picture.
 
 Like the other properties of the `Person` class, the `ProfilePic` property will also be saved to the chosen storage file.
 
@@ -446,24 +509,71 @@ image::deleteProfilePicSD.jpg[width="100%"]
 ==== Design Considerations
 
 **Aspect:** Implementation of `updateProfilePic` +
-**Alternative 1 (current choice):** Add a new class that extends `UndoableCommand` +
-**Pros:** The other properties of a `Person` can be quickly updated, using the `add` or `edit` commands, without waiting for an image to be loaded  +
+**Alternative 1 (current choice):** Add a new class that extends `UndoableCommand`. +
+**Pros:** The other properties of a `Person` can be quickly updated, using the `add` or `edit` commands, without waiting for an image to be loaded.  +
 **Cons:** Users have to remember another command. +
-**Alternative 2:** Just add the function to the `add` and `edit` commands +
-**Pros:** Users do not have to remember a new command +
-**Cons:** The image might take a while to load, so all the data takes longer to be updated
+**Alternative 2:** Just add the function to the `add` and `edit` commands. +
+**Pros:** Users do not have to remember a new command. +
+**Cons:** The image might take a while to load, so all the data takes longer to be updated.
 
 ---
 
 **Aspect:** Implementation of `deleteProfilePic` +
-**Alternative 1 (current choice):** Add a new class that extends `UndoableCommand` +
-**Pros:** A quick way to revert the profile picture back to default  +
+**Alternative 1 (current choice):** Add a new class that extends `UndoableCommand`. +
+**Pros:** A quick way to revert the profile picture back to default.  +
 **Cons:** updateProfilePic can technically do the same job, albeit slower. +
-**Alternative 2:** Not have this command at all +
-**Pros:** Lesser commands for the user to remember +
-**Cons:** The user might not know what the default image URL is
+**Alternative 2:** Not have this command at all. +
+**Pros:** Lesser commands for the user to remember. +
+**Cons:** The user might not know what the default image URL is.
 
-=== Logging
+=== ViewCount Tracking
+
+The `viewCount` variable is a `private int` variable of the `Person` class. This variable is updated whenever a `PersonPanelSelectionChangedEvent` is raised. This means that whenever a `Person` is selected, whether by the `select` command or by clicking on the `PersonCard` on the UI, the `Person` associated with the selected `PersonCard` will have its `viewCount` variable incremented by 1.
+
+To listen for the `PersonPanelSelectionChangedEvent`, a listener is placed in the `MainApp` object, which ensures that the `Model` associated to it is updated with the right `Person` that has its `viewCount` updated.
+
+As the `viewCount` is not displayed on the UI, when this variable of a `Person` is updated, no `AddressBookChangedEvent` is raised, so the UI will not be refreshed unnecessarily.
+
+Right before the app closes, the app will sort the `Person` objects in the `AddressBook` such that the `Person` objects will be displayed from highest `viewCount` to lowest.
+
+Below is the sequence diagram for how the `viewCount` object is updated:
+
+image::updateViewCountSD.png[width="100%]
+
+==== Design Considerations
+
+**Aspect:** Implementation of `viewCount` +
+**Alternative 1 (current choice):** Add a new variable to the `Person` class. +
+**Pros:** No extra classes have to be created and it is clear which `Person` has a `viewCount` of what value. +
+**Cons:** The `Model` has to be updated every time a new `PersonCard` is selected. +
+**Alternative 2:** Track all the `viewCount` in a separate file or class. +
+**Pros:** `Model` does not need to be updated and no existing class will be changed. +
+**Cons:** File IO will be required for the saving of the list or the list has to be converted into XML and stored with the rest of the data is `addressbook.xml`.
+
+---
+
+**Aspect:** Updating of `Model` +
+**Alternative 1 (current choice):** Update `Model` without raising `AddressBookChangedEvent`. +
+**Pros:** No unnecessary refreshing of the UI +
+**Cons:** The `viewCount` variable of each `Person` is only saved to `addressbook.xml` only when the app stops or when the next `AddressBookChangedEvent` is raised. +
+**Alternative 2:** Update `Model` normally +
+**Pros:** The `addressbook.xml` file is always updated once any value is changed. +
+**Cons:** The UI will be refreshed unnecessarily, which may cause a visible lag if large image files are reloaded.
+
+---
+
+**Aspect:** Sorting by `viewCount` +
+**Alternative 1 (current choice):** Sort right before app stops. +
+**Pros:** When app is started the next time, it can be started immediately, without having to perform the sort. +
+**Cons:** The app might lag a bit when stopping. +
+**Alternative 2:** Sort right before app starts. +
+**Pros:** The app will stop quickly. +
+**Cons:** The app will take a while to start. +
+**Alternative 3:** Whenever a viewCount is changed. +
+**Pros:** The app will always show the updated order. +
+**Cons:** The app will lag slightly each time a `PersonCard` is selected.
+
+== Logging
 
 We are using `java.util.logging` package for logging. The `LogsCenter` class is used to manage the logging levels and logging destinations.
 

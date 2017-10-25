@@ -6,20 +6,22 @@ import java.util.logging.Logger;
 import com.google.common.eventbus.Subscribe;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Region;
 import javafx.scene.web.WebView;
 import seedu.address.MainApp;
-import seedu.address.commons.auth.GoogleApiAuth;
 import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.core.LogsCenter;
-import seedu.address.commons.events.logic.GoogleApiAuthServiceCredentialsSetupCompleted;
-import seedu.address.commons.events.logic.GoogleAuthRequestEvent;
-import seedu.address.commons.events.logic.GoogleAuthSuccessEvent;
+import seedu.address.commons.events.logic.GoogleAuthenticationSuccessEvent;
+import seedu.address.commons.events.logic.GoogleCommandCompleteEvent;
 import seedu.address.commons.events.ui.FindLocationRequestEvent;
+import seedu.address.commons.events.ui.Oauth2BrowserRequestEvent;
 import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
 import seedu.address.model.person.ReadOnlyPerson;
+
 
 
 /**
@@ -35,12 +37,11 @@ public class BrowserPanel extends UiPart<Region> {
     private static final String FXML = "BrowserPanel.fxml";
 
     private final Logger logger = LogsCenter.getLogger(this.getClass());
+    private String currentUrl = "";
+    private ChangeListener currentUrlListener;
 
     @FXML
     private WebView browser;
-
-    private String currentUrl = "";
-    private GoogleApiAuth authService;
 
     public BrowserPanel() {
         super(FXML);
@@ -51,7 +52,6 @@ public class BrowserPanel extends UiPart<Region> {
         loadDefaultPage();
         registerAsAnEventHandler(this);
     }
-
 
     private void loadPersonPage(ReadOnlyPerson person) {
         loadPage(GOOGLE_SEARCH_URL_PREFIX + person.getName().fullName.replaceAll(" ", "+")
@@ -97,40 +97,58 @@ public class BrowserPanel extends UiPart<Region> {
         loadPersonPage(event.getNewSelection().person);
     }
 
-    /**
-     * Event listener for Google Auth Requests Events
-     * @param event
-     */
     @Subscribe
-    private void handleGoogleAuthRequestEvent(GoogleAuthRequestEvent event) {
-        authService = event.getAuthServiceRef();
-        loadPage(authService.getAuthContactWriteUrl());
-
-        /**Listener for URL : Code adapted from https://gist.github.com/tewarid/57031d4b2f0a27765fa82abd10c21351
-         * Fires a GoogleAuthSuccessEvent when a URL change to GoogleApiAuth.redirectUrl is detected
-         */
-        browser.getEngine().locationProperty().addListener(((observable, oldValue, newValue) -> {
-            currentUrl = (String) newValue;
-            if (authSuccessUrlDetected(currentUrl)) {
-                EventsCenter.getInstance().post(new GoogleAuthSuccessEvent());
-            }
-        }));
+    private void handleOauth2BrowserRequestEvent(Oauth2BrowserRequestEvent event) {
+        loadPage(event.getRequestUrl());
+        resetUrlListener();
+        currentUrlListener = new UrlListener(event.getCommandType());
+        browser.getEngine().locationProperty().addListener(currentUrlListener);
     }
 
     /**
-     * Event listener for Google Auth Success Events
-     * @param event
+     * Resets any current listeners of the URL
      */
-    @Subscribe
-    private void handleGoogleAuthSucessEvent(GoogleAuthSuccessEvent event) {
-        String authCode = currentUrl.split("=")[1].split("&")[0];
-        if (authService.setupCredentials(authCode)) {
-            EventsCenter.getInstance().post(new GoogleApiAuthServiceCredentialsSetupCompleted());
+    private void resetUrlListener() {
+        if (currentUrlListener != null) {
+            browser.getEngine().locationProperty().removeListener(currentUrlListener);
+            currentUrlListener = null;
         }
     }
 
+    /**
+     * Implements the functional interface ChangeListener. Lambda not used, due to the need to reset the url listener
+     */
+    private class UrlListener implements ChangeListener {
+        private String commandType;
+        UrlListener(String inputCommandType) {
+            commandType = inputCommandType;
+        }
+        @Override
+        public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+            currentUrl = (String) newValue;
+            if (authSuccessUrlDetected(currentUrl)) {
+                EventsCenter.getInstance().post(new GoogleAuthenticationSuccessEvent(commandType,
+                        currentUrl.split("=")[1].split("&")[0]));
+            }
+        }
+    }
+
+    /**
+     * Checks if Authentication is successful -> current domain reflects the set redirect endpoint
+     * @param currentUrl
+     * @return
+     */
     private boolean authSuccessUrlDetected(String currentUrl) {
-        return currentUrl.contains(GoogleApiAuth.REDIRECT_URL);
+        System.out.println(currentUrl);
+        return currentUrl.contains("access_token=");
+    }
+
+    /**
+     * Reloads page according to the completed Google Command
+     */
+    @Subscribe
+    private void handleGoogleCOmmandCompleteEvent(GoogleCommandCompleteEvent event) {
+        loadPage(event.getRedirectUrl());
     }
 
     /**

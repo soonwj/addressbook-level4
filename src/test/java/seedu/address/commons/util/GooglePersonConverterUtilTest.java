@@ -27,7 +27,6 @@ public class GooglePersonConverterUtilTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private GooglePersonConverterUtil convertTool = new GooglePersonConverterUtil();
     @Test
     public void convertGooglePersonWithNullNameException() throws InvalidGooglePersonException {
         Person testPerson = getGooglePerson(null, "12345678", "blk001 Test Ave",

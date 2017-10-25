@@ -213,6 +213,14 @@ public class AddressBook implements ReadOnlyAddressBook {
         }
     }
 
+    /**
+     * Sorts the persons list based on the name
+     * @return
+     */
+    public void sortPersons() {
+        persons.sort();
+    }
+
     //// util methods
 
     @Override

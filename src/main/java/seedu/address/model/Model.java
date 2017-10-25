@@ -85,4 +85,11 @@ public interface Model {
      */
     void updateFilteredEventList(Predicate<ReadOnlyEvent> predicate);
 
+    /**
+     * * Updates the filter of the filtered emailTo list to filter by the given {@code predicate}.
+     * @throws NullPointerException if {@code predicate} is null.
+     */
+    String updateEmailRecipient(Predicate<ReadOnlyPerson> predicate);
+
+    void sortPersons();
 }
