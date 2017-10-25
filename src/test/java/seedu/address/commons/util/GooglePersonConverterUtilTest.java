@@ -2,8 +2,10 @@ package seedu.address.commons.util;
 
 import static org.junit.Assert.assertEquals;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import com.google.api.services.people.v1.model.UserDefined;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -14,6 +16,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.testutil.PersonBuilder;
 
 
 /**
@@ -23,10 +26,10 @@ import seedu.address.model.person.Phone;
  */
 public class GooglePersonConverterUtilTest {
     /**
-     * Google Person -> DoC Person Conversion Tests (IMPORT)
+     * (Single) Google Person -> DoC Person Conversion Tests (IMPORT)
      */
 
-    //Verifies the conversion result for Google Person with null parameters
+    //Negative Testing: Required DoC Person parameters set to null
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -66,24 +69,39 @@ public class GooglePersonConverterUtilTest {
     }
 
     /**
-     * DoC Person -> Google Person Conversion Tests
+     * (Single) DoC Person -> Google Person Conversion Tests
      */
 
+    //Positive Testing: Test for successful conversion
+    @Test
+    public void convertGenericDocPerson() {
+        Person docPerson = new PersonBuilder().withName("John Doe").withAddress("Elm Street")
+                .withEmail("jon@gmail.com").withPhone("01234567").withTags("friends").build();
+        com.google.api.services.people.v1.model.Person expectedGooglePerson =
+                getGooglePerson("John Doe", "01234567", "Elm Street", "jon@gmail.com");
 
+        com.google.api.services.people.v1.model.Person convertedGooglePerson =
+                GooglePersonConverterUtil.singleDocToGooglePersonConversion(docPerson);
+        assertEquals(expectedGooglePerson, convertedGooglePerson);
+    }
 
-
+    /**
+     *
+     */
 
 
 
     /**
      * Creates a GooglePerson from input parameters, to support testing
+     * Made with a default UserDefined for
      * @param name
      * @param number
      * @param address
      * @param email
      * @return the desired Google Person
      */
-    public com.google.api.services.people.v1.model.Person getGooglePerson(String name, String number, String address, String email) {
+    public com.google.api.services.people.v1.model.Person getGooglePerson(String name, String number, String address,
+                                                                          String email) {
         ArrayList<com.google.api.services.people.v1.model.Name> names = new ArrayList<>();
         ArrayList<com.google.api.services.people.v1.model.PhoneNumber> phones = new ArrayList<>();
         ArrayList<com.google.api.services.people.v1.model.Address> addresses = new ArrayList<>();
@@ -91,7 +109,10 @@ public class GooglePersonConverterUtilTest {
         com.google.api.services.people.v1.model.Person personToReturn =
                 new com.google.api.services.people.v1.model.Person();
 
-        names.add(new com.google.api.services.people.v1.model.Name().setDisplayName(name));
+        ArrayList<UserDefined> tags = new ArrayList<>();
+
+        tags.add(new UserDefined().setKey("tag").setValue("friends"));
+        names.add(new com.google.api.services.people.v1.model.Name().setGivenName(name));
         phones.add(new com.google.api.services.people.v1.model.PhoneNumber().setValue(number));
         addresses.add(new com.google.api.services.people.v1.model.Address().setFormattedValue(address));
         emails.add(new com.google.api.services.people.v1.model.EmailAddress().setValue(email));
@@ -100,7 +121,7 @@ public class GooglePersonConverterUtilTest {
         personToReturn.setAddresses(addresses);
         personToReturn.setEmailAddresses(emails);
         personToReturn.setPhoneNumbers(phones);
-
+        personToReturn.setUserDefined(tags);
         return personToReturn;
     }
 }
