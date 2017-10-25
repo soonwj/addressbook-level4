@@ -8,68 +8,86 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.google.api.services.people.v1.model.Address;
-import com.google.api.services.people.v1.model.EmailAddress;
-import com.google.api.services.people.v1.model.Name;
-import com.google.api.services.people.v1.model.Person;
-import com.google.api.services.people.v1.model.PhoneNumber;
-
 import seedu.address.commons.exceptions.InvalidGooglePersonException;
+import seedu.address.model.person.Address;
+import seedu.address.model.person.Email;
+import seedu.address.model.person.Name;
+import seedu.address.model.person.Person;
+import seedu.address.model.person.Phone;
+
 
 /**
  * Unit testing for the GooglePersonConverterUtil class
- * Checks that the converter handles exceptions gracefully, and sets default values correctly
+ * Both classes and their composed classes in each package have the same name;
+ * Handling: seedu.address.model.person.Person will be imported, while Google classes have to be fully qualified.
  */
 public class GooglePersonConverterUtilTest {
     /**
-     * Verifies the conversion result for Google Person with null parameters
+     * Google Person -> DoC Person Conversion Tests (IMPORT)
      */
+
+    //Verifies the conversion result for Google Person with null parameters
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void convertGooglePersonWithNullNameException() throws InvalidGooglePersonException {
-        Person testPerson = getGooglePerson(null, "12345678", "blk001 Test Ave",
+        com.google.api.services.people.v1.model.Person testPerson
+                = getGooglePerson(null, "12345678", "blk001 Test Ave",
                 "test@gmail.com");
         thrown.expect(InvalidGooglePersonException.class);
-        GooglePersonConverterUtil.convertPerson(testPerson);
+        GooglePersonConverterUtil.singleGoogleToDocPersonConversion(testPerson);
     }
 
     @Test
     public void convertGooglePersonWithNullPhoneException() throws InvalidGooglePersonException {
-        Person testPerson = getGooglePerson("Testee", null, "blk001 Test Ave",
-                "test@gmail.com");
+        com.google.api.services.people.v1.model.Person testPerson
+                = getGooglePerson("Testee", null, "blk001 Test Ave", "test@gmail.com");
         thrown.expect(InvalidGooglePersonException.class);
-        GooglePersonConverterUtil.convertPerson(testPerson);
+        GooglePersonConverterUtil.singleGoogleToDocPersonConversion(testPerson);
     }
 
     @Test
     public void convertGooglePersonWithNullEmail() throws InvalidGooglePersonException {
-        Person testPerson = getGooglePerson("Testee", "12345678", "blk001 Test Ave",
-                null);
+        com.google.api.services.people.v1.model.Person testPerson
+                = getGooglePerson("Testee", "12345678", "blk001 Test Ave", null);
         seedu.address.model.person.Person convertedPerson = GooglePersonConverterUtil.convertPerson(testPerson);
         assertEquals(convertedPerson.getEmail().toString(), GooglePersonConverterUtil.DEFAULT_EMAIL);
     }
 
     @Test
     public void convertGooglePersonWithNullAddress() throws InvalidGooglePersonException {
-        Person testPerson = getGooglePerson("Testee", "12345678", null,
-                "test@gmail.com");
+        com.google.api.services.people.v1.model.Person testPerson
+                = getGooglePerson("Testee", "12345678", null, "test@gmail.com");
         seedu.address.model.person.Person convertedPerson = GooglePersonConverterUtil.convertPerson(testPerson);
         assertEquals(convertedPerson.getAddress().toString(), GooglePersonConverterUtil.DEFAULT_ADDRESS);
     }
 
-    public Person getGooglePerson(String name, String number, String address, String email) {
-        ArrayList<Name> names = new ArrayList<>();
-        ArrayList<PhoneNumber> phones = new ArrayList<>();
-        ArrayList<Address> addresses = new ArrayList<>();
-        ArrayList<EmailAddress> emails = new ArrayList<>();
-        Person personToReturn = new Person();
+    /**
+     * DoC Person -> Google Person Conversion Tests
+     */
 
-        names.add(new Name().setDisplayName(name));
-        phones.add(new PhoneNumber().setValue(number));
-        addresses.add(new Address().setFormattedValue(address));
-        emails.add(new EmailAddress().setValue(email));
+
+    /**
+     * Creates a GooglePerson from input parameters, to support testing
+     * @param name
+     * @param number
+     * @param address
+     * @param email
+     * @return the desired Google Person
+     */
+    public com.google.api.services.people.v1.model.Person getGooglePerson(String name, String number, String address, String email) {
+        ArrayList<com.google.api.services.people.v1.model.Name> names = new ArrayList<>();
+        ArrayList<com.google.api.services.people.v1.model.PhoneNumber> phones = new ArrayList<>();
+        ArrayList<com.google.api.services.people.v1.model.Address> addresses = new ArrayList<>();
+        ArrayList<com.google.api.services.people.v1.model.EmailAddress> emails = new ArrayList<>();
+        com.google.api.services.people.v1.model.Person personToReturn =
+                new com.google.api.services.people.v1.model.Person();
+
+        names.add(new com.google.api.services.people.v1.model.Name().setDisplayName(name));
+        phones.add(new com.google.api.services.people.v1.model.PhoneNumber().setValue(number));
+        addresses.add(new com.google.api.services.people.v1.model.Address().setFormattedValue(address));
+        emails.add(new com.google.api.services.people.v1.model.EmailAddress().setValue(email));
 
         personToReturn.setNames(names);
         personToReturn.setAddresses(addresses);
