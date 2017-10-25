@@ -2,6 +2,7 @@ package seedu.address.model;
 
 import static org.junit.Assert.assertEquals;
 import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalPersons.MEETING;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.ReadOnlyPerson;
+import seedu.address.model.person.event.Event;
 import seedu.address.model.person.event.ReadOnlyEvent;
 import seedu.address.model.tag.Tag;
 
@@ -32,6 +34,7 @@ public class AddressBookTest {
     public void constructor() {
         assertEquals(Collections.emptyList(), addressBook.getPersonList());
         assertEquals(Collections.emptyList(), addressBook.getTagList());
+        assertEquals(Collections.emptyList(), addressBook.getEventList());
     }
 
     @Test
@@ -52,7 +55,20 @@ public class AddressBookTest {
         // Repeat ALICE twice
         List<Person> newPersons = Arrays.asList(new Person(ALICE), new Person(ALICE));
         List<Tag> newTags = new ArrayList<>(ALICE.getTags());
-        AddressBookStub newData = new AddressBookStub(newPersons, newTags);
+        List<Event> newEvents = Arrays.asList(new Event(MEETING));
+        AddressBookStub newData = new AddressBookStub(newPersons, newTags, newEvents);
+
+        thrown.expect(AssertionError.class);
+        addressBook.resetData(newData);
+    }
+
+    @Test
+    public void resetData_withDuplicateEvents_throwsAssertionError() {
+        // Repeat MEETING twice
+        List<Person> newPersons = Arrays.asList(new Person(ALICE));
+        List<Tag> newTags = new ArrayList<>(ALICE.getTags());
+        List<Event> newEvents = Arrays.asList(new Event(MEETING), new Event(MEETING));
+        AddressBookStub newData = new AddressBookStub(newPersons, newTags, newEvents);
 
         thrown.expect(AssertionError.class);
         addressBook.resetData(newData);
@@ -70,6 +86,12 @@ public class AddressBookTest {
         addressBook.getTagList().remove(0);
     }
 
+    @Test
+    public void getEventList_modifyList_throwsUnsupportedOperationException() {
+        thrown.expect(UnsupportedOperationException.class);
+        addressBook.getEventList().remove(0);
+    }
+
     /**
      * A stub ReadOnlyAddressBook whose persons and tags lists can violate interface constraints.
      */
@@ -78,7 +100,8 @@ public class AddressBookTest {
         private final ObservableList<ReadOnlyEvent> events = FXCollections.observableArrayList();
         private final ObservableList<Tag> tags = FXCollections.observableArrayList();
 
-        AddressBookStub(Collection<? extends ReadOnlyPerson> persons, Collection<? extends Tag> tags) {
+        AddressBookStub(Collection<? extends ReadOnlyPerson> persons, Collection<? extends Tag> tags,
+                        Collection<? extends ReadOnlyEvent> events) {
             this.persons.setAll(persons);
             this.tags.setAll(tags);
             this.events.setAll(events);
