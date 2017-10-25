@@ -568,7 +568,10 @@ image::updateViewCountSD.png[width="100%]
 **Cons:** The app might lag a bit when stopping. +
 **Alternative 2:** Sort right before app starts. +
 **Pros:** The app will stop quickly. +
-**Cons:** The app will take a while to start.
+**Cons:** The app will take a while to start. +
+**Alternative 3:** Whenever a viewCount is changed. +
+**Pros:** The app will always show the updated order. +
+**Cons:** The app will lag slightly each time a `PersonCard` is selected.
 
 == Logging
 
