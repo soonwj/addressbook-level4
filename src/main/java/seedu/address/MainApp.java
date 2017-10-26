@@ -1,6 +1,8 @@
 package seedu.address;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -60,6 +62,10 @@ public class MainApp extends Application {
     public void init() throws Exception {
         logger.info("=============================[ Initializing AddressBook ]===========================");
         super.init();
+
+        if (!Files.isDirectory(Paths.get("ProfilePics"))) {
+            Files.createDirectory(Paths.get("ProfilePics"));
+        }
 
         config = initConfig(getApplicationParameter("config"));
 
