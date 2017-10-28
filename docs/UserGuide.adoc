@@ -10,12 +10,20 @@ ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
 endif::[]
-:repoURL: https://github.com/se-edu/addressbook-level4
+:repoURL: https://github.com/CS2103AUG2017-T11-B1/main
 
 By: `CS2103AUG2017-T11-B1`      Since: `Sep 2017` +
 Adapted from AddressBook-Level4, by: `Team SE-EDU`      Since: `Jun 2016`      Licence: `MIT`
 
-== Quick Start
+== Introduction
+Are you having trouble keeping track of important dates and events? Is there too much hassle
+in the current way you manage contacts? If these are problems that plague your everyday life, stress no further, for we've
+engineered a cure!
+
+DoC is here to remedy all your event tracking and contact management woes. Built as a Command Line Interface (CLI) application,
+DoC provides a speedy solution to manage event and contact information, with only just a few clicks on the keyboard.
+
+== Getting Started
 
 .  Ensure you have Java version `1.8.0_60` or later installed in your Computer.
 +
@@ -23,7 +31,7 @@ Adapted from AddressBook-Level4, by: `Team SE-EDU`      Since: `Jun 2016`      L
 Having any Java 8 version is not enough. +
 This app will not work with earlier versions of Java 8.
 +
-.  Download the latest `addressbook.jar` link:{repoURL}/releases[here].
+.  Download the latest `DoC.jar` link:{repoURL}/releases[here].
 .  Copy the file to the folder you want to use as the home folder for your Address Book.
 .  Double-click the file to start the app. The GUI should appear in a few seconds.
 +
