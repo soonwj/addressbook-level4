@@ -370,10 +370,11 @@ As you can see from the diagram, the sub component of `Event` include a `PersonL
 **Cons:** System have to check through the list to check if the person name exist in the current address book.
 
 === OAuth2 fulfilment mechanism
-==== Summary
+==== Overview
 A command structure has been set-up to fulfil all commands requiring an authentication process against the OAuth2 protocol.
 DoC currently has two such commands, namely, `import` and `export`, which requires this mechanism. This command structure has also been set-up to support possible future
-extensions. +
+extensions involving external services that require the OAuth2 protocol. An exciting possibility would be an integration with Facebook, for automated
+retrieval of extensive contact and event information.
 
 The OAuth2 authentication process is fulfilled with the help of the inbuilt `BrowserPanel`. This requires cross-component communication,
 which is implemented in an event-driven manner.
@@ -400,7 +401,7 @@ The implementation of `import` and `export` are very similar. There are 3 sequen
 **2.** The execute() method of `import` and `export` then triggers the **authentication process** with the `BrowserPanel` +
 **3.** Upon successful authentication on an `import` command, the **HTTP request process** is executed, followed by the  **conversion process**.
 The list of converted DoC `Person` objects are then added to the `Model` component.
-The order is exactly reversed for an `export` command
+The order in this step is exactly reversed for an `export` command, whereby a list of DoC `Person` objects is first retrieved from the `Model` component.
 
 
  Only the 3 bolded processes will be discussed in further detail as the process for step 1 is the same as all other commands in DoC.
@@ -447,7 +448,7 @@ objects are added under the Google `Person` object's `UserDefined` property
 **Aspect:** How a successful authentication is detected +
 **Alternative 1 (Chosen for security):** Redirect to a hosted domain first, then redirect to a Google Contacts page. +
 **Pros:** The underlying `HTTP GET` is sent to a domain under DoC's control -> risk of authentication code leak is controlled. +
-**Cons:** The BrowserPanel may display an error page temporarily if the hosted domain is down, however this will not be noticeable if redirection occurs fast.
+**Cons:** The BrowserPanel may display an error page temporarily if the hosted domain is down, however this will not be noticeable if redirection occurs fast. +
 **Alternative 2:** Redirect to a Google Contacts page immediately. +
 **Pros:** No risk of an error page being display. +
 **Cons:** The underlying `HTTP GET` containing the users' authentication code is sent to an external domain.
