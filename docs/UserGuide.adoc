@@ -23,8 +23,8 @@ engineered a cure!
 DoC is here to remedy all your event tracking and contact management woes. Built as a Command Line Interface (CLI) application,
 DoC provides a speedy solution to manage event and contact information, with only just a few clicks on the keyboard.
 
-== Getting Started
-
+== Getting started
+=== Installation guide
 .  Ensure you have Java version `1.8.0_60` or later installed in your Computer.
 +
 [NOTE]
@@ -34,20 +34,31 @@ This app will not work with earlier versions of Java 8.
 .  Download the latest `DoC.jar` link:{repoURL}/releases[here].
 .  Copy the file to the folder you want to use as the home folder for your Address Book.
 .  Double-click the file to start the app. The GUI should appear in a few seconds.
-+
-image::Ui.png[width="790"]
-+
-.  Type the command in the command box and press kbd:[Enter] to execute it. +
-e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
-.  Some example commands you can try:
 
-* *`list`* : lists all contacts
-* **`add`**`n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : adds a contact named `John Doe` to the Address Book
-* **`addE`**`h/Birthday de/John Doe's 21st birthday party d/2017-12-20` : adds an event named `Birthday` to the Address Book
-* **`delete`**`3` : deletes the 3rd contact shown in the current list
-* *`exit`* : exits the app
+=== Interface guide
+The following image highlights the 5 different components of DoC: +
 
-.  Refer to the link:#features[Features] section below for details of each command.
+image::Ui.png[width="100%"]
+Here's how you can use them: +
+
+**Command box** +
+Type your desired command into the `Command box` and press kbd:[Enter] to execute it. +
+    e.g. typing *`help`* and pressing kbd:[Enter] will open the help window. +
+
+**Status panel** +
+The `Status panel` displays DoC's feedback on your latest command.
+
+**Contacts panel** +
+The `Contacts panel` displays a list of your contacts stored by DoC. All your contacts will be displayed and listed alphabetically by default.
+Display customization can be achieved with commands `sort`, and `find`.
+
+**Browser panel** +
+The `Browser panel` is DoC's built-in browser that facilitates several cool features like the `location`, `email`, `import`
+and `export` feature.
+
+**Events panel** +
+The `Events panel` displays your recorded events in the order of most urgent, coming soon, and overdue.
+
 
 == Features
 
@@ -452,7 +463,7 @@ As shown in the picture above, after entering the `updateProfilePic` command, th
 Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous Address Book folder.
 ****
 
-== Command Summary
+== Command summary
 
 * *Add* `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]...` +
 e.g. `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
