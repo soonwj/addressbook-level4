@@ -507,10 +507,10 @@ The removeTag mechanism is facilitated by the RemovetagCommand class which is in
 image::EmailSequenceDiagram.png[width="800"]
 
 When the user executes the command removeTag, the RemoveTagCommandParser class will parse the tag and call the `RemoveTagCommand`. In `RemoveTagCommand` the `execute()` function is called.
-This will invoke the `deleteTag` function that resides in the `LogicManager`, which will remove the specific tag from all the contacts and updates the storage.
+This will invoke the `removeTag` function that resides in the `LogicManager`, which will remove the specific tag from all the contacts and updates the storage.
 
 [NOTE]
-Note that the `deleteTag` function will raise a `CommandException` if the `tag` is not valid.
+Note that the `removeTag` function will raise a `CommandException` if the `tag` is not valid.
 
 ==== Design Considerations
 

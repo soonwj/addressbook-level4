@@ -50,7 +50,7 @@ public interface Model {
     void updatePerson(ReadOnlyPerson target, ReadOnlyPerson editedPerson)
             throws DuplicatePersonException, PersonNotFoundException;
 
-    void deleteTag(Tag tag) throws PersonNotFoundException, DuplicatePersonException, CommandException;
+    void removeTag(Tag tag) throws PersonNotFoundException, DuplicatePersonException, CommandException;
 
     void findLocation(ReadOnlyPerson person) throws PersonNotFoundException;
     /**

@@ -30,7 +30,7 @@ public class RemoveTagCommand extends UndoableCommand {
     @Override
     public CommandResult executeUndoableCommand() throws CommandException {
         try {
-            model.deleteTag(targetName);
+            model.removeTag(targetName);
         } catch (PersonNotFoundException pnfe) {
             assert false : "The target Tag cannot be missing";
         } catch (DuplicatePersonException dpe) {

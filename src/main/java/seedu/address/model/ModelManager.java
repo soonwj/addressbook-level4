@@ -101,7 +101,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public void deleteTag(Tag tag) throws PersonNotFoundException, DuplicatePersonException, CommandException {
+    public void removeTag(Tag tag) throws PersonNotFoundException, DuplicatePersonException, CommandException {
         int counter = 0;
         for (ReadOnlyPerson person : addressBook.getPersonList()) {
             if (person.getTags().contains(tag)) {
