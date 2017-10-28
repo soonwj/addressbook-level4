@@ -160,7 +160,7 @@ _Figure 2.2.1 : Structure of the UI Component_
 
 As shown from the diagram above, the UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter`, `BrowserPanel` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class.
 
-The `UI` component uses JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the link:{repoURL}/src/main/java/seedu/address/ui/MainWindow.java[`MainWindow`] is specified in link:{repoURL}/src/main/resources/view/MainWindow.fxml[`MainWindow.fxml`]
+The `UI` component uses JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the link:{repoURL}/src/main/java/seedu/address/ui/MainWindow.java[`MainWindow`] is specified in link:{repoURL}/src/main/resources/view/MainWindow.fxml[`MainWindow.fxml`].
 
 The `UI` component,
 
@@ -452,33 +452,18 @@ objects are added under the Google `Person` object's `UserDefined` property
 **Pros:** No risk of an error page being display. +
 **Cons:** The underlying `HTTP GET` containing the users' authentication code is sent to an external domain.
 
-=== Location
-
-image::Location.png[width="800"]
-
-As seen above, an event based approach is used to display the location of the person.
-Once the Address book parser identifies the user command as a valid location command, it will make use of the Google Event bus to transmit the event.
-The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function.
-This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested person.
-This rendering of Google Maps is done via calling the URL.
-
-==== Design Considerations
-
-**Aspect:** Implementation of `location` +
-**Alternative 1 (current choice):** Add a new class that extends `Command` that uses the Google Maps URL +
-**Pros:** The map can be easily loaded without needing to call the GoogleMaps API  +
-**Cons:** Only functions that can be sent via URL can be used. +
-**Alternative 2:** Make use of Google Maps API +
-**Pros:** More functions such as radius and many more could have been added +
-**Cons:** Take a longer time to load the map.
-
 === Email
 
 The `EmailCommand` is the main driver of this functionality. It links the logic in Addressbook and the content displayed on the Email browser.
 
 image::EmailSequenceDiagram.png[width="800"]
 
-As seen from the picture above, the `AddressParser` will be able to distinguish the email command and direct it to the `EmailCommandParser`. Over there the recipient, subject and the body from the command line input is identified. Once identified, the `execute` function is called. This function in the `EmailCommand` would call the `updateEmailRecipient` function in the Model. Once the fields are updated properly, the `EmailCommand` will call the desktop mail app and fill in the necessary details.
+As seen from the picture above, the `AddressParser` will be able to distinguish the email command and direct it to the `EmailCommandParser`. Over there the recipient, subject and the body from the command line input is identified.
+
+[NOTE]
+Note that the `EmailCommandParser` will raise a `ParseException` if the `to/` is not filled. The `subject` and `body` fields are not compulsory.
+
+Once identified, the `execute` function is called. This function in the `EmailCommand` would call the `updateEmailRecipient` function in the Model. Once the fields are updated properly, the `EmailCommand` will call the desktop mail app and fill in the necessary details.
 
 ==== Design Considerations
 
@@ -488,7 +473,54 @@ As seen from the picture above, the `AddressParser` will be able to distinguish 
 **Cons:** A new application has to be opened. +
 **Alternative 2:** Make use of Gmail API. +
 **Pros:** Can be emailed from the browser panel itself. +
-**Cons:** The UI for Gmail is very poor.
+**Cons:** The UI for Gmail is very poor on `JavaFX WebView`.
+
+=== Location
+
+image::Location.png[width="800"]
+
+As seen above, an event based approach is used to display the location of the person.
+
+[NOTE]
+Note that the `LocationCommandParser` will raise a `ParseException` if the `INDEX` is not stated.
+
+Once the Address book parser identifies the user command as a valid location command, it will make use of the Google Event bus to transmit the event.
+The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function.
+This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested person.
+This rendering of Google Maps is done via calling the URL.
+
+==== Design Considerations
+
+**Aspect:** Implementation of `location` +
+**Alternative 1 (current choice):** Add a new class that extends `Command` that uses the Google Maps URL. +
+**Pros:** The map can be easily loaded without needing to call the GoogleMaps API.  +
+**Cons:** Only functions that can be sent via URL can be used. +
+**Alternative 2:** Make use of Google Maps API. +
+**Pros:** More functions such as radius and many more could have been added. +
+**Cons:** Take a longer time to load the map.
+
+=== RemoveTag
+
+The removeTag mechanism is facilitated by the RemovetagCommand class which is inherited from the
+`UndoableCommand` class. It removes the tag from all the contacts in the current list.
+
+image::EmailSequenceDiagram.png[width="800"]
+
+When the user executes the command removeTag, the RemoveTagCommandParser class will parse the tag and call the `RemoveTagCommand`. In `RemoveTagCommand` the `execute()` function is called.
+This will invoke the `deleteTag` function that resides in the `LogicManager`, which will remove the specific tag from all the contacts and updates the storage.
+
+[NOTE]
+Note that the `deleteTag` function will raise a `CommandException` if the `tag` is not valid.
+
+==== Design Considerations
+
+**Aspect:** Implementation of `removeTag` +
+**Alternative 1 (current choice):** Directly removes the tag from all persons. +
+**Pros:** Easier as mulitple person are updated at one go.  +
+**Cons:** It removes for everyone. If the tag only has to be removed from one person, the `edit` command has to be used. +
+**Alternative 2:** Usage of `edit` command to remove the tags. +
+**Pros:** One lesser command for the user to remember. +
+**Cons:** It is very tiring for the user to update each and everyone of the contacts in the contact list, if he decided to remove the tag from everyone.
 
 === UpdateProfilePic/DeleteProfilePic mechanism
 
