@@ -29,6 +29,7 @@ import seedu.address.logic.commands.RemoveTagCommand;
 import seedu.address.logic.commands.SelectCommand;
 import seedu.address.logic.commands.SortCommand;
 import seedu.address.logic.commands.UndoCommand;
+import seedu.address.logic.commands.UnknownCommand;
 import seedu.address.logic.commands.UpdateProfilePicCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -36,11 +37,16 @@ import seedu.address.logic.parser.exceptions.ParseException;
  * Parses user input.
  */
 public class AddressBookParser {
-
     /**
      * Used for initial separation of command word and args.
      */
     private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
+
+    /**
+     * Variables used for Unknown command parsing
+     */
+    private boolean correctionPrompted = false;
+    private UnknownCommand unknownCommand = null;
 
     /**
      * Parses user input into command for execution.
@@ -57,6 +63,27 @@ public class AddressBookParser {
 
         final String commandWord = matcher.group("commandWord");
         final String arguments = matcher.group("arguments");
+
+        /**
+         * Executes if the system has prompted the user for a typo-correction suggestion previously,
+         * If the user accepts the suggestion with a response of "yes" or "y", we will execute the generated suggested
+         * command.
+         * Upon any other response, we will reset the unknownCommand instance, and parse the command normally with the
+         * switch
+         */
+        if (correctionPrompted) {
+            if (commandWord.equals("yes") || commandWord.equals("y")) {
+                Command tempCommand = unknownCommand.getSuggestedCommand();
+                unknownCommand = null;
+                correctionPrompted = false;
+                return tempCommand;
+            }
+            else {
+                unknownCommand = null;
+                correctionPrompted = false;
+            }
+        }
+
         switch (commandWord) {
 
         case AddCommand.COMMAND_WORD:
@@ -129,6 +156,10 @@ public class AddressBookParser {
             return new SortCommand();
 
         default:
+            unknownCommand = new UnknownCommand(commandWord, arguments);
+            if (unknownCommand.suggestionFound()) {
+                return unknownCommand;
+            }
             throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
         }
     }
