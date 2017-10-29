@@ -26,7 +26,7 @@ public class SortCommandTest {
     }
 
     /**
-     * Generates a new {@code ClearCommand} which upon execution, clears the contents in {@code model}.
+     * Generates a new {@code SortCommand} which upon execution, sorts the contents in {@code model}.
      */
     private SortCommand prepareCommand(Model model) {
         SortCommand command = new SortCommand();
