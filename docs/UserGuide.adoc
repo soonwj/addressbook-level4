@@ -71,7 +71,10 @@ The `Events panel` displays your recorded events in the order of most urgent, co
 * Parameters can be in any order e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
 ====
 
-=== Adding a contact: `add`
+=== Contact features
+You can manage your contacts through the following commands:
+
+==== Adding a contact: `add`
 
 Adds a contact to the address book. +
 Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]...`
@@ -88,80 +91,113 @@ Examples:
 
 <PICTURE GUIDE PENDING UI UPDATE>
 
-=== Adding an event: `addE`
+==== Updating a person's profile picture: `updateProfilePic`
 
-Adds an event to the address book. +
-Format: `addE h/HEADER de/DESCRIPTION d/DATE`
-
-[TIP]
-The date must a valid date with format: year-month-day
-
-Example:
-
-* `addE h/Meeting de/Business meeting at in the afternoon at 2pm d/2017-11-20`
-
-**Picture guide**
-
-image::addEpic.png[width="1000"]
-
-Your newly created event will be listed in the event panel and will be sorted based on its date. Thus, the earliest event will be displayed at the top of the panel.
-As shown in the guide above, yellow panel indicates an event upcoming in 2 or less days, Green panel indicates an event that have yet to come (more than 2 days) and Red panel indicates that the event is already overdue.
-
-
-=== Clearing all entries : `clear`
-
-Clears all entries from the address book. +
-Format: `clear`
-
-**Picture guide**
-
-<PICTURE GUIDE PENDING UI UPDATE>
-
-=== Deleting a contact : `delete`
-
-Deletes the specified contact from the address book. +
-Format: `delete INDEX`
+Updates the profile picture of a person. +
+Format: `updateProfilePic INDEX [u/imageUrl]`
 
 ****
-* Deletes the contact at the specified `INDEX`.
-* The index refers to the index number shown in the most recent listing.
-* The index *must be a positive integer* 1, 2, 3, ...
+* Updates the profile picture of the person at the specified `INDEX`. The index refers to the index number shown in the last person listing. The index *must be a positive integer* 1, 2, 3, ...
+* The index must be valid as well
+* The `imageUrl` must be a valid one. It should start with `file:///` for images stored locally
+* Or a valid web URL for an image stored on the internet
 ****
 
 Examples:
 
-* `list` +
-`delete 2` +
-Deletes the 2nd contact in the address book.
-* `find Betsy` +
-`delete 1` +
-Deletes the 1st contact in the results of the `find` command.
+* `updateProfilePic 1 u/file:///C:/Users/Bobby/image.jpg` +
+Updates the profile picture of the 1st person to be the image at `file:///C:/Users/Bobby/image.jpg` +
+* `updateProfilePic 2 u/http://www.google.com/images/image.png` +
+Updates the profile picture of the 2nd person to be the image at `http://www.google.com/images/image.png` +
+
+Picture Guide:
+
+image::updateProfilePicImageExample.jpg[width="1000"]
+
+As shown in the picture above, after entering the `updateProfilePic` command, the profile picture of the person at the specified index is updated to the image stored at the url specified.
+
+==== Listing all persons : `list`
+
+Display a list of all contacts currently stored in DoC. +
+Format: `list`
+
+**Picture guide** +
+
+<PENDING UI UPDATE> +
+
+As demonstrated in the picture guide, DoC will display a list of all contacts currently stored in DoC upon receiving the command `list`.
+
+==== Finding persons by name and tags: `find`
+Lists all contacts whose name or tags matches any of the given search terms. +
+Format: `find TERM1 [MORE_TERMS]`
+
+
+NOTE: * The search is case insensitive; e.g a search term of `hans` will match any contact name containing `Hans` +
+ * Only full words will be matched; e.g a search term of `Han` will not match a contact name containing `Hans` +
+ * Name of contacts can be matched partially; e.g a search term of `Han` will match the contact name `Han Solo`
+
+*Picture Guide*
+
+<PICTURE PENDING UI UPDATE>
+
+As demonstrated by the picture guide above, entering the command `find Family han` displays all contacts with a tag or
+part of name, matching any search term.
+
+==== Selecting a contact : `select`
+
+Selects the contact identified by the index number used in the last contact listing, and loads the Google search result of the contact. +
+Format: `select INDEX` +
+Refer to the following picture guide on how you can retrieve the INDEX of a contact: +
 
 **Picture guide**
 
-<PICTURE GUIDE PENDING UI UPDATE>
+<PENDING UI UPDATE>
 
-=== Deleting an event : `deleteE`
+As demonstrated by the picture guide, you can first enter the command `list` to display a list of all contacts currently stored in DoC.
+The numbers highlighted in red in the picture are the indexes of each contact.
 
-Deletes the specified event from the address book. +
-Format: `deleteE INDEX`
+==== Editing a person : `edit`
+
+Edits an existing contact in the address book. +
+Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...`
 
 ****
-* Deletes the event at the specified `INDEX`.
-* The index refers to the index number shown in the most recent listing.
-* The index *must be a positive integer* 1, 2, 3, ...
+* Edits the contact at the specified `INDEX`. The index refers to the index number shown in the last contact listing. The index *must be a positive integer* 1, 2, 3, ...
+* At least one of the optional fields must be provided.
+* Existing values will be updated to the input values.
+* When editing tags, the existing tags of the contact will be removed i.e adding of tags is not cumulative.
+* You can remove all the contact's tags by typing `t/` without specifying any tags after it.
 ****
 
 Examples:
 
-* `deleteE 3` +
-Deletes the 3rd event in the address book.
+* `edit 1 p/91234567 e/johndoe@example.com` +
+Edits the phone number and email address of the 1st contact to be `91234567` and `johndoe@example.com` respectively.
+* `edit 2 n/Betsy Crower t/` +
+Edits the name of the 2nd contact to be `Betsy Crower` and clears all existing tags.
 
 **Picture guide**
 
 <PICTURE GUIDE PENDING UI UPDATE>
 
-=== Deleting the profile picture of a contact : `deleteProfilePic`
+==== Removing tags: `removeTag`
+
+Finds contacts whose names or tags contain any of the given tag and removes that tag. +
+Format: `removeTag KEYWORD`
+
+****
+* The search is case sensitive. e.g `family` will match `family`
+* Only tag is searched.
+* Only full words will be matched e.g. `Family` will not match `Families`
+* Persons having that tag will be returned
+****
+
+Examples:
+
+* `removeTag Friend` +
+Returns `john` and `John Doe` with Friend tag removed
+
+==== Deleting the profile picture of a contact : `deleteProfilePic`
 
 Deletes the profile picture of the specified contact from the address book. +
 Format: `deleteProfilePic INDEX`
@@ -188,31 +224,53 @@ image::deleteProfilePicImageExample.jpg[width="1000"]
 
 As shown in the picture above, after entering the `deleteProfilePic` command, the profile picture of the person at the specified index is reverted back to the default.
 
-=== Editing a person : `edit`
+==== Deleting a contact : `delete`
 
-Edits an existing contact in the address book. +
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...`
+Deletes the specified contact from the address book. +
+Format: `delete INDEX`
 
 ****
-* Edits the contact at the specified `INDEX`. The index refers to the index number shown in the last contact listing. The index *must be a positive integer* 1, 2, 3, ...
-* At least one of the optional fields must be provided.
-* Existing values will be updated to the input values.
-* When editing tags, the existing tags of the contact will be removed i.e adding of tags is not cumulative.
-* You can remove all the contact's tags by typing `t/` without specifying any tags after it.
+* Deletes the contact at the specified `INDEX`.
+* The index refers to the index number shown in the most recent listing.
+* The index *must be a positive integer* 1, 2, 3, ...
 ****
 
 Examples:
 
-* `edit 1 p/91234567 e/johndoe@example.com` +
-Edits the phone number and email address of the 1st contact to be `91234567` and `johndoe@example.com` respectively.
-* `edit 2 n/Betsy Crower t/` +
-Edits the name of the 2nd contact to be `Betsy Crower` and clears all existing tags.
+* `list` +
+`delete 2` +
+Deletes the 2nd contact in the address book.
+* `find Betsy` +
+`delete 1` +
+Deletes the 1st contact in the results of the `find` command.
 
 **Picture guide**
 
 <PICTURE GUIDE PENDING UI UPDATE>
 
-=== Editing an event : `editE`
+=== Event features
+You can manage your events through the following commands:
+
+==== Adding an event: `addE`
+
+Adds an event to the address book. +
+Format: `addE h/HEADER de/DESCRIPTION d/DATE`
+
+[TIP]
+The date must a valid date with format: year-month-day
+
+Example:
+
+* `addE h/Meeting de/Business meeting at in the afternoon at 2pm d/2017-11-20`
+
+**Picture guide**
+
+image::addEpic.png[width="1000"]
+
+Your newly created event will be listed in the event panel and will be sorted based on its date. Thus, the earliest event will be displayed at the top of the panel.
+As shown in the guide above, yellow panel indicates an event upcoming in 2 or less days, Green panel indicates an event that have yet to come (more than 2 days) and Red panel indicates that the event is already overdue.
+
+==== Editing an event : `editE`
 
 Edits an existing event in the address book. +
 Format: `editE INDEX [h/HEADER] [de/DESCRIPTION] [d/DATE]`
@@ -233,7 +291,86 @@ Edits the header and date of the 1st event to be `Birthday party` and `2017-06-1
 
 <PICTURE GUIDE PENDING UI UPDATE>
 
-=== Emailing a person : `email`
+==== Deleting an event : `deleteE`
+
+Deletes the specified event from the address book. +
+Format: `deleteE INDEX`
+
+****
+* Deletes the event at the specified `INDEX`.
+* The index refers to the index number shown in the most recent listing.
+* The index *must be a positive integer* 1, 2, 3, ...
+****
+
+Examples:
+
+* `deleteE 3` +
+Deletes the 3rd event in the address book.
+
+**Picture guide**
+
+<PICTURE GUIDE PENDING UI UPDATE>
+
+=== Online features
+These features allow you to further manage your DoC if you have access to the Internet:
+
+==== Importing contacts: `import`
+
+Imports contacts to DoC from Google Contacts. +
+Format: `import`
+
+WARNING: Number of contacts imported is limited to 1000 +
+
+
+**Steps** +
+**1.** Enter the `import` command +
+**2.** Log in to your Google account on the in-built browser +
+**3.** Grant permission to DoC to access your contacts +
+
+**Picture guide**
+
+image::importpic.png[width="1000"]
+
+You can enter your credentials and grant permission to DoC to access your Google contacts, as highlighted by the
+red boxes in the picture above.
+
+==== Exporting contacts: `export`
+Export your contacts from DoC to Google Contacts. +
+Format: `export` +
+
+**Steps** +
+**1.** Enter the `export` command +
+**2.** Log in to your Google account on the built-in browser +
+**3.** Grant permission to DoC to access your contacts +
+
+**Picture guide**
+
+image::importpic.png[width="1000"]
+
+You can enter your credentials and grant permission to DoC to access your Google contacts, as highlighted by the
+red boxes in the picture above.
+
+==== Locating a contact : `location`
+
+Shows the address of the contact in Google Maps. +
+Format: `location INDEX`
+
+
+****
+* Shows the address of the person at the specified `INDEX`. The index refers to the index number shown in the last person listing. The index *must be a positive integer* 1, 2, 3, ...
+****
+
+Examples:
+
+* `location 1` +
+
+**Picture guide**
+
+image::Location_UG.PNG[width="1000"]
+
+Shows the address of the 1st person in Google Maps as shown above.
+
+==== Emailing a person : `email`
 
 Emails an existing person/ a group in the address book. +
 Format: `email [to/TO] [subject/SUBJECT] [body/BODY]`
@@ -263,45 +400,10 @@ Opens the default emailing client and adds Adam to the `to` field and has the su
 
 image::Email_UG_1.PNG[width="1000"]
 
-=== Exiting the program : `exit`
+=== General features
+These are commands that can be used in managing both contacts and events:
 
-Exits the program. +
-Format: `exit`
-
-=== Export contacts: `export`
-Export your contacts from DoC to Google Contacts. +
-Format: `export` +
-
-**Steps** +
-**1.** Enter the `export` command +
-**2.** Log in to your Google account on the built-in browser +
-**3.** Grant permission to DoC to access your contacts +
-
-**Picture guide**
-
-image::importpic.png[width="1000"]
-
-You can enter your credentials and grant permission to DoC to access your Google contacts, as highlighted by the
-red boxes in the picture above.
-
-=== Finding persons by name and tags: `find`
-Lists all contacts whose name or tags matches any of the given search terms. +
-Format: `find TERM1 [MORE_TERMS]`
-
-
-NOTE: * The search is case insensitive; e.g a search term of `hans` will match any contact name containing `Hans` +
- * Only full words will be matched; e.g a search term of `Han` will not match a contact name containing `Hans` +
- * Name of contacts can be matched partially; e.g a search term of `Han` will match the contact name `Han Solo`
-
-*Picture Guide*
-
-<PICTURE PENDING UI UPDATE>
-
-As demonstrated by the picture guide above, entering the command `find Family han` displays all contacts with a tag or
-part of name, matching any search term.
-
-
-=== Help : `help`
+==== Help : `help`
 Displays this document. +
 Format: `help`
 
@@ -315,106 +417,7 @@ Format: `history` +
 * Paste previous commands directly to the command box +
 Format: the kbd:[&uarr;] and kbd:[&darr;] arrows will paste the previous and next input respectively into the command box
 
-=== Importing contacts: `import`
-
-Imports contacts to DoC from Google Contacts. +
-Format: `import`
-
-WARNING: Number of contacts imported is limited to 1000 +
-
-
-**Steps** +
-**1.** Enter the `import` command +
-**2.** Log in to your Google account on the in-built browser +
-**3.** Grant permission to DoC to access your contacts +
-
-**Picture guide**
-
-image::importpic.png[width="1000"]
-
-You can enter your credentials and grant permission to DoC to access your Google contacts, as highlighted by the
-red boxes in the picture above.
-
-=== Listing all persons : `list`
-
-Display a list of all contacts currently stored in DoC. +
-Format: `list`
-
-**Picture guide** +
-
-<PENDING UI UPDATE> +
-
-As demonstrated in the picture guide, DoC will display a list of all contacts currently stored in DoC upon receiving the command `list`.
-
-=== Location of a contact : `location`
-
-Shows the address of the contact in Google Maps. +
-Format: `location INDEX`
-
-
-****
-* Shows the address of the person at the specified `INDEX`. The index refers to the index number shown in the last person listing. The index *must be a positive integer* 1, 2, 3, ...
-****
-
-Examples:
-
-* `location 1` +
-
-**Picture guide**
-
-image::Location_UG.PNG[width="1000"]
-
-Shows the address of the 1st person in Google Maps as shown above.
-
-=== Redoing the previously undone command : `redo`
-
-Reverses the most recent `undo` command, if any. +
-Format: `redo`
-
-**Picture guide** +
-
-<PENDING UI UPDATE>
-
-As demonstrated by the picture guide, a command of 'delete 1' is first entered, deleting the contact listed with an index of 1.
-An `undo` command is then entered, adding the deleted contact back to the list of contacts. Now, the `redo` command entered
-simply deletes the contact with an index of 1 again.
-
-
-=== Removing tags: `removeTag`
-
-Finds contacts whose names or tags contain any of the given tag and removes that tag. +
-Format: `removeTag KEYWORD`
-
-****
-* The search is case sensitive. e.g `family` will match `family`
-* Only tag is searched.
-* Only full words will be matched e.g. `Family` will not match `Families`
-* Persons having that tag will be returned
-****
-
-Examples:
-
-* `removeTag Friend` +
-Returns `john` and `John Doe` with Friend tag removed
-
-=== Saving the data
-All additions, deletions, and changes performed on the contacts stored in DoC are saved automatically.
-
-=== Selecting a contact : `select`
-
-Selects the contact identified by the index number used in the last contact listing, and loads the Google search result of the contact. +
-Format: `select INDEX` +
-Refer to the following picture guide on how you can retrieve the INDEX of a contact: +
-
-**Picture guide**
-
-<PENDING UI UPDATE>
-
-As demonstrated by the picture guide, you can first enter the command `list` to display a list of all contacts currently stored in DoC.
-The numbers highlighted in red in the picture are the indexes of each contact.
-
-
-=== Undoing previous command : `undo`
+==== Undoing previous command : `undo`
 
 Reverses the changes made by the previous command entered. +
 Format: `undo`
@@ -431,31 +434,30 @@ Only these commmands are currently undoable: `add`, `addE`, `delete`, `deleteE`,
 As demonstrated by the picture guide, a command of `delete 1`, deletes the contact listed with an index of 1. A subsequent `undo` command,
 reverses the `delete 1` command by adding back the deleted contact.
 
+==== Redoing the previously undone command : `redo`
 
-=== Updating a person's profile picture: `updateProfilePic`
+Reverses the most recent `undo` command, if any. +
+Format: `redo`
 
-Updates the profile picture of a person. +
-Format: `updateProfilePic INDEX [u/imageUrl]`
+**Picture guide** +
 
-****
-* Updates the profile picture of the person at the specified `INDEX`. The index refers to the index number shown in the last person listing. The index *must be a positive integer* 1, 2, 3, ...
-* The index must be valid as well
-* The `imageUrl` must be a valid one. It should start with `file:///` for images stored locally
-* Or a valid web URL for an image stored on the internet
-****
+<PENDING UI UPDATE>
 
-Examples:
+As demonstrated by the picture guide, a command of 'delete 1' is first entered, deleting the contact listed with an index of 1.
+An `undo` command is then entered, adding the deleted contact back to the list of contacts. Now, the `redo` command entered
+simply deletes the contact with an index of 1 again.
 
-* `updateProfilePic 1 u/file:///C:/Users/Bobby/image.jpg` +
-Updates the profile picture of the 1st person to be the image at `file:///C:/Users/Bobby/image.jpg` +
-* `updateProfilePic 2 u/http://www.google.com/images/image.png` +
-Updates the profile picture of the 2nd person to be the image at `http://www.google.com/images/image.png` +
+==== Clearing all entries : `clear`
 
-Picture Guide:
+Clears all entries from the address book. +
+Format: `clear`
 
-image::updateProfilePicImageExample.jpg[width="1000"]
+==== Saving the data
+All additions, deletions, and changes performed on the contacts stored in DoC are saved automatically.
 
-As shown in the picture above, after entering the `updateProfilePic` command, the profile picture of the person at the specified index is updated to the image stored at the url specified.
+==== Exiting the program : `exit`
+Exits the program. +
+Format: `exit`
 
 == FAQ
 ****
