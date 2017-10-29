@@ -2,7 +2,6 @@ package seedu.address.logic.commands;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.EmailCommand.MESSAGE_EMAIL_APP;
 import static seedu.address.logic.commands.EmailCommand.MESSAGE_NOT_SENT;
@@ -18,7 +17,7 @@ import seedu.address.logic.UndoRedoStack;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.person.NameContainsKeywordsPredicate;;
+import seedu.address.model.person.NameContainsKeywordsPredicate;
 
 /**
  * Contains integration tests (interaction with the Model) for {@code EmailCommand}.
@@ -33,14 +32,14 @@ public class EmailCommandTest {
         NameContainsKeywordsPredicate secondPredicate =
                 new NameContainsKeywordsPredicate(Collections.singletonList("second"));
 
-        EmailCommand findFirstCommand = new EmailCommand(firstPredicate,"","");
-        EmailCommand findSecondCommand = new EmailCommand(secondPredicate,"","");
+        EmailCommand findFirstCommand = new EmailCommand(firstPredicate, "", "");
+        EmailCommand findSecondCommand = new EmailCommand(secondPredicate, "", "");
 
         // same object -> returns true
         assertTrue(findFirstCommand.equals(findFirstCommand));
 
         // same values -> returns true
-        EmailCommand findFirstCommandCopy = new EmailCommand(firstPredicate,"","");
+        EmailCommand findFirstCommandCopy = new EmailCommand(firstPredicate, "", "");
         assertTrue(findFirstCommand.equals(findFirstCommandCopy));
 
         // different types -> returns false
@@ -72,7 +71,7 @@ public class EmailCommandTest {
      */
     private EmailCommand prepareCommand(String userInput) {
         EmailCommand command =
-                new EmailCommand(new NameContainsKeywordsPredicate(Arrays.asList(userInput.split("\\s+"))),"","");
+                new EmailCommand(new NameContainsKeywordsPredicate(Arrays.asList(userInput.split("\\s+"))), "", "");
         command.setData(model, new CommandHistory(), new UndoRedoStack());
         return command;
     }
