@@ -190,7 +190,7 @@ Refer to the following picture guide on how you can retrieve the INDEX of a cont
 
 **Visual guide**
 
-image::selectpic.png [width="800"]
+image::selectpic.png[width="700"]
 
 As demonstrated by the picture guide, you can first enter the command `list` to display a list of all contacts currently stored in DoC. After entering the `select` command, the Google search of the contact name will load up in the `Browser panel`.
 
