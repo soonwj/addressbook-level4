@@ -87,7 +87,9 @@ public class UnknownCommand extends Command{
         //Set the suggested command
         else {
             setSuggestedCommand(closestCommandWord);
-            promptToUser = "Did you mean: " +  String.format(closestCommandWord, arguments);
+            promptToUser = "Did you mean: " + closestCommandWord + arguments + " ?" + "\n" + "Respond: " +
+                   "'yes' or 'y' to accept the suggested command." + "\n" +
+                    "Suggested command will be discarded otherwise";
             return true;
         }
     }
@@ -170,7 +172,7 @@ public class UnknownCommand extends Command{
      * Levenshtein distance algorithm implementation taken from:
      * https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Java,
      * under the Creative Commons Attribution-ShareAlike License.
-     * No changes were made.
+     * No logical changes were made. Minor checkstyle formatting changes applied.
      * @param lhs
      * @param rhs
      * @return
@@ -194,7 +196,7 @@ public class UnknownCommand extends Command{
             newcost[0] = j;
 
             // transformation cost for each letter in s0
-            for(int i = 1; i < len0; i++) {
+            for (int i = 1; i < len0; i++) {
                 // matching current letters in both strings
                 int match = (lhs.charAt(i - 1) == rhs.charAt(j - 1)) ? 0 : 1;
 
