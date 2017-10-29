@@ -79,8 +79,7 @@ public class AddressBookParser {
                 unknownCommand = null;
                 correctionPrompted = false;
                 return tempCommand;
-            }
-            else {
+            } else {
                 unknownCommand = null;
                 correctionPrompted = false;
                 EventsCenter.getInstance().post(new NewResultAvailableEvent(
@@ -161,13 +160,14 @@ public class AddressBookParser {
 
         default:
             unknownCommand = new UnknownCommand(commandWord, arguments);
-            //initiate the similarity checking logic
+            /**
+             * initiate the similarity checking logic. If suggestionFound() returns false, we will reset the
+             * unknownCommand to null, as no matches were found
+             */
             if (unknownCommand.suggestionFound()) {
                 correctionPrompted = true;
                 return unknownCommand;
-            }
-            //if suggestionFound() returns false, we will reset the unknownCommand to null, as no matches were found
-            else {
+            } else {
                 unknownCommand = null;
             }
             throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
