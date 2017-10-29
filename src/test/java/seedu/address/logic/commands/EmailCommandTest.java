@@ -3,7 +3,6 @@ package seedu.address.logic.commands;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.address.logic.commands.EmailCommand.MESSAGE_EMAIL_APP;
 import static seedu.address.logic.commands.EmailCommand.MESSAGE_NOT_SENT;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
@@ -58,17 +57,17 @@ public class EmailCommandTest {
         EmailCommand command = prepareCommand(" ");
         assertCommandSuccess(command, model, expectedMessage, model);
     }
-/**
- * The execution of EmailCommand makes the Travis CI fail.
- * Travis CI is unable to open the desktop mail application.
- * When running locally, use the below test. Comment it otherwise.
- */
-//    @Test
-//    public void execute_multipleKeywords_multiplePersonsFound() {
-//        String expectedMessage = String.format(MESSAGE_EMAIL_APP);
-//        EmailCommand command = prepareCommand("email to/Kurz Elle Kunz");
-//        assertCommandSuccess(command, model, expectedMessage, model);
-//    }
+    /**
+     * The execution of EmailCommand makes the Travis CI fail.
+     * Travis CI is unable to open the desktop mail application.
+     * When running locally, use the below test. Comment it otherwise.
+     */
+    //    @Test
+    //    public void execute_multipleKeywords_multiplePersonsFound() {
+    //        String expectedMessage = String.format(MESSAGE_EMAIL_APP);
+    //        EmailCommand command = prepareCommand("email to/Kurz Elle Kunz");
+    //        assertCommandSuccess(command, model, expectedMessage, model);
+    //    }
 
     /**
      * Parses {@code userInput} into a {@code EmailCommand}.
