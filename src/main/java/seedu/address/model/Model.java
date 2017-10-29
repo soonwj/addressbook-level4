@@ -1,5 +1,6 @@
 package seedu.address.model;
 
+import java.util.Set;
 import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
@@ -50,7 +51,8 @@ public interface Model {
     void updatePerson(ReadOnlyPerson target, ReadOnlyPerson editedPerson)
             throws DuplicatePersonException, PersonNotFoundException;
 
-    void removeTag(Tag tag) throws PersonNotFoundException, DuplicatePersonException, CommandException;
+    void removeTag(ObservableList<ReadOnlyPerson> persons, Set<Tag> tag)
+            throws PersonNotFoundException, DuplicatePersonException, CommandException;
 
     void findLocation(ReadOnlyPerson person) throws PersonNotFoundException;
     /**

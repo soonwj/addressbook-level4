@@ -18,4 +18,5 @@ public class CliSyntax {
     public static final Prefix PREFIX_EMAIL_BODY = new Prefix("body/");
     public static final Prefix PREFIX_EMAIL_SUBJECT = new Prefix("subject/");
     public static final Prefix PREFIX_EMAIL_TO = new Prefix("to/");
+    public static final Prefix PREFIX_REMOVE_INDEX = new Prefix("rm/");
 }

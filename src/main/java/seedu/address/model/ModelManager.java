@@ -101,13 +101,19 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public void removeTag(Tag tag) throws PersonNotFoundException, DuplicatePersonException, CommandException {
+    public void removeTag(ObservableList<ReadOnlyPerson> persons, Set<Tag> tag)
+            throws PersonNotFoundException, DuplicatePersonException, CommandException {
         int counter = 0;
-        for (ReadOnlyPerson person : addressBook.getPersonList()) {
-            if (person.getTags().contains(tag)) {
+        if (persons.isEmpty()) {
+            persons.setAll(addressBook.getPersonList());
+        }
+        for (ReadOnlyPerson person : persons) {
+            if (!Collections.disjoint(person.getTags(), tag)) {
                 Person newPerson = new Person(person);
                 Set<Tag> newTags = new HashSet<>(person.getTags());
-                newTags.remove(tag);
+                for (Tag t: tag) {
+                    newTags.remove(t);
+                }
                 newPerson.setTags(newTags);
                 updatePerson(person, newPerson);
                 counter++;
