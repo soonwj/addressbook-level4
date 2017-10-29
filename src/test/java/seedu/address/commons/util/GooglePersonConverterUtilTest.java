@@ -2,19 +2,18 @@ package seedu.address.commons.util;
 
 import static org.junit.Assert.assertEquals;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.api.services.people.v1.model.ListConnectionsResponse;
-import com.google.api.services.people.v1.model.UserDefined;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import seedu.address.commons.exceptions.InvalidGooglePersonException;
-import seedu.address.model.person.*;
+import seedu.address.model.person.Person;
+import seedu.address.model.person.ReadOnlyPerson;
 import seedu.address.testutil.PersonBuilder;
+
 
 
 /**
@@ -33,8 +32,8 @@ public class GooglePersonConverterUtilTest {
 
     @Test
     public void convertGooglePersonWithNullNameException() throws InvalidGooglePersonException {
-        com.google.api.services.people.v1.model.Person testPerson
-                = getGooglePerson(null, "12345678", "blk001 Test Ave",
+        com.google.api.services.people.v1.model.Person testPerson =
+                getGooglePerson(null, "12345678", "blk001 Test Ave",
                 "test@gmail.com");
         thrown.expect(InvalidGooglePersonException.class);
         GooglePersonConverterUtil.singleGoogleToDocPersonConversion(testPerson);
@@ -42,16 +41,16 @@ public class GooglePersonConverterUtilTest {
 
     @Test
     public void convertGooglePersonWithNullPhoneException() throws InvalidGooglePersonException {
-        com.google.api.services.people.v1.model.Person testPerson
-                = getGooglePerson("Testee", null, "blk001 Test Ave", "test@gmail.com");
+        com.google.api.services.people.v1.model.Person testPerson =
+                getGooglePerson("Testee", null, "blk001 Test Ave", "test@gmail.com");
         thrown.expect(InvalidGooglePersonException.class);
         GooglePersonConverterUtil.singleGoogleToDocPersonConversion(testPerson);
     }
 
     @Test
     public void convertGooglePersonWithNullEmail() throws InvalidGooglePersonException {
-        com.google.api.services.people.v1.model.Person testPerson
-                = getGooglePerson("Testee", "12345678", "blk001 Test Ave", null);
+        com.google.api.services.people.v1.model.Person testPerson =
+                getGooglePerson("Testee", "12345678", "blk001 Test Ave", null);
         seedu.address.model.person.Person convertedPerson =
                 GooglePersonConverterUtil.singleGoogleToDocPersonConversion(testPerson);
         assertEquals(convertedPerson.getEmail().toString(), GooglePersonConverterUtil.DEFAULT_EMAIL);
@@ -59,8 +58,8 @@ public class GooglePersonConverterUtilTest {
 
     @Test
     public void convertGooglePersonWithNullAddress() throws InvalidGooglePersonException {
-        com.google.api.services.people.v1.model.Person testPerson
-                = getGooglePerson("Testee", "12345678", null, "test@gmail.com");
+        com.google.api.services.people.v1.model.Person testPerson =
+                getGooglePerson("Testee", "12345678", null, "test@gmail.com");
         seedu.address.model.person.Person convertedPerson =
                 GooglePersonConverterUtil.singleGoogleToDocPersonConversion(testPerson);
         assertEquals(convertedPerson.getAddress().toString(), GooglePersonConverterUtil.DEFAULT_ADDRESS);
@@ -109,7 +108,7 @@ public class GooglePersonConverterUtilTest {
      * (List) Google Person -> DoC Person Conversion Tests
      */
     @Test
-    public void convertListGooglePerson(){
+    public void convertListGooglePerson() {
         //test google person
         com.google.api.services.people.v1.model.Person testGooglePerson =
                 getGooglePerson("John Doe", "01234567", "Elm Street", "jon@gmail.com");
@@ -142,7 +141,9 @@ public class GooglePersonConverterUtilTest {
 
         try {
             assertEquals(expectedProcessedName, GooglePersonConverterUtil.processName(invalidNameString));
-        } catch (InvalidGooglePersonException E){ assert true: "Unexpected behaviour from GooglePersonConverterUtil"; }
+        } catch (InvalidGooglePersonException E) {
+            assert true : "Unexpected behaviour from GooglePersonConverterUtil";
+        }
     }
 
     @Test
@@ -152,11 +153,10 @@ public class GooglePersonConverterUtilTest {
 
         try {
             assertEquals(expectedNumberString, GooglePersonConverterUtil.processNumber(invalidNumberString));
-        } catch (InvalidGooglePersonException E) { assert true: "Unexpected behaviour from GooglePersonConverterUtil"; }
+        } catch (InvalidGooglePersonException E) {
+            assert true : "Unexpected behaviour from GooglePersonConverterUtil";
+        }
     }
-
-
-
 
     /**
      * Creates a GooglePerson from input parameters, to support testing
@@ -176,9 +176,9 @@ public class GooglePersonConverterUtilTest {
         com.google.api.services.people.v1.model.Person personToReturn =
                 new com.google.api.services.people.v1.model.Person();
 
-        ArrayList<UserDefined> tags = new ArrayList<>();
+        ArrayList<com.google.api.services.people.v1.model.UserDefined> tags = new ArrayList<>();
 
-        tags.add(new UserDefined().setKey("tag").setValue("friends"));
+        tags.add(new com.google.api.services.people.v1.model.UserDefined().setKey("tag").setValue("friends"));
         names.add(new com.google.api.services.people.v1.model.Name().setGivenName(name).setDisplayName(name));
         phones.add(new com.google.api.services.people.v1.model.PhoneNumber().setValue(number));
         addresses.add(new com.google.api.services.people.v1.model.Address().setFormattedValue(address));
