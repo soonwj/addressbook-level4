@@ -62,6 +62,11 @@ public interface Model {
     void updateEvent(ReadOnlyEvent target, ReadOnlyEvent editedEvent)
             throws DuplicateEventException, EventNotFoundException;
 
+    /**
+     * Sorts all the persons in the address book from most selected to least selected.
+     */
+    void sortByViewCount();
+
     /** Returns an unmodifiable view of the filtered person list */
     ObservableList<ReadOnlyPerson> getFilteredPersonList();
 
@@ -85,4 +90,6 @@ public interface Model {
      * @throws NullPointerException if {@code predicate} is null.
      */
     String updateEmailRecipient(Predicate<ReadOnlyPerson> predicate);
+
+    void sortPersons();
 }

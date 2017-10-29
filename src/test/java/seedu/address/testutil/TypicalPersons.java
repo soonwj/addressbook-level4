@@ -76,6 +76,12 @@ public class TypicalPersons {
     public static final ReadOnlyEvent MOVIE = new EventBuilder().withHeader("Movie").withDesc("with date")
             .withEventDate("2017-11-06").build();
 
+    // Manually added
+    public static final ReadOnlyEvent DATE = new EventBuilder().withHeader("Date").withDesc("dinner at restaurant")
+            .withEventDate("2017-12-20").build();
+    public static final ReadOnlyEvent MARATHON = new EventBuilder().withHeader("Marathon")
+            .withDesc("21km run at sundown").withEventDate("2018-09-01").build();
+
     private TypicalPersons() {} // prevents instantiation
 
     /**

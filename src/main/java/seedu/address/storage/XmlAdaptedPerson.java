@@ -32,6 +32,8 @@ public class XmlAdaptedPerson {
     private String address;
     @XmlElement(required = true)
     private String profilePic;
+    @XmlElement
+    private int viewCount;
 
     @XmlElement
     private List<XmlAdaptedTag> tagged = new ArrayList<>();
@@ -54,6 +56,7 @@ public class XmlAdaptedPerson {
         email = source.getEmail().value;
         address = source.getAddress().value;
         profilePic = source.getProfilePic().source;
+        viewCount = source.getViewCount();
         tagged = new ArrayList<>();
         for (Tag tag : source.getTags()) {
             tagged.add(new XmlAdaptedTag(tag));
@@ -76,6 +79,8 @@ public class XmlAdaptedPerson {
         final Address address = new Address(this.address);
         final ProfilePic profilePic = new ProfilePic(this.profilePic);
         final Set<Tag> tags = new HashSet<>(personTags);
-        return new Person(name, phone, email, address, profilePic, tags);
+        Person newPerson = new Person(name, phone, email, address, profilePic, tags);
+        newPerson.setViewCount(this.viewCount);
+        return newPerson;
     }
 }

@@ -15,6 +15,10 @@ ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 By: `CS2103AUG2017-T11-B1`      Since: `Sep 2017` +
 Adapted from AddressBook-Level4, by: `Team SE-EDU`      Since: `Jun 2016`      Licence: `MIT`
 
+== Introduction
+
+The Directory of Contacts(DoC) allows you to manage your contacts and events all within a single app. This guide will help you get to know the more important functions of the app and how they are implemented. From this, you will be better equipped to navigate around the codebase and further enhance the app as required.
+
 == Setting up
 
 === Prerequisites
@@ -522,7 +526,54 @@ image::deleteProfilePicSD.jpg[width="100%"]
 **Pros:** Lesser commands for the user to remember. +
 **Cons:** The user might not know what the default image URL is.
 
-=== Logging
+=== ViewCount Tracking
+
+The `viewCount` variable is a `private int` variable of the `Person` class. This variable is updated whenever a `PersonPanelSelectionChangedEvent` is raised. This means that whenever a `Person` is selected, whether by the `select` command or by clicking on the `PersonCard` on the UI, the `Person` associated with the selected `PersonCard` will have its `viewCount` variable incremented by 1.
+
+To listen for the `PersonPanelSelectionChangedEvent`, a listener is placed in the `MainApp` object, which ensures that the `Model` associated to it is updated with the right `Person` that has its `viewCount` updated.
+
+As the `viewCount` is not displayed on the UI, when this variable of a `Person` is updated, no `AddressBookChangedEvent` is raised, so the UI will not be refreshed unnecessarily.
+
+Right before the app closes, the app will sort the `Person` objects in the `AddressBook` such that the `Person` objects will be displayed from highest `viewCount` to lowest.
+
+Below is the sequence diagram for how the `viewCount` object is updated:
+
+image::updateViewCountSD.png[width="100%]
+
+==== Design Considerations
+
+**Aspect:** Implementation of `viewCount` +
+**Alternative 1 (current choice):** Add a new variable to the `Person` class. +
+**Pros:** No extra classes have to be created and it is clear which `Person` has a `viewCount` of what value. +
+**Cons:** The `Model` has to be updated every time a new `PersonCard` is selected. +
+**Alternative 2:** Track all the `viewCount` in a separate file or class. +
+**Pros:** `Model` does not need to be updated and no existing class will be changed. +
+**Cons:** File IO will be required for the saving of the list or the list has to be converted into XML and stored with the rest of the data is `addressbook.xml`.
+
+---
+
+**Aspect:** Updating of `Model` +
+**Alternative 1 (current choice):** Update `Model` without raising `AddressBookChangedEvent`. +
+**Pros:** No unnecessary refreshing of the UI +
+**Cons:** The `viewCount` variable of each `Person` is only saved to `addressbook.xml` only when the app stops or when the next `AddressBookChangedEvent` is raised. +
+**Alternative 2:** Update `Model` normally +
+**Pros:** The `addressbook.xml` file is always updated once any value is changed. +
+**Cons:** The UI will be refreshed unnecessarily, which may cause a visible lag if large image files are reloaded.
+
+---
+
+**Aspect:** Sorting by `viewCount` +
+**Alternative 1 (current choice):** Sort right before app stops. +
+**Pros:** When app is started the next time, it can be started immediately, without having to perform the sort. +
+**Cons:** The app might lag a bit when stopping. +
+**Alternative 2:** Sort right before app starts. +
+**Pros:** The app will stop quickly. +
+**Cons:** The app will take a while to start. +
+**Alternative 3:** Whenever a viewCount is changed. +
+**Pros:** The app will always show the updated order. +
+**Cons:** The app will lag slightly each time a `PersonCard` is selected.
+
+== Logging
 
 We are using `java.util.logging` package for logging. The `LogsCenter` class is used to manage the logging levels and logging destinations.
 
