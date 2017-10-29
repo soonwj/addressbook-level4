@@ -32,10 +32,10 @@ Having any Java 8 version is not enough. +
 This app will not work with earlier versions of Java 8.
 +
 .  Download the latest `DoC.jar` link:{repoURL}/releases[here].
-.  Copy the file to the folder you want to use as the home folder for your Address Book.
-.  Double-click the file to start the app. The GUI should appear in a few seconds.
+.  Copy the file to the folder you want to use as the home folder for DoC.
+.  Double-click the file to start the app. The graphical user interface should appear in a few seconds.
 
-=== Interface guide
+=== Graphical user interface guide
 The following image highlights the 5 different components of DoC: +
 
 image::Ui.png[width="100%"]
