@@ -383,10 +383,12 @@ simply deletes the contact with an index of 1 again.
 === Removing tags: `removeTag`
 
 Finds contacts whose names or tags contain any of the given tag and removes that tag. +
-Format: `removeTag KEYWORD`
+Format: `removeTag rm/INDEX t/TAG`
 
 ****
 * The search is case sensitive. e.g `family` will match `family`
+* `rm/INDEX` is not compulsory. If not given, it will remove the tag from all contacts.
+* If `rm/INDEX` is stated, tags from those indexes in the current list will be removed.
 * Only tag is searched.
 * Only full words will be matched e.g. `Family` will not match `Families`
 * Persons having that tag will be returned
@@ -394,8 +396,10 @@ Format: `removeTag KEYWORD`
 
 Examples:
 
-* `removeTag Friend` +
-Returns `john` and `John Doe` with Friend tag removed
+* `removeTag t/Friend` +
+Friend tag is removed from all contacts.
+* `removeTag rm/1 2 t/Friend` +
+Friend tag is only removed from Index 1 and 2.
 
 === Saving the data
 All additions, deletions, and changes performed on the contacts stored in DoC are saved automatically.
