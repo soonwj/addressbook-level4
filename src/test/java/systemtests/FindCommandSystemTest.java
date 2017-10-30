@@ -1,7 +1,7 @@
 package systemtests;
 
+import static org.junit.Assert.assertEquals;
 import static seedu.address.commons.core.Messages.MESSAGE_PERSONS_LISTED_OVERVIEW;
-import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BENSON;
 import static seedu.address.testutil.TypicalPersons.CARL;
@@ -155,9 +155,12 @@ public class FindCommandSystemTest extends AddressBookSystemTest {
         assertCommandSuccess(command, expectedModel);
         assertSelectedCardUnchanged();
 
-        /* Case: mixed case command word -> rejected */
+        /* Case: mixed case command word -> within acceptable levenshtein distance, parse accordingly */
         command = "FiNd Meier";
-        assertCommandFailure(command, MESSAGE_UNKNOWN_COMMAND);
+        executeCommand(command);
+        assertEquals("Did you mean: " + "find " + "Meier" + " ?" + "\n" + "Respond: "
+                + "'yes' or 'y' to accept the suggested command." + "\n"
+                + "Suggested command will be discarded otherwise.", getResultDisplay().getText());
     }
 
     /**
