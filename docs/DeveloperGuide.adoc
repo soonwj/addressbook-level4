@@ -1294,12 +1294,12 @@ Author: Students from the NUS School of Computing
 
 Pros:
 
-* Allows import and export of Contacts to and from Google Contacts
-* Allows offline contact information
-* Allows mass emailing
-* Allows managing of events
+* Allows import and export of Contacts to and from Google Contacts.
+* Allows offline contact information.
+* Allows mass emailing.
+* Allows managing of events.
 
 Cons:
 
-* Only a desktop app
-* Needs internet to access certain features
+* Only a desktop app.
+* Needs internet to access certain features.
