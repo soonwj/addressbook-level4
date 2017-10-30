@@ -356,7 +356,7 @@ The `Event` feature is implemented with similar logic as a `Person`. The feature
 
 Commands such as `clear`, `undo` and `redo` will apply to the events in the list as these commands extends `UndoableCommand`. Therefore, further coupling of these user commands and event feature is not introduced.
 
-image::EventPersonModelClassDiagram.png[width="900"]
+image::EventPersonModelClassDiagram.png[width="800"]
 
 As you can see from the diagram, the sub component of `Event` include a `PersonList` that fetches persons from the `ReadOnlyPerson` and add them into the list without any modification. In the Ui, upon clicking on the person tagged under an event, the logic will execute `select` command which will bring the user to the respective person in the person panel.
 
@@ -380,7 +380,7 @@ which is implemented in an event-driven manner.
 
 The following class diagram illustrates the structure of this mechanism, and its' current applications: +
 
-image::Oauth2ClassDiagram.PNG[width=100%]
+image::Oauth2ClassDiagram.PNG[width="800"]
 
 ==== Current usages
 
@@ -408,7 +408,7 @@ The order is exactly reversed for an `export` command
 ===== Authentication process
 The authentication process is the more involved process of the 3. We can understand it better with the help of the following sequence diagram: +
 
-image::AuthenticationSequenceDiagram.png[width=100%]
+image::AuthenticationSequenceDiagram.png[width="800"]
 
 This is a summary of the steps in the execution flow: +
 **1.** The `execute()` method of the `ImportCommand` is called from the `LogicManager`, firing an `Oauth2BrowserRequestEvent` to the `BrowserPanel` +
@@ -447,7 +447,7 @@ objects are added under the Google `Person` object's `UserDefined` property
 **Aspect:** How a successful authentication is detected +
 **Alternative 1 (Chosen for security):** Redirect to a hosted domain first, then redirect to a Google Contacts page. +
 **Pros:** The underlying `HTTP GET` is sent to a domain under DoC's control -> risk of authentication code leak is controlled. +
-**Cons:** The BrowserPanel may display an error page temporarily if the hosted domain is down, however this will not be noticeable if redirection occurs fast.
+**Cons:** The BrowserPanel may display an error page temporarily if the hosted domain is down, however this will not be noticeable if redirection occurs fast. +
 **Alternative 2:** Redirect to a Google Contacts page immediately. +
 **Pros:** No risk of an error page being display. +
 **Cons:** The underlying `HTTP GET` containing the users' authentication code is sent to an external domain.
@@ -473,7 +473,7 @@ Once identified, the `execute` function is called. This function in the `EmailCo
 **Cons:** A new application has to be opened. +
 **Alternative 2:** Make use of Gmail API. +
 **Pros:** Can be emailed from the browser panel itself. +
-**Cons:** The UI for Gmail is very poor on `JavaFX WebView`.
+**Cons:** The UI for GMail is very poor on `JavaFX WebView`.
 
 === Location
 
@@ -501,13 +501,14 @@ This rendering of Google Maps is done via calling the URL.
 
 === RemoveTag
 
-The removeTag mechanism is facilitated by the RemovetagCommand class which is inherited from the
-`UndoableCommand` class. It removes the tag from all the contacts in the current list.
+The removeTag mechanism is facilitated by the `RemoveTagCommand` class which is inherited from the
+`UndoableCommand` class. If the indexes are not stated, the particular tag is removed from all contacts.
+Else, only those chosen indexes has its tag removed. All the indexes are based on the current list.
 
-image::EmailSequenceDiagram.png[width="800"]
+image::RemoveTagSequenceDiagram.png[width="800"]
 
-When the user executes the command removeTag, the RemoveTagCommandParser class will parse the tag and call the `RemoveTagCommand`. In `RemoveTagCommand` the `execute()` function is called.
-This will invoke the `removeTag` function that resides in the `LogicManager`, which will remove the specific tag from all the contacts and updates the storage.
+As shown above, when the user executes the command `removeTag`, the `RemoveTagCommandParser` class will parse the tag and indexes if given, then call the `RemoveTagCommand`. In `RemoveTagCommand` the `execute()` function is called.
+This will invoke the `removeTag` function that resides in the `LogicManager`, which will remove the specific tag from specific or all contacts based on the call made by the user. This changes will then be updated and stored.
 
 [NOTE]
 Note that the `removeTag` function will raise a `CommandException` if the `tag` is not valid.
@@ -515,12 +516,32 @@ Note that the `removeTag` function will raise a `CommandException` if the `tag` 
 ==== Design Considerations
 
 **Aspect:** Implementation of `removeTag` +
-**Alternative 1 (current choice):** Directly removes the tag from all persons. +
-**Pros:** Easier as mulitple person are updated at one go.  +
-**Cons:** It removes for everyone. If the tag only has to be removed from one person, the `edit` command has to be used. +
+**Alternative 1 (current choice):** Directly removes a certain tag from specified or all contacts. +
+**Pros:** Easier as multiple person are updated at one go.  +
+**Cons:** It only can remove one tag at a time. If more tags has to be removed from multiple contacts, this function has to be called more times depending on the number of the tags that has to be removed. +
 **Alternative 2:** Usage of `edit` command to remove the tags. +
 **Pros:** One lesser command for the user to remember. +
 **Cons:** It is very tiring for the user to update each and everyone of the contacts in the contact list, if he decided to remove the tag from everyone.
+
+=== Find
+
+The `FindCommand` class is inherited from the
+`Command` class.It allows the user to search his contacts either by the name of the contact or by the tag of the contact.
+
+image::FindSequenceDiagram.png[width="800"]
+
+As shown above, when the user executes the command `find`, the `FindCommandParser` class will parse the user's input, then call the `FindCommand`. In `FindCommand` the `execute()` function is called.
+This will invoke the `updateFilteredPersonList` function that resides in the `LogicManager`, which will filter the contacts based on their name and tag that matches the call made by the user. This changes will then be updated on the `PersonalListPanel`.
+
+==== Design Considerations
+
+**Aspect:** Implementation of `find` +
+**Alternative 1 (current choice):** Directly find contacts based on both name and tag. +
+**Pros:** One function that can be used to search by name and tag.  +
+**Cons:** If name and tag are similar, the contacts with both the same name and tag will be shown. +
+**Alternative 2:** Having two functions. One for find by name and another for find by tags. +
+**Pros:** Easier to find a person by name or by tag, if both name and tag have similar Strings. +
+**Cons:** Extra command for the user to remember.
 
 === UpdateProfilePic/DeleteProfilePic mechanism
 
@@ -534,9 +555,9 @@ Both the `updateProfilePic` and the `deleteProfilePic` commands work by taking i
 
 Below are the sequence diagrams of each command to illustrate how they work:
 
-image::updateProfilePicSD.jpg[width="100%"]
+image::updateProfilePicSD.jpg[width="800"]
 
-image::deleteProfilePicSD.jpg[width="100%"]
+image::deleteProfilePicSD.jpg[width="800"]
 
 ==== Design Considerations
 
@@ -570,7 +591,7 @@ Right before the app closes, the app will sort the `Person` objects in the `Addr
 
 Below is the sequence diagram for how the `viewCount` object is updated:
 
-image::updateViewCountSD.png[width="100%]
+image::updateViewCountSD.png[width="800"]
 
 ==== Design Considerations
 
@@ -665,12 +686,12 @@ The most reliable way to run tests is the 3rd one. The first two methods might f
 
 *Method 1: Using IntelliJ JUnit test runner*
 
-* To run all tests, right-click on the `src/test/java` folder and choose `Run 'All Tests'`
-* To run a subset of tests, you can right-click on a test package, test class, or a test and choose `Run 'ABC'`
+* To run all tests, right-click on the `src/test/java` folder and choose `Run 'All Tests'`.
+* To run a subset of tests, you can right-click on a test package, test class, or a test and choose `Run 'ABC'`.
 
 *Method 2: Using Gradle*
 
-* Open a console and run the command `gradlew clean allTests` (Mac/Linux: `./gradlew clean allTests`)
+* Open a console and run the command `gradlew clean allTests` (Mac/Linux: `./gradlew clean allTests`).
 
 [NOTE]
 See <<UsingGradle#, UsingGradle.adoc>> for more info on how to run tests using Gradle.
@@ -679,7 +700,7 @@ See <<UsingGradle#, UsingGradle.adoc>> for more info on how to run tests using G
 
 Thanks to the https://github.com/TestFX/TestFX[TestFX] library we use, our GUI tests can be run in the _headless_ mode. In the headless mode, GUI tests do not show up on the screen. That means the developer can do other things on the Computer while the tests are running.
 
-To run tests in headless mode, open a console and run the command `gradlew clean headless allTests` (Mac/Linux: `./gradlew clean headless allTests`)
+To run tests in headless mode, open a console and run the command `gradlew clean headless allTests` (Mac/Linux: `./gradlew clean headless allTests`).
 
 === Types of tests
 
@@ -719,14 +740,14 @@ Here are the steps to create a new release.
 
 .  Update the version number in link:{repoURL}/src/main/java/seedu/address/MainApp.java[`MainApp.java`].
 .  Generate a JAR file <<UsingGradle#creating-the-jar-file, using Gradle>>.
-.  Tag the repo with the version number. e.g. `v0.1`
+.  Tag the repo with the version number. e.g. `v0.1`.
 .  https://help.github.com/articles/creating-releases/[Create a new release using GitHub] and upload the JAR file you created.
 
 === Managing Dependencies
 
 A project often depends on third-party libraries. For example, Address Book depends on the http://wiki.fasterxml.com/JacksonHome[Jackson library] for XML parsing. Managing these _dependencies_ can be automated using Gradle. For example, Gradle can download the dependencies automatically, which is better than these alternatives. +
-a. Include those libraries in the repo (this bloats the repo size) +
-b. Require developers to download those libraries manually (this creates extra work for developers)
+a. Include those libraries in the repo (this bloats the repo size). +
+b. Require developers to download those libraries manually (this creates extra work for developers).
 
 [appendix]
 == Suggested Programming Tasks to Get Started
@@ -1035,10 +1056,10 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 *MSS*
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
+1.  User requests to list persons.
+2.  AddressBook shows a list of persons.
+3.  User requests to delete a specific person in the list.
+4.  AddressBook deletes the person.
 +
 Use case ends.
 
@@ -1046,6 +1067,7 @@ Use case ends.
 
 [none]
 * 2a. The list is empty.
+
 +
 Use case ends.
 
@@ -1056,7 +1078,6 @@ Use case ends.
 +
 Use case resumes at step 2.
 
-[discrete]
 +
 Use case ends.
 
@@ -1067,10 +1088,10 @@ Use case ends.
 
 *MSS*
 
-1.  User requests to undo command
-2.  AddressBook shows the latest command and ask for confirmation
-3.  User confirms
-4.  AddressBook reverts to the state before the command
+1.  User requests to undo command.
+2.  AddressBook shows the latest command and ask for confirmation.
+3.  User confirms.
+4.  AddressBook reverts to the state before the command.
 +
 Use case ends.
 
@@ -1093,10 +1114,10 @@ Use case ends.
 
 *MSS*
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User request to swap the indexes of two persons in the list
-4.  AddressBook swaps the two persons
+1.  User requests to list persons.
+2.  AddressBook shows a list of persons.
+3.  User request to swap the indexes of two persons in the list.
+4.  AddressBook swaps the two persons.
 +
 Use case ends.
 
@@ -1118,8 +1139,8 @@ Use case resumes at step 2.
 
 *MSS*
 
-1.  User requests to sort persons
-2.  AddressBook shows a list of sorted persons
+1.  User requests to sort persons.
+2.  AddressBook shows a list of sorted persons.
 * 2a. The list will be altered and shows the sorted list.
 +
 Use case ends.
@@ -1136,10 +1157,10 @@ Use case resumes at step 2.
 
 *MSS*
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete multiple person in the list
-4.  AddressBook delete the persons
+1.  User requests to list persons.
+2.  AddressBook shows a list of persons.
+3.  User requests to delete multiple person in the list.
+4.  AddressBook delete the persons.
 +
 Use case ends.
 
@@ -1162,12 +1183,12 @@ Use case resumes at step 2.
 
 *MSS*
 
-1.  User requests to import existing contacts
-2.  DoC prompts google login for authentication
-3.  User enters authentication information
-4.  DoC prompts user to grant access to his Google Contacts
-5.  User grants access
-6.  DoC updates contact list
+1.  User requests to import existing contacts.
+2.  DoC prompts google login for authentication.
+3.  User enters authentication information.
+4.  DoC prompts user to grant access to his Google Contacts.
+5.  User grants access.
+6.  DoC updates contact list.
 +
 Use case ends.
 
@@ -1188,8 +1209,8 @@ Use case ends
 
 *MSS*
 
-1.  User requests to add person to the address book
-2.  AddressBook adds the person
+1.  User requests to add person to the address book.
+2.  AddressBook adds the person.
 +
 Use case ends.
 
@@ -1208,10 +1229,10 @@ Use case resumes at step 2.
 
 *MSS*
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to favourite a specific person in the list
-4.  AddressBook favourites the person
+1.  User requests to list persons.
+2.  AddressBook shows a list of persons.
+3.  User requests to favourite a specific person in the list.
+4.  AddressBook favourites the person.
 +
 Use case ends.
 
@@ -1242,7 +1263,7 @@ Use case resumes at step 2.
 .  The system should work on both 32-bit and 64-bit environments.
 .  The system should provide necessary assistance in usage and operation.
 .  The system should be accessible with web-enabled mobile devices.
-.  The font colour of the text and the colour of the display panel should be contrasting to improve readability
+.  The font colour of the text and the colour of the display panel should be contrasting to improve readability.
 .  The user interface should be intuitive enough for users who are not IT-savvy.
 
 {More to be added}
@@ -1267,16 +1288,18 @@ A contact detail that is not meant to be shared with others
 [appendix]
 == Product Survey
 
-*Product Name*
+*DoC*
 
-Author: ...
+Author: Students from the NUS School of Computing
 
 Pros:
 
-* ...
-* ...
+* Allows import and export of Contacts to and from Google Contacts
+* Allows offline contact information
+* Allows mass emailing
+* Allows managing of events
 
 Cons:
 
-* ...
-* ...
+* Only a desktop app
+* Needs internet to access certain features
