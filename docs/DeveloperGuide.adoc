@@ -372,9 +372,12 @@ As you can see from the diagram, the sub component of `Event` include a `PersonL
 === OAuth2 fulfilment mechanism
 ==== Overview
 A command structure has been set-up to fulfil all commands requiring an authentication process against the OAuth2 protocol.
-DoC currently has two such commands, namely, `import` and `export`, which requires this mechanism. This command structure has also been set-up to support possible future
-extensions involving external services that require the OAuth2 protocol. An exciting possibility would be an integration with Facebook, for automated
-retrieval of extensive contact and event information.
+DoC currently only has two such commands, namely, `import` and `export`, which require this mechanism. Thus, it is noteworthy
+that this implementation was built for the express purpose of future extension.
+
+An exciting possibility is an integration with Facebook, for automated
+retrieval of extensive contact and event information. For example, we can populate a users' contact list on DoC, with his
+Facebook friend list, which can include information on their birth dates, gender, and even their public profile pictures.
 
 The OAuth2 authentication process is fulfilled with the help of the inbuilt `BrowserPanel`. This requires cross-component communication,
 which is implemented in an event-driven manner.
@@ -386,19 +389,20 @@ image::Oauth2ClassDiagram.PNG[width=100%]
 ==== Current usages
 
 ===== Import contacts to DoC from Google Contacts
-The `import` command uses `Google Contacts` as a source, and retrieves all of the authenticated users' Google Contacts.
-A conversion process is then executed with the help of the `GooglePersonConverterUtil`. The newly converted contacts are then stored
+The `import` command uses `Google Contacts` as a source, and retrieves all of the authenticated user's Google contacts.
+This comes in the form of a list of Google's `Person` objects, which are then converted to DoC `Person` objects with the
+help of the `GooglePersonConverterUtil` class. The newly converted contacts are then stored
 to the `Model` component of DoC.
 
 ===== Export contacts in DoC to Google Contacts
-The `export` command converts all contacts currently stored in DoC, with the help of the `GooglePersonConverterUtil`,
-to instances of Googles' `Person` class. The newly converted contacts are then exported to the authenticated users' Google Contacts.
+The `export` command converts all contacts currently stored in DoC, with the help of the `GooglePersonConverterUtil` class,
+to a list of Google's `Person` class objects. The newly converted contacts are then exported to the authenticated users' Google Contacts.
 
 ==== Implementation
-The implementation of `import` and `export` are very similar. There are 3 sequential steps in the flow of execution, for both commands: +
+The implementation of both `import` and `export` commands are very similar. There are 3 sequential steps in the flow of execution, for both commands: +
 **1.** The user input of `import` or `export` is parsed by the `AddressBookParser`, and a new instance of an `ImportCommand` or `ExportCommand` is returned to the `LogicManager`,
- which then calls the instances' `execute()` method +
-**2.** The execute() method of `import` and `export` then triggers the **authentication process** with the `BrowserPanel` +
+ which then calls the instance's `execute()` method +
+**2.** The `execute()` method of `import` and `export` then triggers the **authentication process** with the `BrowserPanel` +
 **3.** Upon successful authentication on an `import` command, the **HTTP request process** is executed, followed by the  **conversion process**.
 The list of converted DoC `Person` objects are then added to the `Model` component.
 The order in this step is exactly reversed for an `export` command, whereby a list of DoC `Person` objects is first retrieved from the `Model` component.
