@@ -5,7 +5,6 @@ import static java.util.Objects.requireNonNull;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 
 import seedu.address.commons.exceptions.IllegalValueException;
@@ -17,6 +16,7 @@ import seedu.address.commons.exceptions.IllegalValueException;
 public class ProfilePic {
     public static final String MESSAGE_PROFILE_PIC_CONSTRAINTS =
             "Person profile pictures must be a valid image URL, and it should not be blank";
+    public static final String DEFAULT_URL = "images/default.png";
 
     /*
      * The first character of the address must not be a whitespace,
@@ -27,7 +27,7 @@ public class ProfilePic {
     public final String source;
 
     public ProfilePic() {
-        source = "file://" + Paths.get("src/main/resources/images/default.png").toAbsolutePath().toUri().getPath();
+        source = DEFAULT_URL;
     }
 
     /**
@@ -41,7 +41,7 @@ public class ProfilePic {
             throw new IllegalValueException(MESSAGE_PROFILE_PIC_CONSTRAINTS);
         }
 
-        this.source = url;
+        source = url;
     }
 
     /**
@@ -55,7 +55,11 @@ public class ProfilePic {
                     return false;
                 }
             } catch (IOException e) {
-                return false;
+                if (test.compareTo(DEFAULT_URL) == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
 
             return true;

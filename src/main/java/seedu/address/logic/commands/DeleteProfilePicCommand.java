@@ -5,16 +5,13 @@ import java.util.List;
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.model.person.Person;
 import seedu.address.model.person.ProfilePic;
 import seedu.address.model.person.ReadOnlyPerson;
-import seedu.address.model.person.exceptions.DuplicatePersonException;
-import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 /**
  * Deletes the profile picture of a person identified using it's last displayed index from the address book.
  */
-public class DeleteProfilePicCommand extends UndoableCommand {
+public class DeleteProfilePicCommand extends Command {
     public static final String COMMAND_WORD = "deleteProfilePic";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
@@ -33,7 +30,7 @@ public class DeleteProfilePicCommand extends UndoableCommand {
     }
 
     @Override
-    public CommandResult executeUndoableCommand() throws CommandException {
+    public CommandResult execute() throws CommandException {
 
         List<ReadOnlyPerson> lastShownList = model.getFilteredPersonList();
 
@@ -42,16 +39,10 @@ public class DeleteProfilePicCommand extends UndoableCommand {
         }
 
         ReadOnlyPerson profilePicToDelete = lastShownList.get(targetIndex.getZeroBased());
-        Person deletedProfilePicPerson = new Person(profilePicToDelete);
-        deletedProfilePicPerson.setProfilePic(new ProfilePic());
 
-        try {
-            model.updatePerson(profilePicToDelete, deletedProfilePicPerson);
-        } catch (DuplicatePersonException dpe) {
-            throw new CommandException(MESSAGE_DUPLICATE_PERSON);
-        } catch (PersonNotFoundException pnfe) {
-            assert false : "The target person cannot be missing";
-        }
+        UpdateProfilePicCommand updateToDefault = new UpdateProfilePicCommand(targetIndex, new ProfilePic());
+        updateToDefault.setData(model, history, undoRedoStack);
+        updateToDefault.execute();
 
         return new CommandResult(String.format(MESSAGE_DELETE_PROFILE_PIC_SUCCESS, profilePicToDelete));
     }

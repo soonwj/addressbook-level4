@@ -21,6 +21,7 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.person.Person;
 import seedu.address.model.person.ProfilePic;
 import seedu.address.model.person.ReadOnlyPerson;
 
@@ -31,14 +32,16 @@ public class UpdateProfilePicCommandTest {
     @Test
     public void execute_webUrlUnfilteredList_success() throws Exception {
         ReadOnlyPerson updatedProfilePicPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Person updatedProfilePicturePerson = new Person(updatedProfilePicPerson);
         ProfilePic profilePic = new ProfilePic(VALID_WEB_IMAGE_URL);
+        updatedProfilePicturePerson.setProfilePic(profilePic);
         UpdateProfilePicCommand updateProfilePicCommand = prepareCommand(INDEX_FIRST_PERSON, profilePic);
 
         String expectedMessage = String.format(UpdateProfilePicCommand.MESSAGE_UPDATE_PROFILE_PIC_SUCCESS,
                 updatedProfilePicPerson);
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicPerson);
+        expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicturePerson);
 
         assertCommandSuccess(updateProfilePicCommand, model, expectedMessage, expectedModel);
     }
@@ -48,14 +51,16 @@ public class UpdateProfilePicCommandTest {
         showFirstPersonOnly(model);
 
         ReadOnlyPerson updatedProfilePicPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Person updatedProfilePicturePerson = new Person(updatedProfilePicPerson);
         ProfilePic profilePic = new ProfilePic(VALID_LOCAL_IMAGE_URL);
+        updatedProfilePicturePerson.setProfilePic(profilePic);
         UpdateProfilePicCommand updateProfilePicCommand = prepareCommand(INDEX_FIRST_PERSON, profilePic);
 
         String expectedMessage = String.format(UpdateProfilePicCommand.MESSAGE_UPDATE_PROFILE_PIC_SUCCESS,
-                updatedProfilePicPerson);
+                updatedProfilePicturePerson);
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicPerson);
+        expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicturePerson);
 
         assertCommandSuccess(updateProfilePicCommand, model, expectedMessage, expectedModel);
     }
@@ -65,14 +70,16 @@ public class UpdateProfilePicCommandTest {
         showFirstPersonOnly(model);
 
         ReadOnlyPerson updatedProfilePicPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Person updatedProfilePicturePerson = new Person(updatedProfilePicPerson);
         ProfilePic profilePic = new ProfilePic(VALID_WEB_IMAGE_URL);
+        updatedProfilePicturePerson.setProfilePic(profilePic);
         UpdateProfilePicCommand updateProfilePicCommand = prepareCommand(INDEX_FIRST_PERSON, profilePic);
 
         String expectedMessage = String.format(UpdateProfilePicCommand.MESSAGE_UPDATE_PROFILE_PIC_SUCCESS,
                 updatedProfilePicPerson);
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicPerson);
+        expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicturePerson);
 
         assertCommandSuccess(updateProfilePicCommand, model, expectedMessage, expectedModel);
     }
@@ -80,14 +87,16 @@ public class UpdateProfilePicCommandTest {
     @Test
     public void execute_localUrlFilteredList_success() throws Exception {
         ReadOnlyPerson updatedProfilePicPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Person updatedProfilePicturePerson = new Person(updatedProfilePicPerson);
         ProfilePic profilePic = new ProfilePic(VALID_LOCAL_IMAGE_URL);
+        updatedProfilePicturePerson.setProfilePic(profilePic);
         UpdateProfilePicCommand updateProfilePicCommand = prepareCommand(INDEX_FIRST_PERSON, profilePic);
 
         String expectedMessage = String.format(UpdateProfilePicCommand.MESSAGE_UPDATE_PROFILE_PIC_SUCCESS,
                 updatedProfilePicPerson);
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicPerson);
+        expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicturePerson);
 
         assertCommandSuccess(updateProfilePicCommand, model, expectedMessage, expectedModel);
     }
