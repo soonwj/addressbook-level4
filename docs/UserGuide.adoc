@@ -276,11 +276,13 @@ As you can see from the image above, the `edit` command from the example will ed
 ==== Removing tags: `removeTag`
 
 Finds contacts whose names or tags contain any of the given tag and removes that tag. +
-Format: `removeTag t/KEYWORD`
+Format: `removeTag rm/INDEX t/TAG`
 
 ****
 * The search is case sensitive. e.g `family` will match `family`
-* Only tag is searched.
+* `rm/INDEX` is not compulsory. If not given, it will remove the tag from all contacts
+* If `rm/INDEX` is stated, tags from those indexes in the current list will be removed
+* Only tag is searched
 * Only full words will be matched e.g. `Family` will not match `Families`
 * Contacts having that tag will be returned
 ****
@@ -288,7 +290,9 @@ Format: `removeTag t/KEYWORD`
 Examples:
 
 * `removeTag t/Friend` +
-Returns `john` and `John Doe` with Friend tag removed
+Friend tag is removed from all contacts.
+* `removeTag rm/1 2 t/Friend` +
+Friend tag is only removed from Index 1 and 2.
 
 **Visual guide**
 
