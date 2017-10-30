@@ -398,17 +398,31 @@ to the `Model` component of DoC.
 The `export` command converts all contacts currently stored in DoC, with the help of the `GooglePersonConverterUtil` class,
 to a list of Google's `Person` class objects. The newly converted contacts are then exported to the authenticated users' Google Contacts.
 
-==== Implementation
-The implementation of both `import` and `export` commands are very similar. There are 3 sequential steps in the flow of execution, for both commands: +
+==== Execution flow
+===== Explanation
+The implementation of both the `import` and `export` commands are very similar. These are the 5 sequential steps in the flow of execution
+for the `import` command: +
+
 **1.** The user input of `import` or `export` is parsed by the `AddressBookParser`, and a new instance of an `ImportCommand` or `ExportCommand` is returned to the `LogicManager`,
- which then calls the instance's `execute()` method +
+ which then calls the instance's `execute()` method. This is also known as the **input parsing process**. +
+
 **2.** The `execute()` method of `import` and `export` then triggers the **authentication process** with the `BrowserPanel` +
-**3.** Upon successful authentication on an `import` command, the **HTTP request process** is executed, followed by the  **conversion process**.
-The list of converted DoC `Person` objects are then added to the `Model` component.
-The order in this step is exactly reversed for an `export` command, whereby a list of DoC `Person` objects is first retrieved from the `Model` component.
 
+**3.** Upon successful authentication on an `import` command, the **HTTP request process** is executed, fetching a list.
+of the authenticated user's Google Contacts from Google's servers. +
 
- Only the 3 bolded processes will be discussed in further detail as the process for step 1 is the same as all other commands in DoC.
+**4.** The **conversion process** then converts this list to a list of DoC `Person` objects. +
+
+**5.** The list of converted DoC `Person` objects are then added to the `Model` component. +
+
+**Note:** We will not discuss the **input parsing process** in further detail, as it is common to all commands in DoC,
+and has been previously illustrated in section 3.3: Logic component.
+
+===== Summary
+The following diagram summarizes this implementation and illustrates the parallel between the `import` and `export` commands:
+
+image::import_export_parallel.png[width="80%"]
+
 
 ===== Authentication process
 The authentication process is the more involved process of the 3. We can understand it better with the help of the following sequence diagram: +
