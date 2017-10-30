@@ -484,6 +484,24 @@ we then redirect to a Google Contacts page. +
 **Pros:** No risk of an error page being display. +
 **Cons:** The underlying `HTTP GET` containing the authentication token is sent to an external domain.
 
+'''
+
+**Aspect:** Duplication handling. +
+**Alternative 1 (current choice):** Do not perform any duplication checks in the implementation of the `export` command. +
+**Pros:** We avoid the overhead of having to first import all the user's Google contacts, storing them temporarily, then checking them against
+DoC's Model component to sieve out non-duplicates. +
+**Cons:** Multiple calls of the `export` command will result in duplicates being created on the user's Google contacts. +
+**Alternative 2:** Implement a way to track changes within DoC's `Model` component, or a way to record export history.  +
+**Pros:** We now can choose to export only modified or new `Person` objects in DoC. +
+**Cons:** Cross-checking is still required against a user's Google contacts, as they can be modified externally.
+
+**Note:** While the current choice may affect user experience, it is not app-breaking, and it is the compromise chosen
+in this current version of DoC, due to the following redeeming factors:
+
+- Google Contacts automatically flags possible duplicates, and offers a quick merging service.
+- Contacts exported from DoC will be added to a designated "ImportedFromGoogle" contact group, and can be filtered out on Google Contacts easily.
+
+
 === Location
 
 image::Location.png[width="800"]
