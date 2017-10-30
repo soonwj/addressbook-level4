@@ -474,13 +474,15 @@ object is added as a Google `Person` object's `UserDefined` attribute.
 
 ==== Design Considerations
 
-**Aspect:** How a successful authentication is detected +
-**Alternative 1 (Chosen for security):** Redirect to a hosted domain first, then redirect to a Google Contacts page. +
-**Pros:** The underlying `HTTP GET` is sent to a domain under DoC's control -> risk of authentication code leak is controlled. +
+**Aspect:** How a successful authentication is handled. +
+**Alternative 1 (Chosen for security):** Use a hosted domain as the redirection URL for a successful authentication.
+The hosted domain will be the designated **success URL*** the `BrowserPanel` listens for. After the authentication token is extracted from the URL,
+we then redirect to a Google Contacts page. +
+**Pros:** The underlying `HTTP GET` is sent to a domain under DoC's control, reducing the risk of authentication token leak. +
 **Cons:** The BrowserPanel may display an error page temporarily if the hosted domain is down, however this will not be noticeable if redirection occurs fast. +
 **Alternative 2:** Redirect to a Google Contacts page immediately. +
 **Pros:** No risk of an error page being display. +
-**Cons:** The underlying `HTTP GET` containing the users' authentication code is sent to an external domain.
+**Cons:** The underlying `HTTP GET` containing the authentication token is sent to an external domain.
 
 === Location
 
