@@ -419,7 +419,7 @@ of the authenticated user's Google Contacts from Google's servers. +
 and has been previously illustrated in section 3.3: Logic component.
 
 ===== Summary
-The following diagram summarizes this implementation and illustrates the parallel between the `import` and `export` commands:
+The following diagram summarizes the execution flow and illustrates the parallel between the `import` and `export` commands:
 
 image::import_export_parallel.png[width="80%"]
 
@@ -622,6 +622,18 @@ image::updateViewCountSD.png[width="100%]
 **Alternative 3:** Whenever a viewCount is changed. +
 **Pros:** The app will always show the updated order. +
 **Cons:** The app will lag slightly each time a `PersonCard` is selected.
+
+=== Unknown input parsing
+
+==== Overview
+
+==== Execution flow
+
+==== Design considerations
+
+
+
+
 
 == Logging
 
