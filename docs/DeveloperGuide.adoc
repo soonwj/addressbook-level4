@@ -410,10 +410,14 @@ image::EventColorDiagram.png[width="600"]
 **Cons:** System have to check through the list to check if the person name exist in the current address book.
 
 === OAuth2 fulfilment mechanism
-==== Summary
+==== Overview
 A command structure has been set-up to fulfil all commands requiring an authentication process against the OAuth2 protocol.
-DoC currently has two such commands, namely, `import` and `export`, which requires this mechanism. This command structure has also been set-up to support possible future
-extensions. +
+DoC currently only has two such commands, namely, `import` and `export`, which require this mechanism. Thus, it is noteworthy
+that this implementation was built for the express purpose of future extension.
+
+An exciting possibility is an integration with Facebook, for automated
+retrieval of extensive contact and event information. For example, we can populate a users' contact list on DoC, with his
+Facebook friend list, which can include information on their birth dates, gender, and even their public profile pictures.
 
 The OAuth2 authentication process is fulfilled with the help of the inbuilt `BrowserPanel`. This requires cross-component communication,
 which is implemented in an event-driven manner.
@@ -425,72 +429,133 @@ image::Oauth2ClassDiagram.PNG[width="800"]
 ==== Current usages
 
 ===== Import contacts to DoC from Google Contacts
-The `import` command uses `Google Contacts` as a source, and retrieves all of the authenticated users' Google Contacts.
-A conversion process is then executed with the help of the `GooglePersonConverterUtil`. The newly converted contacts are then stored
+The `import` command uses `Google Contacts` as a source, and retrieves all of the authenticated user's Google contacts.
+This comes in the form of a list of Google's `Person` objects, which are then converted to DoC `Person` objects with the
+help of the `GooglePersonConverterUtil` class. The newly converted contacts are then stored
 to the `Model` component of DoC.
 
 ===== Export contacts in DoC to Google Contacts
-The `export` command converts all contacts currently stored in DoC, with the help of the `GooglePersonConverterUtil`,
-to instances of Googles' `Person` class. The newly converted contacts are then exported to the authenticated users' Google Contacts.
+The `export` command converts all contacts currently stored in DoC, with the help of the `GooglePersonConverterUtil` class,
+to a list of Google's `Person` class objects. The newly converted contacts are then exported to the authenticated users' Google Contacts.
 
-==== Implementation
-The implementation of `import` and `export` are very similar. There are 3 sequential steps in the flow of execution, for both commands: +
-**1.** The user input of `import` or `export` is parsed by the `AddressBookParser`, and a new instance of an `ImportCommand` or `ExportCommand` is returned to the `LogicManager`,
- which then calls the instances' `execute()` method +
-**2.** The execute() method of `import` and `export` then triggers the **authentication process** with the `BrowserPanel` +
-**3.** Upon successful authentication on an `import` command, the **HTTP request process** is executed, followed by the  **conversion process**.
-The list of converted DoC `Person` objects are then added to the `Model` component.
-The order is exactly reversed for an `export` command
+==== Execution flow
+===== Explanation
+The implementation of both the `import` and `export` commands are very similar. These are the 5 sequential steps in the flow of execution
+for the `import` command: +
 
+.  The user input of `import` or `export` is parsed by the `AddressBookParser`, and a new instance of an `ImportCommand` or `ExportCommand` is returned to the `LogicManager`,
+ which then calls the instance's `execute()` method. This is also known as the **input parsing process**. +
 
- Only the 3 bolded processes will be discussed in further detail as the process for step 1 is the same as all other commands in DoC.
+.  The `execute()` method of `import` and `export` then triggers the **authentication process** with the `BrowserPanel` +
+
+.  Upon successful authentication on an `import` command, the **HTTP request process** is executed, fetching a list.
+of the authenticated user's Google Contacts from Google's servers. +
+
+.  The **conversion process** then converts this list to a list of DoC `Person` objects. +
+
+.  The list of converted DoC `Person` objects are then added to the `Model` component. +
+
+**Note:** We will not discuss the **input parsing process** in further detail, as it is common to all commands in DoC,
+and has been previously illustrated in section 3.3: Logic component.
+
+===== Summary
+The following diagram summarizes the execution flow and illustrates the parallel between the `import` and `export` commands:
+
+image::import_export_parallel.png[width="80%"]
+
 
 ===== Authentication process
-The authentication process is the more involved process of the 3. We can understand it better with the help of the following sequence diagram: +
+The **authentication process** is the more involved process of the 3. We can understand it better with the help of the following sequence diagram for the `import` command: +
 
 image::AuthenticationSequenceDiagram.png[width="800"]
 
-This is a summary of the steps in the execution flow: +
-**1.** The `execute()` method of the `ImportCommand` is called from the `LogicManager`, firing an `Oauth2BrowserRequestEvent` to the `BrowserPanel` +
-**2.** The `BrowserPanel` handles this event and navigates to the **authentication URL*** provided by the event +
-**3.** The user successfully authenticates and grants DoC read permission of the users' Google Contacts +
-**4.** The `BrowserPanel` is redirected to the **success URL*** +
-**4.** The `BrowserPanel` detects the URL change to the **success URL*** and extracts the authentication code appended to the URL,
-this code is then attached to a `GoogleAuthenticationSuccessEvent` fired to the instance of `ImportCommand` +
-**5.** The `ImportCommand` instance handles the `GoogleAuthenticationSuccessEvent` and creates the `GoogleCredential` object +
-**6.** The HTTP request process ensues:
+This is a summary of the steps in the **authentication process**:
+
+.  The `execute()` method of the `ImportCommand` is called from the `LogicManager`, firing an `Oauth2BrowserRequestEvent` to the `BrowserPanel`. +
+
+.  The `BrowserPanel` handles this event and navigates to the **authentication URL*** provided by the event. +
+
+.  The user successfully authenticates and grants DoC read permission of the users' Google Contacts. +
+
+.  The `BrowserPanel` is redirected to the **success URL***. +
+
+.  The `BrowserPanel` detects the URL change to the **success URL*** and extracts the authentication code appended to the URL,
+this code is then attached to a `GoogleAuthenticationSuccessEvent` fired to the instance of `ImportCommand`. +
+
+.  The `ImportCommand` instance handles the `GoogleAuthenticationSuccessEvent` and creates the `GoogleCredential` object. +
+
+.  The **HTTP request process** ensues.
+
+**Note:** The **authentication URL*** is generated by Google's `oauth2` client library. Choice of **success URL*** is discussed
+later, under design considerations.
+
 
 ===== HTTP request process
-With the `GoogleCredential` object, we can now send HTTP requests quite easily using Google's Java API client, specifically
-its `PeopleService` class. Its documentation can be found in the following url: +
+With the `GoogleCredential` object generated at the end of the **authentication process**, we can now send HTTP requests
+to the Google People API easily using Google's Java API client, specifically it's `PeopleService` class. Its documentation can be found in the following url: +
 https://developers.google.com/resources/api-libraries/documentation/people/v1/java/latest/com/google/api/services/people/v1/PeopleService.html
 
 
 ===== Conversion process
-The conversion process is handled entirely by the `GooglePersonConverterUtil`. Note-worthy design decisions are listed as follows: +
+The conversion process is handled entirely by the `GooglePersonConverterUtil`. Noteworthy design decisions are listed as follows: +
 **Google Person -> DoC Person** +
 
-* Only Google `Person` objects with a non-null name, and a non-null phone number are accepted
-* Google `Person` objects without an email or an address are given the constants `INVALID_EMAIL@INVALID.COM`, and
- `INVALID_ADDRESS PLEASE UPDATE THIS` respectively, in the resulting DoC `Person`
-* All DoC `Person` objects produced are given the tag `ImportedFromGoogle`
+* All Google `Person` objects with a null name or a null phone number are discarded.
+* Google `Person` objects without an email or an address are given the placeholder constants `INVALID_EMAIL@INVALID.COM`, and
+ `INVALID_ADDRESS PLEASE UPDATE THIS` respectively, in the resulting DoC `Person`.
+* All DoC `Person` objects produced are given the tag `ImportedFromGoogle`.
 
 **DoC Person -> Google Person** +
 
-* DoC's `Name`, `Phone`, `Email` and `Address` are added as native Google `Person` properties, with similar names. `Tag`
-objects are added under the Google `Person` object's `UserDefined` property
-* `ProfilePic` cannot be exported due to Google Contact's restrictions
-* The produced Google `Person` objects are added to a contact group titled `Imported from DoC`
+* DoC's `Name`, `Phone`, `Email` and `Address` objects are added as native Google `Person` attributes, with similar names while the `Tag`
+object is added as a Google `Person` object's `UserDefined` attribute.
+* `ProfilePic` cannot be exported due to Google Contact's restrictions.
+* The produced Google `Person` objects are added to a contact group titled `Imported from DoC` on `Google Contacts`.
 
 ==== Design Considerations
 
-**Aspect:** How a successful authentication is detected +
-**Alternative 1 (Chosen for security):** Redirect to a hosted domain first, then redirect to a Google Contacts page. +
-**Pros:** The underlying `HTTP GET` is sent to a domain under DoC's control -> risk of authentication code leak is controlled. +
-**Cons:** The BrowserPanel may display an error page temporarily if the hosted domain is down, however this will not be noticeable if redirection occurs fast. +
-**Alternative 2:** Redirect to a Google Contacts page immediately. +
-**Pros:** No risk of an error page being display. +
-**Cons:** The underlying `HTTP GET` containing the users' authentication code is sent to an external domain.
+**Aspect:** How a successful authentication is handled. +
+
+**Chosen implementation:** +
+Use a hosted domain as the redirection URL for a successful authentication. This hosted domain will be the designated
+**success URL*** the `BrowserPanel` listens for. After the authentication token is extracted from the URL, we then
+redirect to a Google Contacts page. +
+**Pros:** +
+The underlying `HTTP GET` is sent to a domain under DoC's control, reducing the risk of authentication token leak. +
+**Cons:** +
+The BrowserPanel may display an error page temporarily if the hosted domain is down, however this will not be noticeable if redirection occurs fast. +
+
+**Alternative:** +
+Redirect to a Google Contacts page immediately. +
+**Pros:** +
+No risk of an error page being display. +
+**Cons:** +
+The underlying `HTTP GET` containing the authentication token is sent to an external domain.
+
+'''
+
+**Aspect:** Duplication handling. +
+
+**Chosen implementation:** +
+Do not perform any duplication checks in the implementation of the `export` command. +
+**Pros:** +
+We avoid the overhead of having to first import all the user's Google contacts, storing them temporarily, then checking them against
+DoC's Model component to sieve out non-duplicates. +
+**Cons:** +
+Multiple calls of the `export` command will result in duplicates being created on the user's Google contacts. +
+
+**Alternative:** +
+Implement a way to track changes within DoC's `Model` component, or a way to record export history.  +
+**Pros:** +
+We now can choose to export only modified or new `Person` objects in DoC. +
+**Cons:** +
+Cross-checking is still required against a user's Google contacts, as they can be modified externally.
+
+**Note:** While the current choice may affect user experience, it is not app-breaking, and it is the compromise chosen
+in this current version of DoC, due to the following redeeming factors:
+
+- Google Contacts automatically flags possible duplicates, and offers a quick merging service.
+- Contacts exported from DoC will be added to a designated "ImportedFromGoogle" contact group, and can be filtered out on Google Contacts easily.
 
 === Email
 
@@ -669,6 +734,108 @@ image::updateViewCountSD.png[width="800"]
 **Alternative 3:** Whenever a viewCount is changed. +
 **Pros:** The app will always show the updated order. +
 **Cons:** The app will lag slightly each time a `PersonCard` is selected.
+
+=== Unknown input parsing
+
+==== Overview
+To enhance user experience, a similarity-matching mechanism is employed to detect and parse unknown user input, matching them
+to probable system-recognized commands.
+The Levenshtein distance is used as a metric to measure similarity.
+
+Here's a brief explanation of this metric: +
+----
+The Levenshtein distance between two strings, is the minimum number of insertion, deletion or
+substitution operations required to transform one string to the other.
+----
+
+This mechanism is achieved with an enhancement on the original `AddressBookParser`, and the introduction of a new class, `UnknownCommand`.
+
+==== Execution flow
+===== Explanation
+When a unknown input is entered, the `AddressBookParser` instantiates an `UnknownCommand` object with this input.
+The 'AddressBookParser' then calls the `suggestionFound()` method of this instance. This method proceeds to match the unknown input against
+a list of system-recognized command words. If a match is found, we instantiate the suggested command within the `UnknownCommand` object,
+and prompt the user for a response. If the user accepts the suggestion, we retrieve the instance of the suggested command and execute it.
+
+
+**Note:** +
+
+- If the minimum Levenshtein distance is shared by two matches, the lexicographically smaller match will be chosen.
+
+- We reject any unknown input, whose `commandWord` exceeds the maximum acceptable length. This number is chosen based on the set
+maximum acceptable Levenshtein distance and the length of the longest system-recognized `commandWord` in DoC:
+
+----
+maximum acceptable length = length of longest system-recognized `commandWord` + maximum acceptable Levenshtein distance
+
+Current state of DoC: 18 = 16 + 2
+----
+
+- If a match is found and the input contains invalid parameters, we do not prompt the user for a response. Instead we prompt
+the user with an invalid command format message, and a format guideline on the matched command.
+
+===== Summary
+The following activity diagram illustrates the the execution flow of the `parseCommand()` method, of the `AddressBookParser`,
+with this enhancement in place:
+
+image::ParseCommandActivityDiagram.png[width="100%"]
+
+As shown in the diagram above, actions enclosed in a green box are the enhancements applied to the original `AddressBookParser`,
+for the purpose of this mechanism.
+
+==== Design considerations
+
+**Aspect:** Choice of acceptable Levenshtein distance +
+
+**Chosen implementation:** +
+The maximum acceptable Levenshtein distance is set to 2, as the shortest command in DoC is only 3 characters long. +
+**Pros:** +
+The similarity matching will be more likely to yield relevant result, than if the Levenshtein distance were to be set at 3 or higher.
+For example, the Levenshtein distance between 'add' and 'hey' is 3. +
+**Cons:** +
+Typos on longer commands have a higher propensity to produce a string with a Levenshtein distance of more than 2.
+These cannot be detected with this implementation. +
+
+**Alternative 1:** +
+Set a maximum acceptable Levenshtein distance of 3 or higher. +
+**Pros:** +
+Stronger similarity matching capabilities. +
+**Cons:** +
+Random user input might yield positive matches. +
+
+**Alternative 2:** +
+Lengthen sytem-recognized command words. +
+**Pros:** +
+We can set a higher maximum acceptable Levenshtein distance without the cons mentioned in  alternative 1. +
+**Cons:** +
+The user would have to type more for each command.
+
+---
+
+**Aspect:** Parsing user response after a suggestion is prompted. +
+
+**Chosen implementation:** +
+DoC prompts the user for a response of "yes" or "y", which executes the suggested command. Upon any another response,
+the system discards the suggested command and begins the parsing process again. +
+**Pros:** +
+If the mechanism has wrongly matched an unknown input, the user can simply ignore the suggestion prompt and continue without
+further action. +
+**Cons:** +
+The user might infer that a response of "no" or "n" is required to reject the suggestion, and enters an input accordingly.
+This may begin a loop that proceeds ad infinitum. +
+
+**Alternative 1:** +
+DoC prompts the user for a response of "no" or "n" to indicate rejection. +
+**Pros:** +
+The handling would be more intuitive to the user. +
+**Cons:** +
+An extra step is presented to the user on a wrong match, affecting the user's experience.
+
+**Note:** In our chosen implementation, we mitigate the mentioned cons by including explicit instructions in the suggestion prompt,
+that a response is only required if the user accepts the match.
+
+
+
 
 == Logging
 
