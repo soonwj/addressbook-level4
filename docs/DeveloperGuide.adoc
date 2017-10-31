@@ -475,6 +475,7 @@ object is added as a Google `Person` object's `UserDefined` attribute.
 ==== Design Considerations
 
 **Aspect:** How a successful authentication is handled. +
+
 **Chosen implementation:** +
 Use a hosted domain as the redirection URL for a successful authentication. This hosted domain will be the designated
 **success URL*** the `BrowserPanel` listens for. After the authentication token is extracted from the URL, we then
@@ -483,8 +484,8 @@ redirect to a Google Contacts page. +
 The underlying `HTTP GET` is sent to a domain under DoC's control, reducing the risk of authentication token leak. +
 **Cons:** +
 The BrowserPanel may display an error page temporarily if the hosted domain is down, however this will not be noticeable if redirection occurs fast. +
-+
-**Alternative 2:** +
+
+**Alternative:** +
 Redirect to a Google Contacts page immediately. +
 **Pros:** +
 No risk of an error page being display. +
@@ -494,13 +495,21 @@ The underlying `HTTP GET` containing the authentication token is sent to an exte
 '''
 
 **Aspect:** Duplication handling. +
-**Alternative 1 (current choice):** Do not perform any duplication checks in the implementation of the `export` command. +
-**Pros:** We avoid the overhead of having to first import all the user's Google contacts, storing them temporarily, then checking them against
+
+**Chosen implementation:** +
+Do not perform any duplication checks in the implementation of the `export` command. +
+**Pros:** +
+We avoid the overhead of having to first import all the user's Google contacts, storing them temporarily, then checking them against
 DoC's Model component to sieve out non-duplicates. +
-**Cons:** Multiple calls of the `export` command will result in duplicates being created on the user's Google contacts. +
-**Alternative 2:** Implement a way to track changes within DoC's `Model` component, or a way to record export history.  +
-**Pros:** We now can choose to export only modified or new `Person` objects in DoC. +
-**Cons:** Cross-checking is still required against a user's Google contacts, as they can be modified externally.
+**Cons:** +
+Multiple calls of the `export` command will result in duplicates being created on the user's Google contacts. +
+
+**Alternative:** +
+Implement a way to track changes within DoC's `Model` component, or a way to record export history.  +
+**Pros:** +
+We now can choose to export only modified or new `Person` objects in DoC. +
+**Cons:** +
+Cross-checking is still required against a user's Google contacts, as they can be modified externally.
 
 **Note:** While the current choice may affect user experience, it is not app-breaking, and it is the compromise chosen
 in this current version of DoC, due to the following redeeming factors:
