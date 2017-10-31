@@ -19,7 +19,7 @@ import seedu.address.model.person.NameContainsKeywordsPredicate;
 public class EmailCommand extends Command {
 
     public static final String COMMAND_WORD = "email";
-    public static final String MESSAGE_EMAIL_SENT = "Email Sent.";
+    public static final String MESSAGE_EMAIL_APP = "Opened Email Application";
     public static final String MESSAGE_NOT_SENT = "Please enter a valid name/tag with a valid Email ID.";
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":  people in the Address Book.\n"
             + "The 'to' field is compulsory\n"
@@ -75,7 +75,7 @@ public class EmailCommand extends Command {
             e.printStackTrace();
             return new CommandResult(MESSAGE_NOT_SENT);
         }
-        return new CommandResult(MESSAGE_EMAIL_SENT);
+        return new CommandResult(MESSAGE_EMAIL_APP);
     }
 
     @Override

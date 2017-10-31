@@ -21,7 +21,7 @@ public class EmailCommandParser implements Parser<EmailCommand> {
     /**
      * Parses the given {@code String} of arguments in the context of the EmailCommand
      * and returns an EmailCommand object for execution.
-     * @throws ParseException if the user input does not conform the expected format
+     * @throws ParseException if the user's input does not conform the expected format
      */
     public EmailCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap =

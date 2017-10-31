@@ -77,7 +77,13 @@ public class XmlAdaptedPerson {
         final Phone phone = new Phone(this.phone);
         final Email email = new Email(this.email);
         final Address address = new Address(this.address);
-        final ProfilePic profilePic = new ProfilePic(this.profilePic);
+        ProfilePic tempProfilePic;
+        try {
+            tempProfilePic = new ProfilePic(this.profilePic);
+        } catch (IllegalValueException ive) {
+            tempProfilePic = new ProfilePic();
+        }
+        final ProfilePic profilePic = tempProfilePic;
         final Set<Tag> tags = new HashSet<>(personTags);
         Person newPerson = new Person(name, phone, email, address, profilePic, tags);
         newPerson.setViewCount(this.viewCount);

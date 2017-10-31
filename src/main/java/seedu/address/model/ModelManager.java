@@ -18,6 +18,7 @@ import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.model.AddressBookChangedEvent;
 import seedu.address.commons.events.ui.FindLocationRequestEvent;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.ReadOnlyPerson;
 import seedu.address.model.person.event.ReadOnlyEvent;
@@ -100,13 +101,26 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public void deleteTag(Tag tag) throws PersonNotFoundException, DuplicatePersonException {
-        for (ReadOnlyPerson person : addressBook.getPersonList()) {
-            Person newPerson = new Person(person);
-            Set<Tag> newTags = new HashSet<>(person.getTags());
-            newTags.remove(tag);
-            newPerson.setTags(newTags);
-            updatePerson(person, newPerson);
+    public void removeTag(ObservableList<ReadOnlyPerson> persons, Set<Tag> tag)
+            throws PersonNotFoundException, DuplicatePersonException, CommandException {
+        int counter = 0;
+        if (persons.isEmpty()) {
+            persons.setAll(addressBook.getPersonList());
+        }
+        for (ReadOnlyPerson person : persons) {
+            if (!Collections.disjoint(person.getTags(), tag)) {
+                Person newPerson = new Person(person);
+                Set<Tag> newTags = new HashSet<>(person.getTags());
+                for (Tag t: tag) {
+                    newTags.remove(t);
+                }
+                newPerson.setTags(newTags);
+                updatePerson(person, newPerson);
+                counter++;
+            }
+        }
+        if (counter == 0) {
+            throw new CommandException("The Tag is invalid!");
         }
     }
 
