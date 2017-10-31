@@ -587,11 +587,15 @@ This will invoke the `updateFilteredPersonList` function that resides in the `Lo
 
 The UpdateProfilePic/DeleteProfilePic mechanism is facilitated by a `ProfilePic` class, which is a property class of the `Person` class. It supports the updating and deleting of profile pictures of each Person. These two commands inherit from `UndoableCommand`.
 
-`ProfilePic` essentially stores a **valid** `URL` of an image that will be displayed as the Person?s profile picture. Whenever a new Person is added, the Person?s `ProfilePic` property will be that of a default image. The command, `updateProfilePic` can then be called to change this property. When the command `deleteProfilePic` is called, the `ProfilePic` property of the selected Person will be changed back to the default profile picture.
+`ProfilePic` essentially stores a **valid** `URL` of an image that will be displayed as the `Person` 's profile picture. Whenever a new `Person` is added, the `Person` 's `ProfilePic` property will be that of a default image. The command: `updateProfilePic` can then be called to change this property. When the command `deleteProfilePic` is called, the `ProfilePic` property of the selected `Person` will be changed back to the default profile picture.
 
-Like the other properties of the `Person` class, the `ProfilePic` property will also be saved to the chosen storage file.
+Like the other properties of the `Person` class, the `ProfilePic` property will also be saved to the chosen storage file. If the image that is referred to by the `ProfilePic` is moved or deleted, the `ProfilePic` will reset back to the image of the default profile picture.
 
-Both the `updateProfilePic` and the `deleteProfilePic` commands work by taking in the index of the chosen Person and updating this Person as necessary. The `updateProfilePic` command also takes in a URL of the image that the profile picture is to be changed to. This will cause the app to instantiate a new `ProfilePic` object and check if the URL is valid and if it is valid, the app will proceed to update the Person with the new profile picture, otherwise an IllegalValueException will be thrown. As for the `deleteProfilePic` command, once it is called, the app will instantiate a default `ProfilePic` object and update the Person chosen.
+The `updateProfilePic`  command works by taking in the index of the chosen `Person` and updating this `Person` according to the `ProfilePic` given. To do so, the `updateProfilePic` command takes in a URL of the image that the profile picture is to be changed to. This will cause the app to instantiate a new `ProfilePic` object and check if the URL is valid and if it is valid, the app will proceed to update the Person with the new profile picture, otherwise an IllegalValueException will be thrown.
+
+In addition, the image will be downloaded into a local directory called: `ProfilePics` that is generated when the app initializes. This directory is created in the same directory as the `src` directory.
+
+The `deleteProfilePic` command works by taking in the index of the chosen `Person` and updating the `ProfilePic` property of the chosen `Person` to the default profile picture.
 
 Below are the sequence diagrams of each command to illustrate how they work:
 
