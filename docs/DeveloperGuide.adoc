@@ -353,18 +353,55 @@ image::UndoRedoActivityDiagram.png[width="200"]
 === Event class mechanism
 ==== Summary
 The `Event` class, which is located inside `model`, is implemented with similar logic as `Person` class. We have introduced three commands that modifies the address book: `addE`, `editE` and `deleteE`, which extends `UndoableCommand`.
-Commands such as `clear`, `undo` and `redo` can be used to alter events in the list as they deal with code that directly modifies the address book.
+An `Event` consist of three sub-components: `Header`, `Desc` and `EventDate`. Commands such as `clear`, `undo` and `redo` can be used to alter events in the list as they deal with code that directly modifies the address book.
 
-An `EventPanel` is incorporated into the address book `MainWindow` to display all the events inside the internal list using `ObservableList<ReadOnlyEvent>`. This process will be explained later on under the section `Event Card`.
+The `EventPanel` is incorporated into the address book `MainWindow` to display all the events inside the internal list using `ObservableList<ReadOnlyEvent>`. This process will be explained later on under the section `Event card`.
 
-==== Add an event
+==== Event methods
+As stated in the summary, the `Event` class contains three main methods: `addE`, `editE` and `deleteE`.
+The execution flow is similar for all three methods on a higher level. We can demonstrate how different levels of components communicate with one another by referring to an example of `addE` command in the following sequence diagram.
 
-//image::EventPersonModelClassDiagram.png[width="800"]
+image::AddEventDiagram.PNG[width="800"]
 
-As you can see from the diagram, the sub component of `Event` include a `PersonList` that fetches persons from the `ReadOnlyPerson` and add them into the list without any modification. In the Ui, upon clicking on the person tagged under an event, the logic will execute `select` command which will bring the user to the respective person in the person panel.
+==== Exceptions
+When the user input an event command with its parameters, the validity of the command word is checked inside the `AddressBookParser`. Next, the presence of the parameter prefixes is checked inside `AddEventCommandParser`.
+An appropriate `ParseException` will be thrown if the command word or prefixes are incorrect.
 
-==== Design Consideration
-**Aspect:** How to implement adding of persons into the event's person list +
+Before modifying the list of events inside the address book, the system may throw exceptions due to some invalid parameters. Here are the possible exceptions:
+
+* `EventNotFoundException`: This exception can be thrown by `editE` and `deleteE` command when the an invalid event index is provided by the user. The index needs to be within the size of the event list at the current state of the address book.
+* `DuplicateEventException`: This exception can be thrown by `addE` and `editE` command. The system will first create an `Event` object with the input parameters, compare the object to all events residing in the event list and throw this exception if there is a duplicate found.
+* `DateTimeParseException`: This exception can be thrown by `addE` and `editE` command when the input `EventDate` parameter is not a valid date. The date format and validity of date is checked inside the `Event` class like this: +
+[source,java]
+----
+public EventDate(String eventDate) throws IllegalValueException {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    try {
+        eventLocalDate = LocalDate.parse(eventDate, formatter);
+    } catch (DateTimeParseException ex) {
+        // ... throw message ...
+    }
+}
+----
+
+==== Event card
+The `EventCard` class extends `UiPart<Region>` to represent a distinct part of the UI. The object properties of every event is assigned to a label held by an `EventCard`. The graphic scene is then constructed with the appropriate `FXML` files created to support the display of all events.
+
+===== Design implementation
+When the user starts the `MainApp`, the system calls the `UiManager` to create a new `MainWindow` and fills it with `EventListPanel` and other components. The displayed events are created by `UniqueEventList` and the binding of individual UI elements to the `EventCard` ensures that any changes to the parameter will be displayed in the `EventListPanel`.
+The sequence diagram below illustrates the interaction between the `EventCard` and the `UiManager`:
+
+image::EventCardDiagram.PNG[width="800"]
+
+The events on the `EventListPanel` is sorted based on `EventDate`. An event that is coming soon will appear at the top and events with later dates will be further down the list. Expired events will be pushed to the bottom of the list.
+This sorting algorithm is introduced in `EventDateComparator` which implements `Comparator<Event>`.
+
+The events follow a certain colored background based on its urgency. The visual guide below describes the color code used:
+
+image::EventColorDiagram.png[width="600"]
+
+==== Design Consideration for future enhancement
+**Aspect:** How to implement adding of persons into an `Event` using a person list parameter +
 **Alternative 1 (current choice):** Add by the index of person shown in the person list panel. +
 **Pros:** System only have to check for validity of index. Better performance compared to Alternative 2. +
 **Cons:** Requires user to refer to the person list panel before executing command to add person into event's person list. +
