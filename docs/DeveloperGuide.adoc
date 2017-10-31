@@ -648,7 +648,8 @@ The Levenshtein distance is used as a metric to measure similarity.
 
 Here's a brief explanation of this metric: +
 ----
-The Levenshtein distance between two strings, is the minimum number of insertion, deletion or substitution operations required to transform one string to the other.
+The Levenshtein distance between two strings, is the minimum number of insertion, deletion or
+substitution operations required to transform one string to the other.
 ----
 
 This mechanism is achieved with an enhancement on the original `AddressBookParser`, and the introduction of a new class, `UnknownCommand`.
@@ -668,9 +669,11 @@ and prompt the user for a response. If the user accepts the suggestion, we retri
 - We reject any unknown input, whose `commandWord` exceeds the maximum acceptable length. This number is chosen based on the set
 maximum acceptable Levenshtein distance and the length of the longest system-recognized `commandWord` in DoC:
 
- maximum acceptable length = length of longest system-recognized `commandWord` + maximum acceptable Levenshtein distance
- -
- Current state of DoC: 18 = 16 + 2
+----
+maximum acceptable length = length of longest system-recognized `commandWord` + maximum acceptable Levenshtein distance
+
+Current state of DoC: 18 = 16 + 2
+----
 
 - If a match is found and the input contains invalid parameters, we do not prompt the user for a response. Instead we prompt
 the user with an invalid command format message, and a format guideline on the matched command.
