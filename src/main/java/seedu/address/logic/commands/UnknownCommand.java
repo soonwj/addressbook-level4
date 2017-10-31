@@ -32,7 +32,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
 public class UnknownCommand extends Command {
     //These constants can be varied to allow wider similarity detection, which will come at the cost of performance
     private static final int ACCEPTABLE_LEVENSHTEIN_DISTANCE = 2;
-    private static final int ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH = 17;
+    private static final int ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH = 18;
 
     //A constant String[] of all known COMMAND WORDS; this list should be extended when new Command types are created
     private static final String[] ALL_COMMAND_WORDS = {
