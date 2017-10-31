@@ -569,8 +569,9 @@ e.g. `find James Jake`
 * *Location* : `location INDEX` +
 e.g.`select 2`
 * *Redo* : `redo`
-* *Remove Tag* : `removeTag KEYWORD [MORE_KEYWORDS]` +
-e.g. `removeTag friends family`
+* *Remove Tag* : `removeTag rm/INDEX t/TAG` +
+e.g. `removeTag t/Friend` +
+e.g. `removeTag rm/1 2 t/Friend`
 * *Select* : `select INDEX` +
 e.g.`select 2`
 * *Undo* : `undo`
