@@ -745,9 +745,6 @@ Note that the `removeTag` function will raise a `CommandException` if the `tag` 
 
 **Chosen Implementation:** +
 Directly removes a certain tag from specified or all contacts.
-
-<<<
-
 **Pros:** +
 Easier as multiple contacts are updated at one go.  +
 **Cons:** +
