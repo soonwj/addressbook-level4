@@ -17,7 +17,7 @@ Adapted from AddressBook-Level4, by: `Team SE-EDU`      Since: `Jun 2016`      L
 
 == Introduction
 
-The Directory of Contacts(DoC) allows you to manage your contacts and events all within a single app. This guide will help you get to know the more important functions of the app and how they are implemented. From this, you will be better equipped to navigate around the codebase and further enhance the app as required.
+The Directory of Contacts(DoC) allows you to manage your contacts and events all within a single app. This guide will help you get to know the more important functions of the app and how they were implemented. From this, you will be better equipped to navigate around the codebase and further enhance the app as required.
 
 == Setting up
 
@@ -39,21 +39,21 @@ Do not disable them. If you have disabled them, go to `File` > `Settings` > `Plu
 
 === Setting up the project in your computer
 
-. Fork this repo, and clone the fork to your computer
-. Open IntelliJ (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project dialog first)
-. Set up the correct JDK version for Gradle
-.. Click `Configure` > `Project Defaults` > `Project Structure`
-.. Click `New...` and find the directory of the JDK
-. Click `Import Project`
-. Locate the `build.gradle` file and select it. Click `OK`
-. Click `Open as Project`
-. Click `OK` to accept the default settings
+. Fork this repo, and clone the fork to your computer.
+. Open IntelliJ (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project dialog first).
+. Set up the correct JDK version for Gradle.
+.. Click `Configure` > `Project Defaults` > `Project Structure`.
+.. Click `New...` and find the directory of the JDK.
+. Click `Import Project`.
+. Locate the `build.gradle` file and select it. Click `OK`.
+. Click `Open as Project`.
+. Click `OK` to accept the default settings.
 . Open a console and run the command `gradlew processResources` (Mac/Linux: `./gradlew processResources`). It should finish with the `BUILD SUCCESSFUL` message. +
 This will generate all resources required by the application and tests.
 
 === Verifying the setup
 
-. Run the `seedu.address.MainApp` and try a few commands
+. Run the `seedu.address.MainApp` and try a few commands.
 . link:#testing[Run the tests] to ensure they all pass.
 
 === Configurations to do before writing code
@@ -62,12 +62,12 @@ This will generate all resources required by the application and tests.
 
 This project follows https://github.com/oss-generic/process/blob/master/docs/CodingStandards.md[oss-generic coding standards]. IntelliJ's default style is mostly compliant with ours but it uses a different import order from ours. To rectify,
 
-. Go to `File` > `Settings...` (Windows/Linux), or `IntelliJ IDEA` > `Preferences...` (macOS)
-. Select `Editor` > `Code Style` > `Java`
-. Click on the `Imports` tab to set the order
+. Go to `File` > `Settings...` (Windows/Linux), or `IntelliJ IDEA` > `Preferences...` (macOS).
+. Select `Editor` > `Code Style` > `Java`.
+. Click on the `Imports` tab to set the order.
 
-* For `Class count to use import with '\*'` and `Names count to use static import with '*'`: Set to `999` to prevent IntelliJ from contracting the import statements
-* For `Import Layout`: The order is `import static all other imports`, `import java.\*`, `import javax.*`, `import org.\*`, `import com.*`, `import all other imports`. Add a `<blank line>` between each `import`
+* For `Class count to use import with '\*'` and `Names count to use static import with '*'`: Set to `999` to prevent IntelliJ from contracting the import statements.
+* For `Import Layout`: The order is `import static all other imports`, `import java.\*`, `import javax.*`, `import org.\*`, `import com.*`, `import all other imports`. Add a `<blank line>` between each `import`.
 
 Optionally, you can follow the <<UsingCheckstyle#, UsingCheckstyle.adoc>> document to configure Intellij to check style-compliance as you write code.
 
@@ -110,7 +110,7 @@ The `.pptx` files used to create diagrams in this document can be found in the l
 
 link:#common-classes[*`Commons`*] represents a collection of classes used by multiple other components. Two of those classes play important roles at the architecture level.
 
-* `EventsCenter` : This class (written using https://github.com/google/guava/wiki/EventBusExplained[Google's Event Bus library]) is used by components to communicate with other components using events (i.e. a form of _Event Driven_ design)
+* `EventsCenter` : This class (written using https://github.com/google/guava/wiki/EventBusExplained[Google's Event Bus library]) is used by components to communicate with other components using events (i.e. a form of _Event Driven_ design).
 * `LogsCenter` : Used by many classes to write log messages to the App's log file.
 
 The rest of the App consists of four components.
@@ -153,14 +153,14 @@ The sections below give more details of each component.
 
 === UI component
 
-image::UiClassDiagram.png[width="800"]
+image::UiClassDiagram.PNG[width="800"]
 _Figure 2.2.1 : Structure of the UI Component_
 
 *API* : link:{repoURL}/src/main/java/seedu/address/ui/Ui.java[`Ui.java`]
 
-The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter`, `BrowserPanel` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class.
+As shown from the diagram above, the UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `EventListPanel`, `StatusBarFooter`, `BrowserPanel` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class.
 
-The `UI` component uses JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the link:{repoURL}/src/main/java/seedu/address/ui/MainWindow.java[`MainWindow`] is specified in link:{repoURL}/src/main/resources/view/MainWindow.fxml[`MainWindow.fxml`]
+The `UI` component uses JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the link:{repoURL}/src/main/java/seedu/address/ui/MainWindow.java[`MainWindow`] is specified in link:{repoURL}/src/main/resources/view/MainWindow.fxml[`MainWindow.fxml`].
 
 The `UI` component,
 
@@ -191,7 +191,7 @@ _Figure 2.3.1 : Interactions Inside the Logic Component for the `delete 1` Comma
 
 === Model component
 
-image::ModelClassDiagram.png[width="800"]
+image::ModelClassDiagram.PNG[width="800"]
 _Figure 2.4.1 : Structure of the Model Component_
 
 *API* : link:{repoURL}/src/main/java/seedu/address/model/Model.java[`Model.java`]
@@ -200,12 +200,12 @@ The `Model`,
 
 * stores a `UserPref` object that represents the user's preferences.
 * stores the Address Book data.
-* exposes an unmodifiable `ObservableList<ReadOnlyPerson>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
+* exposes an unmodifiable `ObservableList<ReadOnlyPerson>` and `ObservableList<ReadOnlyEvent>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
 * does not depend on any of the other three components.
 
 === Storage component
 
-image::StorageClassDiagram.png[width="800"]
+image::StorageClassDiagram.PNG[width="800"]
 _Figure 2.5.1 : Structure of the Storage Component_
 
 *API* : link:{repoURL}/src/main/java/seedu/address/storage/Storage.java[`Storage.java`]
@@ -350,18 +350,58 @@ image::UndoRedoActivityDiagram.png[width="200"]
 **Cons:** Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two different things. +
 // end::undoredo[]
 
-=== Event(feature)
+=== Event class mechanism
+==== Summary
+The `Event` class, which is located inside `model`, is implemented with similar logic as `Person` class. We have introduced three commands that modifies the address book: `addE`, `editE` and `deleteE`, which extends `UndoableCommand`.
+An `Event` consist of three sub-components: `Header`, `Desc` and `EventDate`. Commands such as `clear`, `undo` and `redo` can be used to alter events in the list as they deal with code that directly modifies the address book.
 
-The `Event` feature is implemented with similar logic as a `Person`. The featured commands that modifies the address book include `addE`, `editE` and `deleteE`. As such, the methods from events are extended from `Model`.
+The `EventPanel` is incorporated into the address book `MainWindow` to display all the events inside the internal list using `ObservableList<ReadOnlyEvent>`. This process will be explained later on under the section `Event card`.
 
-Commands such as `clear`, `undo` and `redo` will apply to the events in the list as these commands extends `UndoableCommand`. Therefore, further coupling of these user commands and event feature is not introduced.
+==== Event methods
+As stated in the summary, the `Event` class contains three main methods: `addE`, `editE` and `deleteE`.
+The execution flow is similar for all three methods on a higher level. We can demonstrate how different levels of components communicate with one another by referring to an example of `addE` command in the following sequence diagram.
 
-image::EventPersonModelClassDiagram.png[width="900"]
+image::AddEventDiagram.PNG[width="800"]
 
-As you can see from the diagram, the sub component of `Event` include a `PersonList` that fetches persons from the `ReadOnlyPerson` and add them into the list without any modification. In the Ui, upon clicking on the person tagged under an event, the logic will execute `select` command which will bring the user to the respective person in the person panel.
+==== Exceptions
+When the user input an event command with its parameters, the validity of the command word is checked inside the `AddressBookParser`. Next, the presence of the parameter prefixes is checked inside `AddEventCommandParser`.
+An appropriate `ParseException` will be thrown if the command word or prefixes are incorrect.
 
-==== Design Consideration
-**Aspect:** How to implement adding of persons into the event's person list +
+Before modifying the list of events inside the address book, the system may throw exceptions due to some invalid parameters. Here are the possible exceptions:
+
+* `EventNotFoundException`: This exception can be thrown by `editE` and `deleteE` command when the an invalid event index is provided by the user. The index needs to be within the size of the event list at the current state of the address book.
+* `DuplicateEventException`: This exception can be thrown by `addE` and `editE` command. The system will first create an `Event` object with the input parameters, compare the object to all events residing in the event list and throw this exception if there is a duplicate found.
+* `DateTimeParseException`: This exception can be thrown by `addE` and `editE` command when the input `EventDate` parameter is not a valid date. The date format and validity of date is checked inside the `Event` class like this: +
+[source,java]
+----
+public EventDate(String eventDate) throws IllegalValueException {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    try {
+        eventLocalDate = LocalDate.parse(eventDate, formatter);
+    } catch (DateTimeParseException ex) {
+        // ... throw message ...
+    }
+}
+----
+
+==== Event card
+The `EventCard` class extends `UiPart<Region>` to represent a distinct part of the UI. The object properties of every event is assigned to a label held by an `EventCard`. The graphic scene is then constructed with the appropriate `FXML` files created to support the display of all events.
+
+===== Design implementation
+When the user starts the `MainApp`, the system calls the `UiManager` to create a new `MainWindow` and fills it with `EventListPanel` and other components. The displayed events are created by `UniqueEventList` and the binding of individual UI elements to the `EventCard` ensures that any changes to the parameter will be displayed in the `EventListPanel`.
+The sequence diagram below illustrates the interaction between the `EventCard` and the `UiManager`:
+
+image::EventCardDiagram.PNG[width="800"]
+
+The events on the `EventListPanel` is sorted based on `EventDate`. An event that is coming soon will appear at the top and events with later dates will be further down the list. Expired events will be pushed to the bottom of the list.
+This sorting algorithm is introduced in `EventDateComparator` which implements `Comparator<Event>`.
+
+The events follow a certain colored background based on its urgency. The visual guide below describes the color code used:
+
+image::EventColorDiagram.png[width="600"]
+
+==== Design Consideration for future enhancement
+**Aspect:** How to implement adding of persons into an `Event` using a person list parameter +
 **Alternative 1 (current choice):** Add by the index of person shown in the person list panel. +
 **Pros:** System only have to check for validity of index. Better performance compared to Alternative 2. +
 **Cons:** Requires user to refer to the person list panel before executing command to add person into event's person list. +
@@ -384,7 +424,7 @@ which is implemented in an event-driven manner.
 
 The following class diagram illustrates the structure of this mechanism, and its' current applications: +
 
-image::Oauth2ClassDiagram.PNG[width=100%]
+image::Oauth2ClassDiagram.PNG[width="800"]
 
 ==== Current usages
 
@@ -427,7 +467,7 @@ image::import_export_parallel.png[width="80%"]
 ===== Authentication process
 The **authentication process** is the more involved process of the 3. We can understand it better with the help of the following sequence diagram for the `import` command: +
 
-image::AuthenticationSequenceDiagram.png[width=100%]
+image::AuthenticationSequenceDiagram.png[width="800"]
 
 This is a summary of the steps in the **authentication process**:
 
@@ -517,34 +557,18 @@ in this current version of DoC, due to the following redeeming factors:
 - Google Contacts automatically flags possible duplicates, and offers a quick merging service.
 - Contacts exported from DoC will be added to a designated "ImportedFromGoogle" contact group, and can be filtered out on Google Contacts easily.
 
-
-=== Location
-
-image::Location.png[width="800"]
-
-As seen above, an event based approach is used to display the location of the person.
-Once the Address book parser identifies the user command as a valid location command, it will make use of the Google Event bus to transmit the event.
-The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function.
-This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested person.
-This rendering of Google Maps is done via calling the URL.
-
-==== Design Considerations
-
-**Aspect:** Implementation of `location` +
-**Alternative 1 (current choice):** Add a new class that extends `Command` that uses the Google Maps URL +
-**Pros:** The map can be easily loaded without needing to call the GoogleMaps API  +
-**Cons:** Only functions that can be sent via URL can be used. +
-**Alternative 2:** Make use of Google Maps API +
-**Pros:** More functions such as radius and many more could have been added +
-**Cons:** Take a longer time to load the map.
-
 === Email
 
 The `EmailCommand` is the main driver of this functionality. It links the logic in Addressbook and the content displayed on the Email browser.
 
 image::EmailSequenceDiagram.png[width="800"]
 
-As seen from the picture above, the `AddressParser` will be able to distinguish the email command and direct it to the `EmailCommandParser`. Over there the recipient, subject and the body from the command line input is identified. Once identified, the `execute` function is called. This function in the `EmailCommand` would call the `updateEmailRecipient` function in the Model. Once the fields are updated properly, the `EmailCommand` will call the desktop mail app and fill in the necessary details.
+As seen from the picture above, the `AddressParser` will be able to distinguish the email command and direct it to the `EmailCommandParser`. Over there the recipient, subject and the body from the command line input is identified.
+
+[NOTE]
+Note that the `EmailCommandParser` will raise a `ParseException` if the `to/` is not filled. The `subject` and `body` fields are not compulsory.
+
+Once identified, the `execute` function is called. This function in the `EmailCommand` would call the `updateEmailRecipient` function in the Model. Once the fields are updated properly, the `EmailCommand` will call the desktop mail app and fill in the necessary details.
 
 ==== Design Considerations
 
@@ -554,23 +578,95 @@ As seen from the picture above, the `AddressParser` will be able to distinguish 
 **Cons:** A new application has to be opened. +
 **Alternative 2:** Make use of Gmail API. +
 **Pros:** Can be emailed from the browser panel itself. +
-**Cons:** The UI for Gmail is very poor.
+**Cons:** The UI for GMail is very poor on `JavaFX WebView`.
+
+=== Location
+
+image::Location.png[width="800"]
+
+As seen above, an event based approach is used to display the location of the person.
+
+[NOTE]
+Note that the `LocationCommandParser` will raise a `ParseException` if the `INDEX` is not stated.
+
+Once the Address book parser identifies the user command as a valid location command, it will make use of the Google Event bus to transmit the event.
+The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function.
+This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested person.
+This rendering of Google Maps is done via calling the URL.
+
+==== Design Considerations
+
+**Aspect:** Implementation of `location` +
+**Alternative 1 (current choice):** Add a new class that extends `Command` that uses the Google Maps URL. +
+**Pros:** The map can be easily loaded without needing to call the GoogleMaps API.  +
+**Cons:** Only functions that can be sent via URL can be used. +
+**Alternative 2:** Make use of Google Maps API. +
+**Pros:** More functions such as radius and many more could have been added. +
+**Cons:** Take a longer time to load the map.
+
+=== RemoveTag
+
+The removeTag mechanism is facilitated by the `RemoveTagCommand` class which is inherited from the
+`UndoableCommand` class. If the indexes are not stated, the particular tag is removed from all contacts.
+Else, only those chosen indexes has its tag removed. All the indexes are based on the current list.
+
+image::RemoveTagSequenceDiagram.png[width="800"]
+
+As shown above, when the user executes the command `removeTag`, the `RemoveTagCommandParser` class will parse the tag and indexes if given, then call the `RemoveTagCommand`. In `RemoveTagCommand` the `execute()` function is called.
+This will invoke the `removeTag` function that resides in the `LogicManager`, which will remove the specific tag from specific or all contacts based on the call made by the user. This changes will then be updated and stored.
+
+[NOTE]
+Note that the `removeTag` function will raise a `CommandException` if the `tag` is not valid.
+
+==== Design Considerations
+
+**Aspect:** Implementation of `removeTag` +
+**Alternative 1 (current choice):** Directly removes a certain tag from specified or all contacts. +
+**Pros:** Easier as multiple person are updated at one go.  +
+**Cons:** It only can remove one tag at a time. If more tags has to be removed from multiple contacts, this function has to be called more times depending on the number of the tags that has to be removed. +
+**Alternative 2:** Usage of `edit` command to remove the tags. +
+**Pros:** One lesser command for the user to remember. +
+**Cons:** It is very tiring for the user to update each and everyone of the contacts in the contact list, if he decided to remove the tag from everyone.
+
+=== Find
+
+The `FindCommand` class is inherited from the
+`Command` class.It allows the user to search his contacts either by the name of the contact or by the tag of the contact.
+
+image::FindSequenceDiagram.png[width="800"]
+
+As shown above, when the user executes the command `find`, the `FindCommandParser` class will parse the user's input, then call the `FindCommand`. In `FindCommand` the `execute()` function is called.
+This will invoke the `updateFilteredPersonList` function that resides in the `LogicManager`, which will filter the contacts based on their name and tag that matches the call made by the user. This changes will then be updated on the `PersonalListPanel`.
+
+==== Design Considerations
+
+**Aspect:** Implementation of `find` +
+**Alternative 1 (current choice):** Directly find contacts based on both name and tag. +
+**Pros:** One function that can be used to search by name and tag.  +
+**Cons:** If name and tag are similar, the contacts with both the same name and tag will be shown. +
+**Alternative 2:** Having two functions. One for find by name and another for find by tags. +
+**Pros:** Easier to find a person by name or by tag, if both name and tag have similar Strings. +
+**Cons:** Extra command for the user to remember.
 
 === UpdateProfilePic/DeleteProfilePic mechanism
 
 The UpdateProfilePic/DeleteProfilePic mechanism is facilitated by a `ProfilePic` class, which is a property class of the `Person` class. It supports the updating and deleting of profile pictures of each Person. These two commands inherit from `UndoableCommand`.
 
-`ProfilePic` essentially stores a **valid** `URL` of an image that will be displayed as the Person?s profile picture. Whenever a new Person is added, the Person?s `ProfilePic` property will be that of a default image. The command, `updateProfilePic` can then be called to change this property. When the command `deleteProfilePic` is called, the `ProfilePic` property of the selected Person will be changed back to the default profile picture.
+`ProfilePic` essentially stores a **valid** `URL` of an image that will be displayed as the `Person` 's profile picture. Whenever a new `Person` is added, the `Person` 's `ProfilePic` property will be that of a default image. The command: `updateProfilePic` can then be called to change this property. When the command `deleteProfilePic` is called, the `ProfilePic` property of the selected `Person` will be changed back to the default profile picture.
 
-Like the other properties of the `Person` class, the `ProfilePic` property will also be saved to the chosen storage file.
+Like the other properties of the `Person` class, the `ProfilePic` property will also be saved to the chosen storage file. If the image that is referred to by the `ProfilePic` is moved or deleted, the `ProfilePic` will reset back to the image of the default profile picture.
 
-Both the `updateProfilePic` and the `deleteProfilePic` commands work by taking in the index of the chosen Person and updating this Person as necessary. The `updateProfilePic` command also takes in a URL of the image that the profile picture is to be changed to. This will cause the app to instantiate a new `ProfilePic` object and check if the URL is valid and if it is valid, the app will proceed to update the Person with the new profile picture, otherwise an IllegalValueException will be thrown. As for the `deleteProfilePic` command, once it is called, the app will instantiate a default `ProfilePic` object and update the Person chosen.
+The `updateProfilePic`  command works by taking in the index of the chosen `Person` and updating this `Person` according to the `ProfilePic` given. To do so, the `updateProfilePic` command takes in a URL of the image that the profile picture is to be changed to. This will cause the app to instantiate a new `ProfilePic` object and check if the URL is valid and if it is valid, the app will proceed to update the Person with the new profile picture, otherwise an IllegalValueException will be thrown.
+
+In addition, the image will be downloaded into a local directory called: `ProfilePics` that is generated when the app initializes. This directory is created in the same directory as the `src` directory.
+
+The `deleteProfilePic` command works by taking in the index of the chosen `Person` and updating the `ProfilePic` property of the chosen `Person` to the default profile picture.
 
 Below are the sequence diagrams of each command to illustrate how they work:
 
-image::updateProfilePicSD.jpg[width="100%"]
+image::updateProfilePicSD.jpg[width="800"]
 
-image::deleteProfilePicSD.jpg[width="100%"]
+image::deleteProfilePicSD.jpg[width="800"]
 
 ==== Design Considerations
 
@@ -604,7 +700,7 @@ Right before the app closes, the app will sort the `Person` objects in the `Addr
 
 Below is the sequence diagram for how the `viewCount` object is updated:
 
-image::updateViewCountSD.png[width="100%]
+image::updateViewCountSD.png[width="800"]
 
 ==== Design Considerations
 
@@ -801,12 +897,12 @@ The most reliable way to run tests is the 3rd one. The first two methods might f
 
 *Method 1: Using IntelliJ JUnit test runner*
 
-* To run all tests, right-click on the `src/test/java` folder and choose `Run 'All Tests'`
-* To run a subset of tests, you can right-click on a test package, test class, or a test and choose `Run 'ABC'`
+* To run all tests, right-click on the `src/test/java` folder and choose `Run 'All Tests'`.
+* To run a subset of tests, you can right-click on a test package, test class, or a test and choose `Run 'ABC'`.
 
 *Method 2: Using Gradle*
 
-* Open a console and run the command `gradlew clean allTests` (Mac/Linux: `./gradlew clean allTests`)
+* Open a console and run the command `gradlew clean allTests` (Mac/Linux: `./gradlew clean allTests`).
 
 [NOTE]
 See <<UsingGradle#, UsingGradle.adoc>> for more info on how to run tests using Gradle.
@@ -815,7 +911,7 @@ See <<UsingGradle#, UsingGradle.adoc>> for more info on how to run tests using G
 
 Thanks to the https://github.com/TestFX/TestFX[TestFX] library we use, our GUI tests can be run in the _headless_ mode. In the headless mode, GUI tests do not show up on the screen. That means the developer can do other things on the Computer while the tests are running.
 
-To run tests in headless mode, open a console and run the command `gradlew clean headless allTests` (Mac/Linux: `./gradlew clean headless allTests`)
+To run tests in headless mode, open a console and run the command `gradlew clean headless allTests` (Mac/Linux: `./gradlew clean headless allTests`).
 
 === Types of tests
 
@@ -855,14 +951,14 @@ Here are the steps to create a new release.
 
 .  Update the version number in link:{repoURL}/src/main/java/seedu/address/MainApp.java[`MainApp.java`].
 .  Generate a JAR file <<UsingGradle#creating-the-jar-file, using Gradle>>.
-.  Tag the repo with the version number. e.g. `v0.1`
+.  Tag the repo with the version number. e.g. `v0.1`.
 .  https://help.github.com/articles/creating-releases/[Create a new release using GitHub] and upload the JAR file you created.
 
 === Managing Dependencies
 
 A project often depends on third-party libraries. For example, Address Book depends on the http://wiki.fasterxml.com/JacksonHome[Jackson library] for XML parsing. Managing these _dependencies_ can be automated using Gradle. For example, Gradle can download the dependencies automatically, which is better than these alternatives. +
-a. Include those libraries in the repo (this bloats the repo size) +
-b. Require developers to download those libraries manually (this creates extra work for developers)
+a. Include those libraries in the repo (this bloats the repo size). +
+b. Require developers to download those libraries manually (this creates extra work for developers).
 
 [appendix]
 == Suggested Programming Tasks to Get Started
@@ -1171,10 +1267,10 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 *MSS*
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
+1.  User requests to list persons.
+2.  AddressBook shows a list of persons.
+3.  User requests to delete a specific person in the list.
+4.  AddressBook deletes the person.
 +
 Use case ends.
 
@@ -1182,6 +1278,7 @@ Use case ends.
 
 [none]
 * 2a. The list is empty.
+
 +
 Use case ends.
 
@@ -1192,7 +1289,6 @@ Use case ends.
 +
 Use case resumes at step 2.
 
-[discrete]
 +
 Use case ends.
 
@@ -1203,10 +1299,10 @@ Use case ends.
 
 *MSS*
 
-1.  User requests to undo command
-2.  AddressBook shows the latest command and ask for confirmation
-3.  User confirms
-4.  AddressBook reverts to the state before the command
+1.  User requests to undo command.
+2.  AddressBook shows the latest command and ask for confirmation.
+3.  User confirms.
+4.  AddressBook reverts to the state before the command.
 +
 Use case ends.
 
@@ -1229,10 +1325,10 @@ Use case ends.
 
 *MSS*
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User request to swap the indexes of two persons in the list
-4.  AddressBook swaps the two persons
+1.  User requests to list persons.
+2.  AddressBook shows a list of persons.
+3.  User request to swap the indexes of two persons in the list.
+4.  AddressBook swaps the two persons.
 +
 Use case ends.
 
@@ -1254,8 +1350,8 @@ Use case resumes at step 2.
 
 *MSS*
 
-1.  User requests to sort persons
-2.  AddressBook shows a list of sorted persons
+1.  User requests to sort persons.
+2.  AddressBook shows a list of sorted persons.
 * 2a. The list will be altered and shows the sorted list.
 +
 Use case ends.
@@ -1272,10 +1368,10 @@ Use case resumes at step 2.
 
 *MSS*
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete multiple person in the list
-4.  AddressBook delete the persons
+1.  User requests to list persons.
+2.  AddressBook shows a list of persons.
+3.  User requests to delete multiple person in the list.
+4.  AddressBook delete the persons.
 +
 Use case ends.
 
@@ -1298,12 +1394,12 @@ Use case resumes at step 2.
 
 *MSS*
 
-1.  User requests to import existing contacts
-2.  DoC prompts google login for authentication
-3.  User enters authentication information
-4.  DoC prompts user to grant access to his Google Contacts
-5.  User grants access
-6.  DoC updates contact list
+1.  User requests to import existing contacts.
+2.  DoC prompts google login for authentication.
+3.  User enters authentication information.
+4.  DoC prompts user to grant access to his Google Contacts.
+5.  User grants access.
+6.  DoC updates contact list.
 +
 Use case ends.
 
@@ -1324,8 +1420,8 @@ Use case ends
 
 *MSS*
 
-1.  User requests to add person to the address book
-2.  AddressBook adds the person
+1.  User requests to add person to the address book.
+2.  AddressBook adds the person.
 +
 Use case ends.
 
@@ -1344,10 +1440,10 @@ Use case resumes at step 2.
 
 *MSS*
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to favourite a specific person in the list
-4.  AddressBook favourites the person
+1.  User requests to list persons.
+2.  AddressBook shows a list of persons.
+3.  User requests to favourite a specific person in the list.
+4.  AddressBook favourites the person.
 +
 Use case ends.
 
@@ -1378,7 +1474,7 @@ Use case resumes at step 2.
 .  The system should work on both 32-bit and 64-bit environments.
 .  The system should provide necessary assistance in usage and operation.
 .  The system should be accessible with web-enabled mobile devices.
-.  The font colour of the text and the colour of the display panel should be contrasting to improve readability
+.  The font colour of the text and the colour of the display panel should be contrasting to improve readability.
 .  The user interface should be intuitive enough for users who are not IT-savvy.
 
 {More to be added}
@@ -1403,16 +1499,18 @@ A contact detail that is not meant to be shared with others
 [appendix]
 == Product Survey
 
-*Product Name*
+*DoC*
 
-Author: ...
+Author: Students from the NUS School of Computing
 
 Pros:
 
-* ...
-* ...
+* Allows import and export of Contacts to and from Google Contacts.
+* Allows offline contact information.
+* Allows mass emailing.
+* Allows managing of events.
 
 Cons:
 
-* ...
-* ...
+* Only a desktop app.
+* Needs internet to access certain features.

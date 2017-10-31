@@ -4,10 +4,17 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_IMAGE_URL;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
+import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.ProfilePic;
@@ -21,7 +28,7 @@ import seedu.address.model.person.exceptions.PersonNotFoundException;
  * Updates the profile picture of an existing person in the address book.
  */
 
-public class UpdateProfilePicCommand extends UndoableCommand {
+public class UpdateProfilePicCommand extends Command {
     public static final String COMMAND_WORD = "updateProfilePic";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Updates the profile picture of the person identified "
@@ -41,6 +48,8 @@ public class UpdateProfilePicCommand extends UndoableCommand {
     private final Index index;
     private final ProfilePic profilePic;
 
+    private boolean isOldFileDeleted = true;
+
     /**
      *
      * @param index of the person in the filtered person list to update profile picture
@@ -55,7 +64,7 @@ public class UpdateProfilePicCommand extends UndoableCommand {
     }
 
     @Override
-    public CommandResult executeUndoableCommand() throws CommandException {
+    public CommandResult execute() throws CommandException {
         List<ReadOnlyPerson> lastShownList = model.getFilteredPersonList();
 
         if (index.getZeroBased() >= lastShownList.size()) {
@@ -64,7 +73,46 @@ public class UpdateProfilePicCommand extends UndoableCommand {
 
         ReadOnlyPerson personToUpdateProfilePic = lastShownList.get(index.getZeroBased());
         Person updatedProfilePicPerson = new Person(personToUpdateProfilePic);
-        updatedProfilePicPerson.setProfilePic(profilePic);
+        ProfilePic newProfilePic;
+        if (profilePic.toString().compareTo(ProfilePic.DEFAULT_URL) == 0) {
+            String oldFile = personToUpdateProfilePic.getProfilePic().toString();
+            if (oldFile.compareTo(ProfilePic.DEFAULT_URL) != 0) {
+                oldFile = urlToPath(oldFile);
+                try {
+                    Files.delete(Paths.get(oldFile));
+                } catch (IOException ioe) {
+                    isOldFileDeleted = false;
+                }
+            }
+            newProfilePic = profilePic;
+        } else {
+            String newFile;
+            if (personToUpdateProfilePic.getProfilePic().toString().compareTo(ProfilePic.DEFAULT_URL) == 0) {
+                newFile = "ProfilePics/" + updatedProfilePicPerson.hashCode() + ".png";
+            } else {
+                newFile = personToUpdateProfilePic.getProfilePic().toString();
+                newFile = urlToPath(newFile);
+            }
+            if (!Files.exists(Paths.get(newFile))) {
+                try {
+                    Files.createFile(Paths.get(newFile));
+                } catch (IOException ioe) {
+                    throw new CommandException("New file failed to be created");
+                }
+            }
+            try {
+                URL url = new URL(profilePic.toString());
+                InputStream in = url.openStream();
+                Files.copy(in, Paths.get(newFile), StandardCopyOption.REPLACE_EXISTING);
+                in.close();
+                newProfilePic = new ProfilePic("file://" + Paths.get(newFile).toAbsolutePath().toUri().getPath());
+            } catch (IOException ioe) {
+                throw new CommandException("Image failed to download");
+            } catch (IllegalValueException ive) {
+                throw new CommandException(ive.getMessage());
+            }
+        }
+        updatedProfilePicPerson.setProfilePic(newProfilePic);
 
         try {
             model.updatePerson(personToUpdateProfilePic, updatedProfilePicPerson);
@@ -73,8 +121,15 @@ public class UpdateProfilePicCommand extends UndoableCommand {
         } catch (PersonNotFoundException pnfe) {
             throw new AssertionError("The target person cannot be missing");
         }
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        return new CommandResult(String.format(MESSAGE_UPDATE_PROFILE_PIC_SUCCESS, personToUpdateProfilePic));
+        if (profilePic.toString().compareTo(ProfilePic.DEFAULT_URL) != 0) {
+            model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        }
+        String resultMessage = String.format(MESSAGE_UPDATE_PROFILE_PIC_SUCCESS, personToUpdateProfilePic);
+        if (isOldFileDeleted) {
+            return new CommandResult(resultMessage);
+        } else {
+            return new CommandResult(String.join("\n", resultMessage, "Old image not deleted"));
+        }
     }
 
     @Override
@@ -83,5 +138,9 @@ public class UpdateProfilePicCommand extends UndoableCommand {
                 || (other instanceof UpdateProfilePicCommand // instanceof handles nulls
                 && this.index.equals(((UpdateProfilePicCommand) other).index)
                 && this.profilePic.equals(((UpdateProfilePicCommand) other).profilePic)); // state check
+    }
+
+    private String urlToPath(String url) {
+        return url.substring(url.indexOf("ProfilePics"));
     }
 }
