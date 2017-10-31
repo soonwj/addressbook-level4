@@ -475,14 +475,21 @@ object is added as a Google `Person` object's `UserDefined` attribute.
 ==== Design Considerations
 
 **Aspect:** How a successful authentication is handled. +
-**Alternative 1 (Chosen for security):** Use a hosted domain as the redirection URL for a successful authentication.
-The hosted domain will be the designated **success URL*** the `BrowserPanel` listens for. After the authentication token is extracted from the URL,
-we then redirect to a Google Contacts page. +
-**Pros:** The underlying `HTTP GET` is sent to a domain under DoC's control, reducing the risk of authentication token leak. +
-**Cons:** The BrowserPanel may display an error page temporarily if the hosted domain is down, however this will not be noticeable if redirection occurs fast. +
-**Alternative 2:** Redirect to a Google Contacts page immediately. +
-**Pros:** No risk of an error page being display. +
-**Cons:** The underlying `HTTP GET` containing the authentication token is sent to an external domain.
+**Chosen implementation:** +
+Use a hosted domain as the redirection URL for a successful authentication. This hosted domain will be the designated
+**success URL*** the `BrowserPanel` listens for. After the authentication token is extracted from the URL, we then
+redirect to a Google Contacts page. +
+**Pros:** +
+The underlying `HTTP GET` is sent to a domain under DoC's control, reducing the risk of authentication token leak. +
+**Cons:** +
+The BrowserPanel may display an error page temporarily if the hosted domain is down, however this will not be noticeable if redirection occurs fast. +
++
+**Alternative 2:** +
+Redirect to a Google Contacts page immediately. +
+**Pros:** +
+No risk of an error page being display. +
+**Cons:** +
+The underlying `HTTP GET` containing the authentication token is sent to an external domain.
 
 '''
 
@@ -626,11 +633,98 @@ image::updateViewCountSD.png[width="100%]
 === Unknown input parsing
 
 ==== Overview
+To enhance user experience, a similarity-matching mechanism is employed to detect and parse unknown user input, matching them
+to probable system-recognized commands.
+The Levenshtein distance is used as a metric to measure similarity.
+
+Here's a brief explanation of this metric: +
+----
+The Levenshtein distance between two strings, is the minimum number of insertion, deletion or substitution operations required to transform one string to the other.
+----
+
+This mechanism is achieved with an enhancement on the original `AddressBookParser`, and the introduction of a new class, `UnknownCommand`.
 
 ==== Execution flow
+===== Explanation
+When a unknown input is entered, the `AddressBookParser` instantiates an `UnknownCommand` object with this input.
+The 'AddressBookParser' then calls the `suggestionFound()` method of this instance. This method proceeds to match the unknown input against
+a list of system-recognized command words. If a match is found, we instantiate the suggested command within the `UnknownCommand` object,
+and prompt the user for a response. If the user accepts the suggestion, we retrieve the instance of the suggested command and execute it.
+
+
+**Note:** +
+
+- If the minimum Levenshtein distance is shared by two matches, the lexicographically smaller match will be chosen.
+
+- We reject any unknown input, whose `commandWord` exceeds the maximum acceptable length. This number is chosen based on the set
+maximum acceptable Levenshtein distance and the length of the longest system-recognized `commandWord` in DoC:
+
+ maximum acceptable length = length of longest system-recognized `commandWord` + maximum acceptable Levenshtein distance
+ -
+ Current state of DoC: 18 = 16 + 2
+
+- If a match is found and the input contains invalid parameters, we do not prompt the user for a response. Instead we prompt
+the user with an invalid command format message, and a format guideline on the matched command.
+
+===== Summary
+The following activity diagram illustrates the the execution flow of the `parseCommand()` method, of the `AddressBookParser`,
+with this enhancement in place:
+
+image::ParseCommandActivityDiagram.png[width="100%"]
+
+As shown in the diagram above, actions enclosed in a green box are the enhancements applied to the original `AddressBookParser`,
+for the purpose of this mechanism.
 
 ==== Design considerations
 
+**Aspect:** Choice of acceptable Levenshtein distance +
+
+**Chosen implementation:** +
+The maximum acceptable Levenshtein distance is set to 2, as the shortest command in DoC is only 3 characters long. +
+**Pros:** +
+The similarity matching will be more likely to yield relevant result, than if the Levenshtein distance were to be set at 3 or higher.
+For example, the Levenshtein distance between 'add' and 'hey' is 3. +
+**Cons:** +
+Typos on longer commands have a higher propensity to produce a string with a Levenshtein distance of more than 2.
+These cannot be detected with this implementation. +
+
+**Alternative 1:** +
+Set a maximum acceptable Levenshtein distance of 3 or higher. +
+**Pros:** +
+Stronger similarity matching capabilities. +
+**Cons:** +
+Random user input might yield positive matches. +
+
+**Alternative 2:** +
+Lengthen sytem-recognized command words. +
+**Pros:** +
+We can set a higher maximum acceptable Levenshtein distance without the cons mentioned in  alternative 1. +
+**Cons:** +
+The user would have to type more for each command.
+
+---
+
+**Aspect:** Parsing user response after a suggestion is prompted. +
+
+**Chosen implementation:** +
+DoC prompts the user for a response of "yes" or "y", which executes the suggested command. Upon any another response,
+the system discards the suggested command and begins the parsing process again. +
+**Pros:** +
+If the mechanism has wrongly matched an unknown input, the user can simply ignore the suggestion prompt and continue without
+further action. +
+**Cons:** +
+The user might infer that a response of "no" or "n" is required to reject the suggestion, and enters an input accordingly.
+This may begin a loop that proceeds ad infinitum. +
+
+**Alternative 1:** +
+DoC prompts the user for a response of "no" or "n" to indicate rejection. +
+**Pros:** +
+The handling would be more intuitive to the user. +
+**Cons:** +
+An extra step is presented to the user on a wrong match, affecting the user's experience.
+
+**Note:** In our chosen implementation, we mitigate the mentioned cons by including explicit instructions in the suggestion prompt,
+that a response is only required if the user accepts the match.
 
 
 
