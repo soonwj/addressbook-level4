@@ -105,6 +105,8 @@ Format: `updateProfilePic INDEX [u/imageUrl]`
 * Or a valid web URL for an image stored on the internet
 ****
 
+NOTE: If the image used as a profile picture of a particular contact gets moved or deleted, the profile picture of that contact will be changed back to the default one.
+
 Examples:
 
 * `updateProfilePic 1 u/file:///C:/Users/Bobby/image.jpg` +
