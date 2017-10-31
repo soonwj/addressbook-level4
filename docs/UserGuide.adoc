@@ -15,7 +15,7 @@ endif::[]
 By: `CS2103AUG2017-T11-B1`      Since: `Sep 2017` +
 Adapted from AddressBook-Level4, by: `Team SE-EDU`      Since: `Jun 2016`      Licence: `MIT`
 
-== Introduction
+= Introduction
 Are you having trouble keeping track of important dates and events? Is there too much hassle
 in the current way you manage contacts? If these are problems that plague your everyday life, stress no further, for we've
 engineered a cure!
@@ -23,8 +23,8 @@ engineered a cure!
 DoC is here to remedy all your event tracking and contact management woes. Built as a Command Line Interface (CLI) application,
 DoC provides a speedy solution to manage event and contact information, with only just a few clicks on the keyboard.
 
-== Getting started
-=== Installation guide
+= Getting started
+== Installation guide
 .  Ensure you have Java version `1.8.0_60` or later installed in your Computer.
 +
 [NOTE]
@@ -35,7 +35,7 @@ This app will not work with earlier versions of Java 8.
 .  Copy the file to the folder you want to use as the home folder for DoC.
 .  Double-click the file to start the app. The graphical user interface should appear in a few seconds.
 
-=== Graphical user interface guide
+== Graphical user interface guide
 The following image highlights the 5 different components of DoC: +
 
 image::Ui.png[width="100%"]
@@ -60,7 +60,7 @@ and `export` feature.
 The `Events panel` displays your recorded events in the order of most urgent, coming soon, and overdue.
 
 
-== Features
+= Features
 
 ====
 *Command Format*
@@ -71,12 +71,12 @@ The `Events panel` displays your recorded events in the order of most urgent, co
 * Parameters can be in any order e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
 ====
 
-=== Contact features
+== Contact features
 You can manage your contacts through the following commands:
 
-==== Adding a contact: `add`
+=== Adding a contact: `add`
 
-Adds a contact to the address book. +
+Adds a contact to DoC. +
 Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]...`
 
 [TIP]
@@ -93,7 +93,7 @@ image::addpic.png[width="700"]
 
 As shown in the image above, after entering the `add` command in the example, the newly added contact will appear in the `Contacts panel`
 
-==== Updating a contact's profile picture: `updateProfilePic`
+=== Updating a contact's profile picture: `updateProfilePic`
 
 Updates the profile picture of a contact. +
 Format: `updateProfilePic INDEX [u/imageUrl]`
@@ -120,7 +120,7 @@ image::updateProfilePicImageExample.jpg[width="1000"]
 
 As shown in the image above, after entering the `updateProfilePic` command, the profile picture of the contact at the specified index is updated to the image stored at the url specified.
 
-==== Importing contacts: `import`
+=== Importing contacts: `import`
 
 Import contacts to DoC from Google Contacts. +
 Format: `import`
@@ -140,7 +140,7 @@ image::importpic.png[width="1000"]
 You can enter your credentials and grant permission to DoC to access your Google contacts, as highlighted by the
 red boxes in the images above.
 
-==== Exporting contacts: `export`
+=== Exporting contacts: `export`
 Export your contacts from DoC to Google Contacts. +
 Format: `export` +
 
@@ -158,7 +158,7 @@ image::importpic.png[width="1000"]
 You can enter your credentials and grant permission to DoC to access your Google contacts, as highlighted by the
 red boxes in the images above.
 
-==== Finding contacts by name and tags: `find`
+=== Finding contacts by name and tags: `find`
 Lists all contacts whose name or tags matches any of the given search terms. +
 Format: `find TERM1 [MORE_TERMS]`
 
@@ -173,7 +173,7 @@ image::findpic.png[width="700"]
 As demonstrated by the image above, entering the command `find Family han` displays all contacts with a tag or
 part of name, matching any search term.
 
-==== Listing all contacts : `list`
+=== Listing all contacts : `list`
 
 Display a list of all contacts currently stored in DoC. +
 Format: `list`
@@ -184,21 +184,21 @@ image::listpic.png[width="700"]
 
 As demonstrated in the image above, regardless of the current view in `Contacts panel`, DoC will display the list of all contacts currently stored in DoC upon receiving the command `list`.
 
-==== Selecting a contact : `select`
+=== Selecting a contact : `select`
 
 Selects the contact identified by the index number used in the last contact listing, and loads the Google search result of the contact. +
 Format: `select INDEX` +
-Refer to the following picture guide on how you can retrieve the INDEX of a contact: +
+Refer to the following visual guide on how you can retrieve the INDEX of a contact: +
 
 **Visual guide**
 
 image::selectpic.png[width="700"]
 
-As demonstrated by the picture guide, you can first enter the command `list` to display a list of all contacts currently stored in DoC. After entering the `select` command, the Google search of the contact name will load up in the `Browser panel`.
+As demonstrated by the visual guide, you can first enter the command `list` to display a list of all contacts currently stored in DoC. After entering the `select` command, the Google search of the contact name will load up in the `Browser panel`.
 
-==== Emailing contacts : `email`
+=== Emailing contacts : `email`
 
-Emails an existing contact/ a group in the address book. +
+Emails an existing contact/ a group in the DoC. +
 Format: `email [to/TO] [subject/SUBJECT] [body/BODY]`
 
 WARNING: This features requires Internet connection
@@ -228,7 +228,7 @@ Opens the default emailing client and adds Adam to the `to` field and has the su
 
 image::Email_UG_1.PNG[width="1000"]
 
-==== Locating a contact : `location`
+=== Locating a contact : `location`
 
 Shows the address of the contact in Google Maps. +
 Format: `location INDEX`
@@ -249,9 +249,9 @@ image::Location_UG.PNG[width="1000"]
 
 Shows the address of the 1st contact in Google Maps as shown above.
 
-==== Editing a contact : `edit`
+=== Editing a contact : `edit`
 
-Edits an existing contact in the address book. +
+Edits an existing contact in DoC. +
 Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...`
 
 ****
@@ -275,7 +275,7 @@ image::editpic.png[width="700"]
 
 As you can see from the image above, the `edit` command from the example will edit the stated parameters of a contact.
 
-==== Removing tags: `removeTag`
+=== Removing tags: `removeTag`
 
 Finds contacts whose names or tags contain any of the given tag and removes that tag. +
 Format: `removeTag rm/INDEX t/TAG`
@@ -302,9 +302,9 @@ image::removeTagpic.png[width="700"]
 
 As shown in the image above, the `removeTag` command will remove given `Tag` from all the appropriate contacts in Doc.
 
-==== Deleting the profile picture of a contact : `deleteProfilePic`
+=== Deleting the profile picture of a contact : `deleteProfilePic`
 
-Deletes the profile picture of the specified contact from the address book. +
+Deletes the profile picture of the specified contact from DoC. +
 Format: `deleteProfilePic INDEX`
 
 ****
@@ -318,7 +318,7 @@ Examples:
 
 * `list` +
 `deleteProfilePic 2` +
-Deletes the profile picture of the 2nd contact in the address book.
+Deletes the profile picture of the 2nd contact in the DoC.
 * `find Bobby` +
 `deleteProfilePic 1` +
 Deletes the profile picture of the 1st contact in the results of the `find` command.
@@ -327,11 +327,11 @@ Deletes the profile picture of the 1st contact in the results of the `find` comm
 
 image::deleteProfilePicImageExample.jpg[width="1000"]
 
-As shown in the picture above, after entering the `deleteProfilePic` command, the profile picture of the contact at the specified index is reverted back to the default.
+As shown in the image above, after entering the `deleteProfilePic` command, the profile picture of the contact at the specified index is reverted back to the default.
 
-==== Deleting a contact : `delete`
+=== Deleting a contact : `delete`
 
-Deletes the specified contact from the address book. +
+Deletes the specified contact from DoC. +
 Format: `delete INDEX`
 
 ****
@@ -344,7 +344,7 @@ Examples:
 
 * `list` +
 `delete 2` +
-Deletes the 2nd contact in the address book.
+Deletes the 2nd contact in DoC.
 * `find Betsy` +
 `delete 1` +
 Deletes the 1st contact in the results of the `find` command.
@@ -355,12 +355,12 @@ image::deletepic.png[width="700"]
 
 According to the image above, let's say you want to delete the contact at index 3, enter the `delete` command and index to remove the contact from DoC.
 
-=== Event features
+== Event features
 You can manage your events through the following commands:
 
-==== Adding an event: `addE`
+=== Adding an event: `addE`
 
-Adds an event to the address book. +
+Adds an event to DoC. +
 Format: `addE h/HEADER de/DESCRIPTION d/DATE`
 
 [TIP]
@@ -377,9 +377,9 @@ image::addEpic.png[width="700"]
 Your newly created event will be listed in the event panel and will be sorted based on its date. Thus, the earliest event will be displayed at the top of the panel.
 As shown in the guide above, yellow panel indicates an event upcoming in 2 or less days, Green panel indicates an event that have yet to come (more than 2 days) and Red panel indicates that the event is already overdue.
 
-==== Editing an event : `editE`
+=== Editing an event : `editE`
 
-Edits an existing event in the address book. +
+Edits an existing event in DoC. +
 Format: `editE INDEX [h/HEADER] [de/DESCRIPTION] [d/DATE]`
 
 ****
@@ -400,9 +400,9 @@ image::editEpic.png[width="700"]
 
 According to the image above, if you want to edit an `Event` at index 3 by changing the header and date, the result event will automatically sort itself in the `Events panel` based on the new date.
 
-==== Deleting an event : `deleteE`
+=== Deleting an event : `deleteE`
 
-Deletes the specified event from the address book. +
+Deletes the specified event from DoC. +
 Format: `deleteE INDEX`
 
 ****
@@ -414,7 +414,7 @@ Format: `deleteE INDEX`
 Examples:
 
 * `deleteE 3` +
-Deletes the 3rd event in the address book.
+Deletes the 3rd event in DoC.
 
 **Visual guide**
 
@@ -422,14 +422,14 @@ image::deleteEpic.png[width="700"]
 
 As shown on the image above, if you want to delete an overdue `Event`, simply key in the `deleteE` command stating the index and the event will be removed from DoC.
 
-=== General features
+== General features
 These are commands that can be used in managing both contacts and events:
 
-==== Help : `help`
+=== Help : `help`
 Displays this document. +
 Format: `help`
 
-==== History : `history`
+=== History : `history`
 Displays the history of commands you have entered, starting from the most recent one.  +
 This feature can be accessed in two different ways: +
 
@@ -439,7 +439,7 @@ Format: `history` +
 * Paste previous commands directly to the command box +
 Format: the kbd:[&uarr;] and kbd:[&darr;] arrows will paste the previous and next input respectively into the command box
 
-==== Undoing previous command : `undo`
+=== Undoing previous command : `undo`
 
 Reverses the changes made by the previous command entered. +
 Format: `undo`
@@ -456,7 +456,7 @@ image::undoPic.png[width="700"]
 As demonstrated by the image above, `history` command shows us that you have deleted the contact listed with an index of 2. A subsequent `undo` command,
 reverses the `delete 2` command by adding back the deleted contact.
 
-==== Redoing the previously undone command : `redo`
+=== Redoing the previously undone command : `redo`
 
 Reverses the most recent `undo` command, if any. +
 Format: `redo`
@@ -469,25 +469,25 @@ As demonstrated by the image above, a command of 'delete 2' is first entered, de
 An `undo` command is then entered, adding the deleted contact back to the list of contacts. Now, the `redo` command entered
 simply deletes the contact with an index of 2 again.
 
-==== Clearing all entries : `clear`
+=== Clearing all entries : `clear`
 
-Clears all entries from the address book. +
+Clears all entries from DoC. +
 Format: `clear`
 
-==== Saving the data
+=== Saving the data
 All additions, deletions, and changes performed on the contacts stored in DoC are saved automatically.
 
-==== Exiting the program : `exit`
+=== Exiting the program : `exit`
 Exits the program. +
 Format: `exit`
 
-== FAQ
+= FAQ
 ****
 *How do I transfer my data to another Computer?* +
-Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous Address Book folder.
+Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous DoC folder.
 ****
 
-== Command summary
+= Command summary
 
 * *Add* `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]...` +
 e.g. `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
