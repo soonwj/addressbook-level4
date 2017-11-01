@@ -17,6 +17,7 @@ import seedu.address.model.tag.Tag;
  * Deletes a tag from every contact if index not stated. Else, only deletes
  * the tag from person's identified using it's last displayed index from the address book.
  */
+//@@author sidhmads
 public class RemoveTagCommand extends UndoableCommand {
 
     public static final String COMMAND_WORD = "removeTag";
