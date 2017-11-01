@@ -100,6 +100,7 @@ public class ModelManager extends ComponentManager implements Model {
         }
     }
 
+    //@@author sidhmads
     @Override
     public void removeTag(ObservableList<ReadOnlyPerson> persons, Set<Tag> tag)
             throws PersonNotFoundException, DuplicatePersonException, CommandException {
@@ -123,6 +124,7 @@ public class ModelManager extends ComponentManager implements Model {
             throw new CommandException("The Tag is invalid!");
         }
     }
+    //@@author
 
     @Override
     public synchronized void deleteEvent(ReadOnlyEvent target) throws EventNotFoundException {
@@ -147,10 +149,12 @@ public class ModelManager extends ComponentManager implements Model {
 
     }
 
+    //@@author sidhmads
     @Override
     public void findLocation(ReadOnlyPerson person) throws PersonNotFoundException {
         raise(new FindLocationRequestEvent(person));
     }
+    //@@author
 
     @Override
     public void sortByViewCount() {
@@ -173,6 +177,7 @@ public class ModelManager extends ComponentManager implements Model {
 
     //=========== Filtered Person List Accessors =============================================================
 
+    //@@author sidhmads
     /**
      * Sorts the persons in the address book by name
      */
@@ -180,6 +185,7 @@ public class ModelManager extends ComponentManager implements Model {
         addressBook.sortPersons();
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
     }
+    //@@author
 
     /**
      * Returns an unmodifiable view of the list of {@code ReadOnlyPerson} backed by the internal list of
@@ -196,6 +202,7 @@ public class ModelManager extends ComponentManager implements Model {
         filteredPersons.setPredicate(predicate);
     }
 
+    //@@author sidhmads
     @Override
     public String updateEmailRecipient(Predicate<ReadOnlyPerson> predicate) {
         requireNonNull(predicate);
@@ -209,6 +216,7 @@ public class ModelManager extends ComponentManager implements Model {
         }
         return String.join(",", validPeeps);
     }
+    //@@author
 
     /**
      * Returns an unmodifiable view of the list of {@code ReadOnlyEvent} backed by the internal list of

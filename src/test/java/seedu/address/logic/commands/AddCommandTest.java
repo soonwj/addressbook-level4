@@ -139,11 +139,14 @@ public class AddCommandTest {
             fail("This method should not be called.");
         }
 
+        //@@author sidhmads
         @Override
         public void removeTag(ObservableList<ReadOnlyPerson> persons, Set<Tag> tag)
                 throws PersonNotFoundException, DuplicatePersonException, CommandException {
             fail("This method should not be called");
         }
+        //@@author
+
         public void addEvent(ReadOnlyEvent event) throws DuplicateEventException {
             fail("This method should not be called.");
         }
@@ -175,21 +178,27 @@ public class AddCommandTest {
             fail("This method should not be called.");
         }
 
+        //@@author sidhmads
         @Override
         public void findLocation(ReadOnlyPerson person) {
             fail("This method should not be called.");
         }
+        //@@author
 
+        //@@author sidhmads
         @Override
         public void sortPersons() {
             fail("This method should not be called.");
         }
+        //@@author
 
+        //@@author sidhmads
         @Override
         public String updateEmailRecipient(Predicate<ReadOnlyPerson> predicate) {
             fail("This method should not be called.");
             return null;
         }
+        //@@author
     }
 
     /**

@@ -4,6 +4,7 @@ package seedu.address.logic.commands;
  * Finds and lists all persons in address book whose name contains any of the argument keywords.
  * Keyword matching is case sensitive.
  */
+//@@author sidhmads
 public class SortCommand extends Command {
 
     public static final String COMMAND_WORD = "sort";

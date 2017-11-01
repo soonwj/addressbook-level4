@@ -51,10 +51,15 @@ public interface Model {
     void updatePerson(ReadOnlyPerson target, ReadOnlyPerson editedPerson)
             throws DuplicatePersonException, PersonNotFoundException;
 
+    //@@author sidhmads
     void removeTag(ObservableList<ReadOnlyPerson> persons, Set<Tag> tag)
             throws PersonNotFoundException, DuplicatePersonException, CommandException;
+    //@@author
 
+    //@@author sidhmads
     void findLocation(ReadOnlyPerson person) throws PersonNotFoundException;
+    //@@author
+
     /**
      * Replaces the given event {@code target} with {@code editedEvent}.
      *
@@ -88,6 +93,7 @@ public interface Model {
      */
     void updateFilteredEventList(Predicate<ReadOnlyEvent> predicate);
 
+    //@@author sidhmads
     /**
      * * Updates the filter of the filtered emailTo list to filter by the given {@code predicate}.
      * @throws NullPointerException if {@code predicate} is null.
@@ -95,4 +101,5 @@ public interface Model {
     String updateEmailRecipient(Predicate<ReadOnlyPerson> predicate);
 
     void sortPersons();
+    //@@author
 }
