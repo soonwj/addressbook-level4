@@ -6,7 +6,7 @@ import seedu.address.model.person.ReadOnlyPerson;
 /**
  * Indicates a request to jump to the list of persons
  */
-
+//@@author sidhmads
 public class FindLocationRequestEvent extends BaseEvent {
 
     public final ReadOnlyPerson targetPerson;

@@ -11,6 +11,7 @@ import org.junit.Test;
 import seedu.address.logic.commands.EmailCommand;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 
+//@@author sidhmads
 /**
  * As we are only doing white-box testing, our test cases do not cover path variations
  * outside of the EmailCommand code. For example, inputs "to/adam" and "to/adam sam subject/hi body/cool" take the

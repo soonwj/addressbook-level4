@@ -60,6 +60,7 @@ public class BrowserPanel extends UiPart<Region> {
                 + GOOGLE_SEARCH_URL_SUFFIX);
     }
 
+    //@@author sidhmads
     /**
      * Loads Google Maps.
      */
@@ -73,6 +74,7 @@ public class BrowserPanel extends UiPart<Region> {
         }
         loadPage(GOOGLE_MAPS_URL + location);
     }
+    //@@author
 
     public void loadPage(String url) {
         Platform.runLater(() -> browser.getEngine().load(url));
@@ -161,6 +163,7 @@ public class BrowserPanel extends UiPart<Region> {
     }
     //@@author
 
+    //@@author sidhmads
     /**
      * Event listener for Find Location Events
      * @param event
@@ -171,4 +174,5 @@ public class BrowserPanel extends UiPart<Region> {
                 "Getting location of " + event.targetPerson.getName().fullName));
         loadPersonLocation(event.targetPerson);
     }
+    //@@author
 }

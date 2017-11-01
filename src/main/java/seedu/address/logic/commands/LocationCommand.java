@@ -11,6 +11,7 @@ import seedu.address.model.person.exceptions.PersonNotFoundException;
 /**
  * Terminates the program.
  */
+//@@author sidhmads
 public class LocationCommand extends Command {
 
     public static final String COMMAND_WORD = "location";

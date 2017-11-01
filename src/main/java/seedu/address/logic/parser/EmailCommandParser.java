@@ -16,6 +16,7 @@ import seedu.address.model.person.NameContainsKeywordsPredicate;
 /**
  * Parses input arguments and creates a new EmailCommand object
  */
+//@@author sidhmads
 public class EmailCommandParser implements Parser<EmailCommand> {
 
     /**
