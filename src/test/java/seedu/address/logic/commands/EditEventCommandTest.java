@@ -28,6 +28,7 @@ import seedu.address.model.person.event.ReadOnlyEvent;
 import seedu.address.testutil.EditEventDescriptorBuilder;
 import seedu.address.testutil.EventBuilder;
 
+//@@author royceljh
 /**
  * Contains integration tests (interaction with the Model) and unit tests for EditEventCommand.
  */
@@ -91,7 +92,7 @@ public class EditEventCommandTest {
     public void execute_duplicateEventFilteredList_failure() {
         showFirstEventOnly(model);
 
-        // edit person in filtered list into a duplicate in address book
+        // edit event in filtered list into a duplicate in address book
         ReadOnlyEvent eventInList = model.getAddressBook().getEventList().get(INDEX_SECOND_EVENT.getZeroBased());
         EditEventCommand editEventCommand = prepareCommand(INDEX_FIRST_EVENT,
                 new EditEventDescriptorBuilder(eventInList).build());

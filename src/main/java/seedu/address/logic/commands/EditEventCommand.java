@@ -21,8 +21,9 @@ import seedu.address.model.person.event.ReadOnlyEvent;
 import seedu.address.model.person.exceptions.DuplicateEventException;
 import seedu.address.model.person.exceptions.EventNotFoundException;
 
+//@@author royceljh
 /**
- * Edits the details of an existing person in the address book.
+ * Edits the details of an existing event in the address book.
  */
 public class EditEventCommand extends UndoableCommand {
 

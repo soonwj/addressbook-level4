@@ -13,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.person.event.ReadOnlyEvent;
 
+//@@author royceljh
 public class EventListPanelTest extends GuiUnitTest {
     private static final ObservableList<ReadOnlyEvent> TYPICAL_EVENTS =
             FXCollections.observableList(getTypicalEvents());

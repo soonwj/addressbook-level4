@@ -15,6 +15,7 @@ import seedu.address.model.UserPrefs;
 import seedu.address.model.person.event.Event;
 import seedu.address.testutil.EventBuilder;
 
+//@@author royceljh
 /**
  * Contains integration tests (interaction with the Model) for {@code AddEventCommand}.
  */

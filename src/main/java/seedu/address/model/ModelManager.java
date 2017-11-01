@@ -123,7 +123,7 @@ public class ModelManager extends ComponentManager implements Model {
             throw new CommandException("The Tag is invalid!");
         }
     }
-
+    //@@author royceljh
     @Override
     public synchronized void deleteEvent(ReadOnlyEvent target) throws EventNotFoundException {
         addressBook.removeEvent(target);
@@ -146,7 +146,7 @@ public class ModelManager extends ComponentManager implements Model {
         indicateAddressBookChanged();
 
     }
-
+    //@@author
     @Override
     public void findLocation(ReadOnlyPerson person) throws PersonNotFoundException {
         raise(new FindLocationRequestEvent(person));
@@ -209,7 +209,7 @@ public class ModelManager extends ComponentManager implements Model {
         }
         return String.join(",", validPeeps);
     }
-
+    //@@author royceljh
     /**
      * Returns an unmodifiable view of the list of {@code ReadOnlyEvent} backed by the internal list of
      * {@code addressBook}
@@ -224,7 +224,7 @@ public class ModelManager extends ComponentManager implements Model {
         requireNonNull(predicate);
         filteredEvents.setPredicate(predicate);
     }
-
+    //@@author
     @Override
     public boolean equals(Object obj) {
         // short circuit if same object

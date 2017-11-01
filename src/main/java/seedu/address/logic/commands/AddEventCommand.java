@@ -10,6 +10,7 @@ import seedu.address.model.person.event.Event;
 import seedu.address.model.person.event.ReadOnlyEvent;
 import seedu.address.model.person.exceptions.DuplicateEventException;
 
+//@@author royceljh
 /**
  * Adds an event to the address book.
  */

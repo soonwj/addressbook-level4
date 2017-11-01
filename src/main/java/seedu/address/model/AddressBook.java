@@ -61,11 +61,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     public void setPersons(List<? extends ReadOnlyPerson> persons) throws DuplicatePersonException {
         this.persons.setPersons(persons);
     }
-
+    //@@author royceljh
     public void setEvents(List<? extends ReadOnlyEvent> events) throws DuplicateEventException {
         this.events.setEvents(events);
     }
-
+    //@@author
     public void setTags(Set<Tag> tags) {
         this.tags.setTags(tags);
     }
@@ -177,7 +177,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     public void addTag(Tag t) throws UniqueTagList.DuplicateTagException {
         tags.add(t);
     }
-
+    //@@author royceljh
     /**
      * Adds an event to the address book.
      * @throws DuplicateEventException if an equivalent event already exists.
@@ -212,7 +212,7 @@ public class AddressBook implements ReadOnlyAddressBook {
             throw new EventNotFoundException();
         }
     }
-
+    //@@author
     /**
      * Sorts the persons list based on the name
      * @return
@@ -239,12 +239,12 @@ public class AddressBook implements ReadOnlyAddressBook {
     public ObservableList<Tag> getTagList() {
         return tags.asObservableList();
     }
-
+    //@@author royceljh
     @Override
     public ObservableList<ReadOnlyEvent> getEventList() {
         return events.asObservableList();
     }
-
+    //@@author
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object

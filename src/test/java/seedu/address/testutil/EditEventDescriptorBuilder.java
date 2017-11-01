@@ -7,6 +7,7 @@ import seedu.address.logic.commands.EditEventCommand.EditEventDescriptor;
 import seedu.address.logic.parser.ParserUtil;
 import seedu.address.model.person.event.ReadOnlyEvent;
 
+//@@author royceljh
 /**
  * A utility class to help with building EditEventDescriptor objects.
  */

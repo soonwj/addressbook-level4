@@ -6,6 +6,7 @@ import java.util.Comparator;
 
 import seedu.address.model.person.event.Event;
 
+//@@author royceljh
 /**
  * EventDateComparator compares events based on the LocalDate eventDate.
  * It sorts events starting from the dates that are closest to the currentDate.

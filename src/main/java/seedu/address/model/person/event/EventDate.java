@@ -10,9 +10,10 @@ import java.time.format.DateTimeParseException;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 
+//@@author royceljh
 /**
  * Represents a Event's header in the address book.
- * Guarantees: immutable; is valid as declared in {@link #isValidEventDate(String)}
+ * Guarantees: immutable; is valid as declared in {@link #EventDate(String)}
  */
 public class EventDate {
 

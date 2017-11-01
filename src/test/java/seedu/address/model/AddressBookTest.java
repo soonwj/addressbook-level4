@@ -61,7 +61,7 @@ public class AddressBookTest {
         thrown.expect(AssertionError.class);
         addressBook.resetData(newData);
     }
-
+    //@@author royceljh
     @Test
     public void resetData_withDuplicateEvents_throwsAssertionError() {
         // Repeat MEETING twice
@@ -73,7 +73,7 @@ public class AddressBookTest {
         thrown.expect(AssertionError.class);
         addressBook.resetData(newData);
     }
-
+    //@@author
     @Test
     public void getPersonList_modifyList_throwsUnsupportedOperationException() {
         thrown.expect(UnsupportedOperationException.class);
@@ -85,13 +85,13 @@ public class AddressBookTest {
         thrown.expect(UnsupportedOperationException.class);
         addressBook.getTagList().remove(0);
     }
-
+    //@@author royceljh
     @Test
     public void getEventList_modifyList_throwsUnsupportedOperationException() {
         thrown.expect(UnsupportedOperationException.class);
         addressBook.getEventList().remove(0);
     }
-
+    //@@author
     /**
      * A stub ReadOnlyAddressBook whose persons and tags lists can violate interface constraints.
      */
@@ -111,12 +111,12 @@ public class AddressBookTest {
         public ObservableList<ReadOnlyPerson> getPersonList() {
             return persons;
         }
-
+        //@@author royceljh
         @Override
         public ObservableList<ReadOnlyEvent> getEventList() {
             return events;
         }
-
+        //@@author
         @Override
         public ObservableList<Tag> getTagList() {
             return tags;

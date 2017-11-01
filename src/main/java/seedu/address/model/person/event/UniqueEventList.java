@@ -15,6 +15,7 @@ import seedu.address.model.person.exceptions.DuplicateEventException;
 import seedu.address.model.person.exceptions.EventNotFoundException;
 import seedu.address.model.util.EventDateComparator;
 
+//@@author royceljh
 /**
  * A list of events that enforces uniqueness between its elements and does not allow nulls.
  *
@@ -40,7 +41,7 @@ public class UniqueEventList implements Iterable<Event> {
     /**
      * Adds a event to the list.
      *
-     * @throws DuplicateEventException if the person to add is a duplicate of an existing person in the list.
+     * @throws DuplicateEventException if the event to add is a duplicate of an existing event in the list.
      */
     public void add(ReadOnlyEvent toAdd) throws DuplicateEventException {
         requireNonNull(toAdd);

@@ -8,6 +8,7 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.event.ReadOnlyEvent;
 import seedu.address.model.person.exceptions.EventNotFoundException;
 
+//@@author royceljh
 /**
  * Deletes an event identified using it's last displayed index from the address book.
  */

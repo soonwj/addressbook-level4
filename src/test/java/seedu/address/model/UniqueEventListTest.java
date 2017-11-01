@@ -6,6 +6,7 @@ import org.junit.rules.ExpectedException;
 
 import seedu.address.model.person.event.UniqueEventList;
 
+//@@author royceljh
 public class UniqueEventListTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();

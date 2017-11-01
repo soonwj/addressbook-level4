@@ -8,8 +8,9 @@ import java.util.Objects;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+//@@author royceljh
 /**
- * Represents a Person in the address book.
+ * Represents a Event in the address book.
  * Guarantees: details are present and not null, field values are validated.
  */
 public class Event implements ReadOnlyEvent {

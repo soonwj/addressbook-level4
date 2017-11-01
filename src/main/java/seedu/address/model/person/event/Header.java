@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 
+//@@author royceljh
 /**
  * Represents a Event's header in the address book.
  * Guarantees: immutable; is valid as declared in {@link #isValidHeader(String)}
@@ -11,7 +12,7 @@ import seedu.address.commons.exceptions.IllegalValueException;
 public class Header {
 
     public static final String MESSAGE_HEADER_CONSTRAINTS =
-            "Person addresses can take any values, and it should not be blank";
+            "Event header can take any values, and it should not be blank";
 
     /*
      * The first character of the address must not be a whitespace,

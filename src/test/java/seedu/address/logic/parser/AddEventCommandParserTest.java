@@ -25,6 +25,7 @@ import seedu.address.model.person.event.EventDate;
 import seedu.address.model.person.event.Header;
 import seedu.address.testutil.EventBuilder;
 
+//@@author royceljh
 public class AddEventCommandParserTest {
     private AddEventCommandParser parser = new AddEventCommandParser();
 

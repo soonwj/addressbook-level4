@@ -36,9 +36,9 @@ public class AddressBookBuilder {
         }
         return this;
     }
-
+    //@@author royceljh
     /**
-     * Adds a new {@code Person} to the {@code AddressBook} that we are building.
+     * Adds a new {@code Event} to the {@code AddressBook} that we are building.
      */
     public AddressBookBuilder withEvent(ReadOnlyEvent event) {
         try {
@@ -48,7 +48,7 @@ public class AddressBookBuilder {
         }
         return this;
     }
-
+    //@@author
     /**
      * Parses {@code tagName} into a {@code Tag} and adds it to the {@code AddressBook} that we are building.
      */
