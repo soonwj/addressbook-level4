@@ -158,6 +158,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
     //@@author
 
+    //@@author soonwj
     @Override
     public void sortByViewCount() {
         AddressBook addressBookToSort = new AddressBook(addressBook);
@@ -176,6 +177,7 @@ public class ModelManager extends ComponentManager implements Model {
 
         resetData(addressBookToSort);
     }
+    //@@author
 
     //=========== Filtered Person List Accessors =============================================================
 

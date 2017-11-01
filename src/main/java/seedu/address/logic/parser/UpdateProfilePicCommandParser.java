@@ -12,6 +12,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.ProfilePic;
 import seedu.address.model.util.SampleDataUtil;
 
+//@@author soonwj
 /**
  * Parses input arguments and creates a new UpdateProfilePicCommand object
  */

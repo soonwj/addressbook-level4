@@ -77,6 +77,7 @@ public class PersonCard extends UiPart<Region> {
         });
     }
 
+    //@@author soonwj
     private int[] getTagColour(String tag) {
         int[] rgb = {random.nextInt(256), random.nextInt(256), random.nextInt(256)};
 
@@ -86,6 +87,7 @@ public class PersonCard extends UiPart<Region> {
 
         return tagColour.get(tag);
     }
+    //@@author
 
     /**
      * Initalizes the tags with same colours for same tags
@@ -102,9 +104,11 @@ public class PersonCard extends UiPart<Region> {
         });
     }
 
+    //@@author soonwj
     private void initProfilePic(ReadOnlyPerson person) {
         imageView.setImage(new Image(person.getProfilePic().toString(), 128, 128, true, false));
     }
+    //@@author
 
     @Override
     public boolean equals(Object other) {

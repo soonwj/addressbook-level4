@@ -72,10 +72,12 @@ public interface Model {
     void findLocation(ReadOnlyPerson person) throws PersonNotFoundException;
     //@@author
 
+    //@@author soonwj
     /**
      * Sorts all the persons in the address book from most selected to least selected.
      */
     void sortByViewCount();
+    //@@author
 
     /** Returns an unmodifiable view of the filtered person list */
     ObservableList<ReadOnlyPerson> getFilteredPersonList();

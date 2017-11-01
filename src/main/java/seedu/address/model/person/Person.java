@@ -118,6 +118,7 @@ public class Person implements ReadOnlyPerson {
         this.profilePic.set(requireNonNull(profilePic));
     }
 
+    //@@author soonwj
     @Override
     public ObjectProperty<ProfilePic> profilePicProperty() {
         return profilePic;
@@ -136,6 +137,7 @@ public class Person implements ReadOnlyPerson {
     public void setViewCount(int newViewCount) {
         viewCount = newViewCount;
     }
+    //@@author
 
     /**
      * Returns an immutable tag set, which throws {@code UnsupportedOperationException}

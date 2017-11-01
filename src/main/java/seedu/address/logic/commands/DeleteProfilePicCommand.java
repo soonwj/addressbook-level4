@@ -8,6 +8,7 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.ProfilePic;
 import seedu.address.model.person.ReadOnlyPerson;
 
+//@@author soonwj
 /**
  * Deletes the profile picture of a person identified using it's last displayed index from the address book.
  */

@@ -23,7 +23,7 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 
-
+//@@author soonwj
 /**
  * Updates the profile picture of an existing person in the address book.
  */

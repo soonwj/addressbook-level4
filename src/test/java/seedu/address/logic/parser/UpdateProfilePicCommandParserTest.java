@@ -16,6 +16,7 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.UpdateProfilePicCommand;
 import seedu.address.model.person.ProfilePic;
 
+//@@author soonwj
 public class UpdateProfilePicCommandParserTest {
     private static final String MESSAGE_INVALID_FORMAT =
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpdateProfilePicCommand.MESSAGE_USAGE);

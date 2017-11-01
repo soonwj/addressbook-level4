@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 
+//@@author soonwj
 /**
  * Represents a Person's profile picture in the address book.
  * Guarantees: immutable; is valid as declared in {@link #isValidUrl(String)}

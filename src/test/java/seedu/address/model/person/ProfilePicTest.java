@@ -7,6 +7,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_WEB_IMAGE_URL;
 
 import org.junit.Test;
 
+//@@author soonwj
 public class ProfilePicTest {
     @Test
     public void isValidUrl() {
