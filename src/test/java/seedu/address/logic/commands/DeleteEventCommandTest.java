@@ -20,6 +20,7 @@ import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.event.ReadOnlyEvent;
 
+//@@author royceljh
 /**
  * Contains integration tests (interaction with the Model) and unit tests for {@code DeleteEventCommand}.
  */
@@ -95,7 +96,7 @@ public class DeleteEventCommandTest {
         // null -> returns false
         assertFalse(deleteFirstCommand.equals(null));
 
-        // different person -> returns false
+        // different event -> returns false
         assertFalse(deleteFirstCommand.equals(deleteSecondCommand));
     }
 

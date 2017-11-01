@@ -14,6 +14,7 @@ import seedu.address.model.person.event.Event;
 import seedu.address.model.person.event.ReadOnlyEvent;
 import seedu.address.testutil.EventBuilder;
 
+//@@author royceljh
 public class EventCardTest extends GuiUnitTest {
 
     @Test
@@ -37,7 +38,7 @@ public class EventCardTest extends GuiUnitTest {
         Event event = new EventBuilder().build();
         EventCard eventCard = new EventCard(event, 0);
 
-        // same person, same index -> returns true
+        // same event, same index -> returns true
         EventCard copy = new EventCard(event, 0);
         assertTrue(eventCard.equals(copy));
 
@@ -50,16 +51,16 @@ public class EventCardTest extends GuiUnitTest {
         // different types -> returns false
         assertFalse(eventCard.equals(0));
 
-        // different person, same index -> returns false
+        // different event, same index -> returns false
         Event differentEvent = new EventBuilder().withHeader("differentHeader").build();
         assertFalse(eventCard.equals(new EventCard(differentEvent, 0)));
 
-        // same person, different index -> returns false
+        // same event, different index -> returns false
         assertFalse(eventCard.equals(new EventCard(event, 1)));
     }
 
     /**
-     * Asserts that {@code personCard} displays the details of {@code expectedPerson} correctly and matches
+     * Asserts that {@code eventCard} displays the details of {@code expectedEvent} correctly and matches
      * {@code expectedId}.
      */
     private void assertCardDisplay(EventCard eventCard, ReadOnlyEvent expectedEvent, int expectedId) {
@@ -70,7 +71,7 @@ public class EventCardTest extends GuiUnitTest {
         // verify id is displayed correctly
         assertEquals(Integer.toString(expectedId) + ". ", eventCardHandle.getId());
 
-        // verify person details are displayed correctly
+        // verify event details are displayed correctly
         assertCardDisplaysEvent(expectedEvent, eventCardHandle);
     }
 }

@@ -31,6 +31,7 @@ import seedu.address.model.person.exceptions.PersonNotFoundException;
 import seedu.address.model.tag.Tag;
 import seedu.address.testutil.EventBuilder;
 
+//@@author royceljh
 public class AddEventCommandTest {
 
     @Rule

@@ -56,14 +56,14 @@ public class AddressBookParserTest {
         AddCommand command = (AddCommand) parser.parseCommand(PersonUtil.getAddCommand(person));
         assertEquals(new AddCommand(person), command);
     }
-
+    //@@author royceljh
     @Test
     public void parseCommand_addEvent() throws Exception {
         Event event = new EventBuilder().build();
         AddEventCommand command = (AddEventCommand) parser.parseCommand(EventUtil.getAddEventCommand(event));
         assertEquals(new AddEventCommand(event), command);
     }
-
+    //@@author
     @Test
     public void parseCommand_clear() throws Exception {
         assertTrue(parser.parseCommand(ClearCommand.COMMAND_WORD) instanceof ClearCommand);
@@ -76,14 +76,14 @@ public class AddressBookParserTest {
                 DeleteCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
         assertEquals(new DeleteCommand(INDEX_FIRST_PERSON), command);
     }
-
+    //@@author royceljh
     @Test
     public void parseCommand_deleteEvent() throws Exception {
         DeleteEventCommand command = (DeleteEventCommand) parser.parseCommand(
                 DeleteEventCommand.COMMAND_WORD + " " + INDEX_FIRST_EVENT.getOneBased());
         assertEquals(new DeleteEventCommand(INDEX_FIRST_EVENT), command);
     }
-
+    //@@author
     @Test
     public void parseCommand_edit() throws Exception {
         Person person = new PersonBuilder().build();
@@ -92,7 +92,7 @@ public class AddressBookParserTest {
                 + INDEX_FIRST_PERSON.getOneBased() + " " + PersonUtil.getPersonDetails(person));
         assertEquals(new EditCommand(INDEX_FIRST_PERSON, descriptor), command);
     }
-
+    //@@author royceljh
     @Test
     public void parseCommand_editEvent() throws Exception {
         Event event = new EventBuilder().build();
@@ -101,7 +101,7 @@ public class AddressBookParserTest {
                 + INDEX_FIRST_EVENT.getOneBased() + " " + EventUtil.getEventDetails(event));
         assertEquals(new EditEventCommand(INDEX_FIRST_EVENT, descriptor), command);
     }
-
+    //@@author
     @Test
     public void parseCommand_exit() throws Exception {
         assertTrue(parser.parseCommand(ExitCommand.COMMAND_WORD) instanceof ExitCommand);

@@ -7,13 +7,14 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_HEADER;
 import seedu.address.logic.commands.AddEventCommand;
 import seedu.address.model.person.event.ReadOnlyEvent;
 
+//@@author royceljh
 /**
  * A utility class for Event.
  */
 public class EventUtil {
 
     /**
-     * Returns an add command string for adding the {@code person}.
+     * Returns an add command string for adding the {@code event}.
      */
     public static String getAddEventCommand(ReadOnlyEvent event) {
         return AddEventCommand.COMMAND_WORD + " " + getEventDetails(event);

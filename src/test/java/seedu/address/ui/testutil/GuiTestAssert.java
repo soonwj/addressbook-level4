@@ -39,7 +39,7 @@ public class GuiTestAssert {
         assertEquals(expectedPerson.getTags().stream().map(tag -> tag.tagName).collect(Collectors.toList()),
                 actualCard.getTags());
     }
-
+    //@@author royceljh
     /**
      * Asserts that {@code actualCard} displays the details of {@code expectedEvent}.
      */
@@ -48,7 +48,7 @@ public class GuiTestAssert {
         assertEquals(expectedEvent.getDesc().value, actualCard.getDesc());
         assertEquals(expectedEvent.getEventDate().value, actualCard.getEventDate());
     }
-
+    //@@author
     /**
      * Asserts that the list in {@code personListPanelHandle} displays the details of {@code persons} correctly and
      * in the correct order.

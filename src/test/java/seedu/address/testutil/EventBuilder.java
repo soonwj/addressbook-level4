@@ -7,6 +7,7 @@ import seedu.address.model.person.event.EventDate;
 import seedu.address.model.person.event.Header;
 import seedu.address.model.person.event.ReadOnlyEvent;
 
+//@@author royceljh
 /**
  * A utility class to help with building Event objects.
  */

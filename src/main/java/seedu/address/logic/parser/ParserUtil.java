@@ -135,6 +135,7 @@ public class ParserUtil {
         return result;
     }
 
+    //@@author royceljh
     /**
      * Parses a {@code Optional<String> Header} into an {@code Optional<Header>} if {@code header} is present.
      * See header comment of this class regarding the use of {@code Optional} parameters.
