@@ -1,7 +1,10 @@
 package seedu.address.commons.exceptions;
 
+
+//@@author philemontan
 /**
- * Created by Philemon1 on 13/10/2017.
+ * This exception is thrown to indicate an invalid Google Person object in the process of being converted by the
+ * GooglePersonConverterUtil
  */
 public class InvalidGooglePersonException extends Exception {
     /**

@@ -2,8 +2,11 @@ package seedu.address.commons.events.logic;
 
 import seedu.address.commons.events.BaseEvent;
 
+//@@author philemontan
 /**
- * Created by Philemon1 on 21/10/2017.
+ * An event fired indicating a successful GoogleCommand authentication
+ * Attributes String commandType & String authCode are used to store information on the GoogleCommand subclass
+ * firing this event, and the authentication token extracted from the URL, respectively
  */
 public class GoogleAuthenticationSuccessEvent extends BaseEvent {
     private String commandType;

@@ -16,7 +16,7 @@ import seedu.address.model.util.SampleDataUtil;
 
 
 
-
+//@@author philemontan
 /**This class provides the service of two-way conversion between Google Person(s) and Doc Person(s)
  * Both classes and their composed classes in each package have the same name;
  * Handling: seedu.address.model.person.Person will be imported, while Google classes have to be fully qualified.
@@ -217,6 +217,10 @@ public abstract class GooglePersonConverterUtil {
         if (tempNumber == null) {
             throw new InvalidGooglePersonException("DoC does not accept Google Persons with null phone");
         }
+        /**
+         * Current implementation of the Phone class cannot handle country codes. We will only handle(remove)
+         * Singaporean country codes for now, and all other non-digit characters.
+         */
         if (tempNumber.contains("+65")) {
             tempNumber = tempNumber.replace("+65", "");
         }
