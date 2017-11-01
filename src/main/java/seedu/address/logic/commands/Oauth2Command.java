@@ -8,9 +8,10 @@ import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.logic.GoogleAuthenticationSuccessEvent;
 import seedu.address.commons.events.ui.Oauth2BrowserRequestEvent;
 
-
-/**This class is the parent class for all commands requiring OAuth2 authentication using the BrowserPanel.
- * This class cannot be instantiated, as it is requires child classes with a defined COMMAND_TYPE.
+//@@author philemontan
+/**
+ * This class is the parent class for all commands requiring OAuth2 authentication using the BrowserPanel.
+ * This class is abstract, and requires child classes to define the commandType.
  * Child classes are also expected to implement the event listener: handleAuthenticationSuccessEvent()
  * Created by Philemon1 on 21/10/2017.
  */

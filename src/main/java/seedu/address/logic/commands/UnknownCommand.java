@@ -18,19 +18,26 @@ import seedu.address.logic.parser.SelectCommandParser;
 import seedu.address.logic.parser.UpdateProfilePicCommandParser;
 import seedu.address.logic.parser.exceptions.ParseException;
 
-
+//@@author philemontan
 /**
  * Created by Philemon1 on 29/10/2017.
  * This class is used to process all unknown commands, i.e user input that does not match any existing COMMAND_WORD
- * this is done by searching for COMMAND_WORDs with a levenshtein distance within the defined acceptable range,
- * in the constant ACCEPTABLE_LEVENSHTEIN_DISTANCE.
+ * this is done by searching for COMMAND_WORDs with a Levenshtein distance <= the set ACCEPTABLE_LEVENSHTEIN_DISTANCE,
+ * away from the user input command word
  *
- * The levenshtein distance calculator implementation is adapted entirely from:
+ * The Levenshtein distance calculator implementation is adapted entirely from:
  * https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Java
- * Proper credits have been given in the method:{@link #levenshteinDistance(CharSequence, CharSequence)}
+ * Full credits have been given in the method comment:{@link #levenshteinDistance(CharSequence, CharSequence)}
  */
 public class UnknownCommand extends Command {
-    //These constants can be varied to allow wider similarity detection, which will come at the cost of performance
+    /**
+     * These constants can be varied to allow wider similarity detection, which will come at the cost of performance.
+     * They should not be chosen arbitrarily. For example,
+     * the ACCEPTABLE_LEVENSHTEIN_DISTANCE should be less than the shortest system-recognized COMMAND_WORD available,
+     * although this is not a strict rule.
+     * the ACCEPTABLE_MAXIMUM_COMMAND_WORD_LENGTH should be computed by summing the longest system-recognized
+     * COMMAND_WORD available, and the set ACCEPTABLE_LEVENSHTEIN_DISTANCE, to prevent needless checking
+     */
     private static final int ACCEPTABLE_LEVENSHTEIN_DISTANCE = 2;
     private static final int ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH = 18;
 
@@ -67,10 +74,13 @@ public class UnknownCommand extends Command {
 
 
     /**
-     * This method initiates the checking of levenshtein distance, and updates the PROMPT_TO_USER accordingly.
-     * This method will only check for user-entered commandWord < 18 in length (length of the longest command in DoC
-     * : deleteProfilePic is 16 characters long)
-     * In the case of same equal levenshtein distance, suggestedCommand() will be set to the first found
+     * This method initiates the computation of Levenshtein distance between the user input commandWord, and each of
+     * the system-recognized COMMAND_WORDs, in the constant String[] ALL_COMMAND_WORDS.
+     * This method also sets the suggested command, and updates the PROMPT_TO_USER accordingly, if any matches are
+     * found.
+     * This method will only check for user-entered commandWord <= ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH in length
+     * In the case of equal Levenshtein distance, the first encountered in the order of delcaration in the
+     * String[] ALL_COMMAND_WORDS, will be used.
      * This method should always be executed before execute() method is called
      * @return true if minimum distance found is <= the ACCEPTABLE_LEVENSHTEIN_DISTANCE constant set, else false
      */
@@ -85,8 +95,9 @@ public class UnknownCommand extends Command {
         }
 
         /**
-         * Iterates through all known COMMAND_WORDs, and find the smallest possible levenshtein distance,
-         * in the case of equal levenshtein distance, the first encountered (alphabetical order), will be used
+         * Iterates through all known COMMAND_WORDs, and find the smallest possible Levenshtein distance.
+         * In the case of equal Levenshtein distance, the first encountered in the order of delcaration in the String[]
+         * ALL_COMMAND_WORDS, will be used.
          */
         for (String s: ALL_COMMAND_WORDS) {
             tempDistance = levenshteinDistance(s, commandWord);
@@ -109,7 +120,7 @@ public class UnknownCommand extends Command {
 
     /**
      * This method checks for an invalid commandWord length
-     * @return true if commandWord.length is more than 17
+     * @return true if commandWord.length is more than the ACCEPTABLE_MAXIMUM_COMMAND_WORD_LENGTH
      * @throws ParseException if user input command length is 0
      */
     private boolean invalidLengthDetected () {
@@ -123,6 +134,14 @@ public class UnknownCommand extends Command {
         return false;
     }
 
+    //@@author philemontan-reused
+    /**
+     * This switch is adapted from the original AddressBookParser.
+     * If a match is found, but its parameters are invalid, we will not prompt the user for a response, but instead
+     * with a formatting alert, through the exception thrown by the existings command parsers.
+     * @param closestCommandWord
+     * @throws ParseException
+     */
     private void setSuggestedCommand(String closestCommandWord) throws ParseException {
         switch (closestCommandWord) {
         case AddCommand.COMMAND_WORD:
@@ -221,7 +240,7 @@ public class UnknownCommand extends Command {
         }
     }
 
-
+    //@@author philemontan-reused
     /**
      * Levenshtein distance algorithm implementation taken from:
      * https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Java,
