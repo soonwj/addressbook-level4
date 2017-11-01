@@ -559,7 +559,8 @@ e.g. `deleteProfilePic 3`
 * *Edit* : `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]...` +
 e.g. `edit 2 n/James Lee e/jameslee@example.com`
 * *EditE* : `editE INDEX [h/HEADER] [de/DESCRIPTION] [d/DATE]` +
-e.g. `editE 2 h/Party d/2018-01-12`
+e.g. `editE 2 h/Party d/2018-01-12` +
+* *Export* : `export` +
 * *Find* : `find KEYWORD [MORE_KEYWORDS]` +
 e.g. `find James Jake`
 * *Help* : `help`
