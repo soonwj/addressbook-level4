@@ -16,6 +16,7 @@ public class NameContainsKeywordsPredicate implements Predicate<ReadOnlyPerson> 
         this.keywords = keywords;
     }
 
+    //@@author sidhmads
     @Override
     public boolean test(ReadOnlyPerson person) {
         boolean validNames =  keywords.stream()
@@ -33,6 +34,7 @@ public class NameContainsKeywordsPredicate implements Predicate<ReadOnlyPerson> 
         }
         return validTags;
     }
+    //@@author
 
     @Override
     public boolean equals(Object other) {
