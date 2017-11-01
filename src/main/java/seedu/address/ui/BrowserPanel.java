@@ -37,8 +37,10 @@ public class BrowserPanel extends UiPart<Region> {
     private static final String FXML = "BrowserPanel.fxml";
 
     private final Logger logger = LogsCenter.getLogger(this.getClass());
+    //@@author philemontan
     private String currentUrl = "";
     private ChangeListener currentUrlListener;
+    //@@author
 
     @FXML
     private WebView browser;
@@ -99,6 +101,12 @@ public class BrowserPanel extends UiPart<Region> {
         loadPersonPage(event.getNewSelection().person);
     }
 
+    //@@author philemontan
+    /**
+     * Handles an Oauth2BrowserRequestEvent sent by the execution of a command requiring the authentication against
+     * the OAuth2 protocol
+     * @param event
+     */
     @Subscribe
     private void handleOauth2BrowserRequestEvent(Oauth2BrowserRequestEvent event) {
         loadPage(event.getRequestUrl());
@@ -116,6 +124,7 @@ public class BrowserPanel extends UiPart<Region> {
             currentUrlListener = null;
         }
     }
+
 
     /**
      * Implements the functional interface ChangeListener. Lambda not used, due to the need to reset the url listener
@@ -152,6 +161,7 @@ public class BrowserPanel extends UiPart<Region> {
     private void handleGoogleCOmmandCompleteEvent(GoogleCommandCompleteEvent event) {
         loadPage(event.getRedirectUrl());
     }
+    //@@author
 
     //@@author sidhmads
     /**

@@ -6,7 +6,10 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
-/**This class is the parent class for all commands calling Google's APIs
+//@@author philemontan
+/**
+ * This class inherits from the Oauth2Command class and is the parent class for all commands making calls to
+ * Google's APIs.
  * Created by Philemon1 on 21/10/2017.
  */
 public abstract class GoogleCommand extends Oauth2Command {

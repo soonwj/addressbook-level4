@@ -4,8 +4,10 @@ import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.BaseEvent;
 import seedu.address.commons.events.ui.NewResultAvailableEvent;
 
+//@@author philemontan
 /**
- * Created by Philemon1 on 22/10/2017.
+ * An event fired indicating a GoogleCommand instance has successfully completed. Attributes redirectUrl and
+ * commandType are provided by the firer, for identifying the the GoogleCommand subclass of the instance.
  */
 public class GoogleCommandCompleteEvent extends BaseEvent {
     private String redirectUrl;

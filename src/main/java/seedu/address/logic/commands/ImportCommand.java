@@ -19,7 +19,9 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 
-/**Purpose: Imports contacts from Google Contacts, fulfilling Google's OAuth2 protocol.
+//@@author philemontan
+/**
+ * Purpose: Imports contacts from Google Contacts, fulfilling Google's OAuth2 protocol.
  * Limit of contacts retrieved set at : 1000
  * Created by Philemon1 on 11/10/2017.
  */

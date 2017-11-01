@@ -4,8 +4,9 @@ import java.io.IOException;
 
 import seedu.address.commons.events.BaseEvent;
 
-/**This event is used by all Oauth2Command to trigger the browser authentication logic
- * Created by Philemon1 on 21/10/2017.
+//@@author philemontan
+/**
+ * This event is used by all Oauth2Command implementations to trigger the BrowserPanel authentication process
  */
 public class Oauth2BrowserRequestEvent extends BaseEvent {
     public static final String INVALID_INPUT_MESSAGE = "This event must be created with a COMMAND_TYPE";

@@ -21,7 +21,9 @@ import seedu.address.commons.util.GooglePersonConverterUtil;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.ReadOnlyPerson;
 
-/**Purpose: Exports contacts to Google Contacts, fulfilling Google's OAuth2 protocol.
+//@@author philemontan
+/**
+ * Purpose: Exports DoC's contacts to Google Contacts, with the OAuth2 protocol against the Google People API.
  * Inherits from GoogleCommand & Oauth2Command
  */
 public class ExportCommand extends GoogleCommand {

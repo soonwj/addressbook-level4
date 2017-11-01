@@ -66,6 +66,7 @@ public class AddressBookParser {
         final String commandWord = matcher.group("commandWord");
         final String arguments = matcher.group("arguments");
 
+        //@@author philemontan
         /**
          * Executes if the system has prompted the user for a typo-correction suggestion previously,
          * If the user accepts the suggestion with a response of "yes" or "y", we will execute the generated suggested
@@ -86,6 +87,7 @@ public class AddressBookParser {
                         "Suggested command is discarded", false));
             }
         }
+        //@@author
 
         switch (commandWord) {
 
@@ -158,6 +160,7 @@ public class AddressBookParser {
         case SortCommand.COMMAND_WORD:
             return new SortCommand();
 
+        //@@author philemontan
         default:
             unknownCommand = new UnknownCommand(commandWord, arguments);
             /**
