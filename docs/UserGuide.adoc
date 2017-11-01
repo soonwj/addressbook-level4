@@ -580,5 +580,19 @@ e.g.`select 2`
 e.g. `updateProfilePic 1 u/file:///C:/Users/Bobby/image.jpg` +
 e.g. `updateProfilePic 2 u/http://www.google.com/images/image.png` +
 
+= Features coming in v2.0
+
+DoC v2.0 is capable of delivering these features:
+
+* Multithreading - execute multiple threads simultaneously, to maximise utilisation of CPU time.
+* Tag one or more contacts to every event.
+* Add a location to an event.
+* A pop-up window will appear after starting DoC if there is an event that day.
+* CLI will autocomplete the user command when the user start to key in a command in the command box.
+* Improve the user interface of DoC.
+* Access to DoC using mobile phone.
+* Extract a list of contacts into a folder.
+* Send messages to contacts from DoC.
+* Option to type abbreviations of a command.
 
 
