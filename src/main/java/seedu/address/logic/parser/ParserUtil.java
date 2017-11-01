@@ -105,6 +105,7 @@ public class ParserUtil {
         return email.isPresent() ? Optional.of(new Email(email.get())) : Optional.empty();
     }
 
+    //@@author soonwj
     /**
      * Parses a {@code Optional<String> imageURL} into an {@code Optional<ProfilePic>} if {@code imageURL} is present.
      * See header comment of this class regarding the use of {@code Optional} parameters.
@@ -113,6 +114,7 @@ public class ParserUtil {
         requireNonNull(imageUrl);
         return imageUrl.isPresent() ? Optional.of(new ProfilePic(imageUrl.get())) : Optional.empty();
     }
+    //@@author
 
     /**
      * Parses {@code Collection<String> tags} into a {@code Set<Tag>}.

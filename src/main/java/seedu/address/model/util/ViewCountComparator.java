@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 import seedu.address.model.person.ReadOnlyPerson;
 
+//@@author soonwj
 /**
  * Compares the view counts of 2 ReadOnlyPersons
  */

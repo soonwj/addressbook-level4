@@ -25,6 +25,10 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.ProfilePic;
 import seedu.address.model.person.ReadOnlyPerson;
 
+//@@author soonwj
+/**
+ * Contains integration tests (interaction with the Model) and unit tests for UpdateProfilePicCommand.
+ */
 public class UpdateProfilePicCommandTest {
 
     private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());

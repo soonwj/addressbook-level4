@@ -22,6 +22,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.ProfilePic;
 import seedu.address.model.person.ReadOnlyPerson;
 
+//@@author soonwj
 /**
  * Contains integration tests (interaction with the Model) and unit tests for {@code DeleteProfilePicCommand}.
  */

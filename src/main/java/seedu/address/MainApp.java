@@ -211,6 +211,7 @@ public class MainApp extends Application {
         System.exit(0);
     }
 
+    //@@author soonwj
     @Subscribe
     private void handlePersonPanelSelectionChangedEvent(PersonPanelSelectionChangedEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
@@ -226,6 +227,7 @@ public class MainApp extends Application {
             }
         }
     }
+    //@@author
 
     @Subscribe
     public void handleExitAppRequestEvent(ExitAppRequestEvent event) {
