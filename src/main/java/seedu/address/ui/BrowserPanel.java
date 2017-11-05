@@ -1,6 +1,7 @@
 package seedu.address.ui;
 
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.common.eventbus.Subscribe;
@@ -30,7 +31,8 @@ import seedu.address.model.person.ReadOnlyPerson;
 public class BrowserPanel extends UiPart<Region> {
 
     public static final String DEFAULT_PAGE = "default.html";
-    public static final String GOOGLE_MAPS_URL = "https://www.google.com.sg/maps/place/";
+    public static final String GOOGLE_MAPS_URL_PLACE = "https://www.google.com.sg/maps/place/";
+    public static final String GOOGLE_MAPS_URL_DIR = "https://www.google.com.sg/maps/dir/";
     public static final String GOOGLE_SEARCH_URL_PREFIX = "https://www.google.com.sg/search?safe=off&q=";
     public static final String GOOGLE_SEARCH_URL_SUFFIX = "&cad=h";
 
@@ -64,15 +66,21 @@ public class BrowserPanel extends UiPart<Region> {
     /**
      * Loads Google Maps.
      */
-    private void loadPersonLocation(ReadOnlyPerson person) {
-        String add = person.getAddress().toString();
-        String[] address = add.split("\\s");
-        String location = "";
-        for (String s: address) {
-            location += s;
-            location += "+";
+    private void loadPersonLocation(List<ReadOnlyPerson> person) {
+        String url = (person.size() == 1) ? GOOGLE_MAPS_URL_PLACE : GOOGLE_MAPS_URL_DIR;
+        String result = "";
+        for (ReadOnlyPerson ppl: person) {
+            String add = ppl.getAddress().toString();
+            String[] address = add.split("\\s");
+            for (String s: address) {
+                if (!s.contains("#")) {
+                    result += s;
+                    result += "+";
+                }
+            }
+            result += "/";
         }
-        loadPage(GOOGLE_MAPS_URL + location);
+        loadPage(url + result);
     }
     //@@author
 
@@ -171,8 +179,8 @@ public class BrowserPanel extends UiPart<Region> {
     @Subscribe
     private void handleFindLocationRequestEvent(FindLocationRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event,
-                "Getting location of " + event.targetPerson.getName().fullName));
-        loadPersonLocation(event.targetPerson);
+                "Getting location"));
+        loadPersonLocation(event.targetPersons);
     }
     //@@author
 }

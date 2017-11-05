@@ -686,26 +686,27 @@ Can be emailed from the browser panel itself. +
 **Cons:** +
 The UI for GMail is very poor on `JavaFX WebView`.
 
-=== Location
+=== Map
 
 ==== Overview
 
 image::Location.png[width="800"]
 _Figure 4.5.1: Location Sequence Diagram_
 
-As seen in the above diagram, an event based approach is used to display the location of the contact.
+As seen in the above diagram, an event based approach is used to display information on the Browser Panel.
 
 [NOTE]
 Note that the `LocationCommandParser` will raise a `ParseException` if the `INDEX` is not stated.
 
 Once the Address book parser identifies the user command as a valid location command, it will make use of the Google Event bus to transmit the event.
 The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function.
-This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested contact.
+If the there is only one INDEX, This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested contact.
+If there would be more than one INDEX present, then the direction from one place to another will be shown by the Google Maps.
 This rendering of Google Maps is done via calling the URL.
 
 ==== Design Considerations
 
-**Aspect:** Implementation of `location` +
+**Aspect:** Implementation of `map` +
 
 **Chosen Implementation:** +
 Add a new class that extends `Command` that uses the Google Maps URL. +

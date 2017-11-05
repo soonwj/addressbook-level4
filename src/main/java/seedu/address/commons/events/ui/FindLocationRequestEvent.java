@@ -1,5 +1,7 @@
 package seedu.address.commons.events.ui;
 
+import java.util.List;
+
 import seedu.address.commons.events.BaseEvent;
 import seedu.address.model.person.ReadOnlyPerson;
 
@@ -9,10 +11,10 @@ import seedu.address.model.person.ReadOnlyPerson;
 //@@author sidhmads
 public class FindLocationRequestEvent extends BaseEvent {
 
-    public final ReadOnlyPerson targetPerson;
+    public final List<ReadOnlyPerson> targetPersons;
 
-    public FindLocationRequestEvent(ReadOnlyPerson targetPerson) {
-        this.targetPerson = targetPerson;
+    public FindLocationRequestEvent(List<ReadOnlyPerson> targetPersons) {
+        this.targetPersons = targetPersons;
     }
 
     @Override

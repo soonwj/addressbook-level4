@@ -9,6 +9,9 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 import seedu.address.commons.core.Messages;
@@ -31,13 +34,16 @@ public class LocationCommandTest {
     @Test
     public void execute_validIndexUnfilteredList_success() throws Exception {
         ReadOnlyPerson personToFind = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        LocationCommand locationCommand = prepareCommand(INDEX_FIRST_PERSON);
+        List<String> list = new ArrayList<>();
+        list.add("1");
+        LocationCommand locationCommand = prepareCommand(list);
 
-        String expectedMessage = String.format(LocationCommand.MESSAGE_FIND_LOCATION_SUCCESS,
-                personToFind.getName().fullName, personToFind.getAddress());
+        String expectedMessage = String.format(LocationCommand.MESSAGE_FIND_LOCATION_SUCCESS);
 
         ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        expectedModel.findLocation(personToFind);
+        List<ReadOnlyPerson> person = new ArrayList<>();
+        person.add(personToFind);
+        expectedModel.findLocation(person);
 
         assertCommandSuccess(locationCommand, model, expectedMessage, expectedModel);
     }
@@ -45,7 +51,9 @@ public class LocationCommandTest {
     @Test
     public void execute_invalidIndexUnfilteredList_throwsCommandException() throws Exception {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
-        LocationCommand locationCommand = prepareCommand(outOfBoundIndex);
+        List<String> list = new ArrayList<>();
+        list.add(outOfBoundIndex.toString());
+        LocationCommand locationCommand = prepareCommand(list);
 
         assertCommandFailure(locationCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
     }
@@ -55,14 +63,17 @@ public class LocationCommandTest {
         showFirstPersonOnly(model);
 
         ReadOnlyPerson personToFind = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        LocationCommand locationCommand = prepareCommand(INDEX_FIRST_PERSON);
+        List<String> list = new ArrayList<>();
+        list.add("1");
+        LocationCommand locationCommand = prepareCommand(list);
 
-        String expectedMessage = String.format(LocationCommand.MESSAGE_FIND_LOCATION_SUCCESS,
-                personToFind.getName().fullName, personToFind.getAddress());
+        String expectedMessage = String.format(LocationCommand.MESSAGE_FIND_LOCATION_SUCCESS);
 
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
         showFirstPersonOnly(expectedModel);
-        expectedModel.findLocation(personToFind);
+        List<ReadOnlyPerson> person = new ArrayList<>();
+        person.add(personToFind);
+        expectedModel.findLocation(person);
 
         assertCommandSuccess(locationCommand, model, expectedMessage, expectedModel);
     }
@@ -75,21 +86,29 @@ public class LocationCommandTest {
         // ensures that outOfBoundIndex is still in bounds of address book list
         assertTrue(outOfBoundIndex.getZeroBased() < model.getAddressBook().getPersonList().size());
 
-        LocationCommand locationCommand = prepareCommand(outOfBoundIndex);
+        List<String> list = new ArrayList<>();
+        list.add(outOfBoundIndex.toString());
+        LocationCommand locationCommand = prepareCommand(list);
 
         assertCommandFailure(locationCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
     }
 
     @Test
     public void equals() {
-        LocationCommand findFirstCommand = new LocationCommand(INDEX_FIRST_PERSON);
-        LocationCommand findSecondCommand = new LocationCommand(INDEX_SECOND_PERSON);
+        List<String> first = new ArrayList<>();
+        first.add("1");
+        LocationCommand findFirstCommand = new LocationCommand(first);
+        List<String> second = new ArrayList<>();
+        second.add("2");
+        LocationCommand findSecondCommand = new LocationCommand(second);
 
         // same object -> returns true
         assertTrue(findFirstCommand.equals(findFirstCommand));
 
         // same values -> returns true
-        LocationCommand findFirstCommandCopy = new LocationCommand(INDEX_FIRST_PERSON);
+        List<String> firstCopy = new ArrayList<>();
+        firstCopy.add("1");
+        LocationCommand findFirstCommandCopy = new LocationCommand(firstCopy);
         assertTrue(findFirstCommand.equals(findFirstCommandCopy));
 
         // different types -> returns false
@@ -105,18 +124,9 @@ public class LocationCommandTest {
     /**
      * Returns a {@code LocationCommand} with the parameter {@code index}.
      */
-    private LocationCommand prepareCommand(Index index) {
+    private LocationCommand prepareCommand(List<String> index) {
         LocationCommand locationCommand = new LocationCommand(index);
         locationCommand.setData(model, new CommandHistory(), new UndoRedoStack());
         return locationCommand;
-    }
-
-    /**
-     * Updates {@code model}'s filtered list to show no one.
-     */
-    private void showNoPerson(Model model) {
-        model.updateFilteredPersonList(p -> false);
-
-        assert model.getFilteredPersonList().isEmpty();
     }
 }
