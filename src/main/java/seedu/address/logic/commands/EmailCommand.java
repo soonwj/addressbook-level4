@@ -69,7 +69,6 @@ public class EmailCommand extends Command {
 
     @Override
     public CommandResult execute() {
-        System.out.println(this.body);
         String emailTo = model.updateEmailRecipient(predicate);
         try {
             sendEmail(emailTo);
