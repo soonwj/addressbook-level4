@@ -375,7 +375,7 @@ Opens the default emailing client and adds Adam to the `to` field and has the su
 === Locating a contact : `map`
 
 Shows the address of the contact or the directions from one location to another in Google Maps. +
-If `map` is followed by only one INDEX, then the address of the contact in that particular index will be shown. + 
+If `map` is followed by only one INDEX, then the address of the contact in that particular index will be shown. +
 If `map` is followed by more than one INDEX, then the directions from one place to another will be shown. +
 Format: `map INDEXES`
 
