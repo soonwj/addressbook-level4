@@ -36,7 +36,9 @@ public class EmailCommandParser implements Parser<EmailCommand> {
 
             String[] toList = ParserUtil.parseEmailToCommand(argMultimap.getAllValues(PREFIX_EMAIL_TO));
             String subject = String.join("", argMultimap.getAllValues(PREFIX_EMAIL_SUBJECT)).replace(" ", "%20");
-            String body = String.join("", argMultimap.getAllValues(PREFIX_EMAIL_BODY)).replace(" ", "%20");
+            String body = String.join("", argMultimap.getAllValues(PREFIX_EMAIL_BODY)).replace(" ",
+                    "%20").replace("\"", "\'");
+
             return new EmailCommand(new NameContainsKeywordsPredicate(Arrays.asList(toList)), subject, body);
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
