@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -190,7 +191,7 @@ public class AddEventCommandTest {
 
         //@@author sidhmads
         @Override
-        public void findLocation(ReadOnlyPerson person) {
+        public void findLocation(List<ReadOnlyPerson> person) {
             fail("This method should not be called.");
         }
         //@@author

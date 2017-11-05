@@ -2,8 +2,8 @@ package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
-import seedu.address.commons.core.index.Index;
-import seedu.address.commons.exceptions.IllegalValueException;
+import java.util.Arrays;
+
 import seedu.address.logic.commands.LocationCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -19,13 +19,14 @@ public class LocationCommandParser implements Parser<LocationCommand> {
      * @throws ParseException if the user input does not conform the expected format
      */
     public LocationCommand parse(String args) throws ParseException {
-        try {
-            Index index = ParserUtil.parseIndex(args);
-            return new LocationCommand(index);
-        } catch (IllegalValueException ive) {
+        String trimmedArgs = args.trim();
+        if (trimmedArgs.isEmpty()) {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, LocationCommand.MESSAGE_USAGE));
         }
+        String[] indexKeywords = trimmedArgs.split("\\s+");
+        return new LocationCommand(Arrays.asList(indexKeywords));
+
     }
 
 }

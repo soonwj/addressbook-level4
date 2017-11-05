@@ -1,5 +1,6 @@
 package seedu.address.model;
 
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -69,7 +70,7 @@ public interface Model {
     //@@author
 
     //@@author sidhmads
-    void findLocation(ReadOnlyPerson person) throws PersonNotFoundException;
+    void findLocation(List<ReadOnlyPerson> person) throws PersonNotFoundException;
     //@@author
 
     //@@author soonwj

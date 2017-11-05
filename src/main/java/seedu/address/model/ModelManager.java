@@ -153,7 +153,10 @@ public class ModelManager extends ComponentManager implements Model {
 
     //@@author sidhmads
     @Override
-    public void findLocation(ReadOnlyPerson person) throws PersonNotFoundException {
+    public void findLocation(List<ReadOnlyPerson> person) throws PersonNotFoundException {
+        if (person.size() == 0) {
+            throw new PersonNotFoundException();
+        }
         raise(new FindLocationRequestEvent(person));
     }
     //@@author
