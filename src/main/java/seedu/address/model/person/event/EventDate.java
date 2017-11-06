@@ -7,6 +7,7 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 
@@ -33,7 +34,8 @@ public class EventDate {
      */
     public EventDate(String eventDate) throws IllegalValueException {
         requireNonNull(eventDate);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd")
+                .withResolverStyle(ResolverStyle.STRICT);
         try {
             eventLocalDate = LocalDate.parse(eventDate, formatter);
         } catch (DateTimeParseException ex) {
