@@ -499,7 +499,7 @@ System have to check through the list to check if the contact's name exist in th
 ==== Overview
 A command structure has been set-up to fulfil all commands requiring an authentication process against the OAuth2 protocol.
 DoC currently only has two such commands, namely, `import` and `export`, which require this mechanism. Thus, it is noteworthy
-that this implementation was built for the express purpose of future extension.
+that this implementation has been built for the express purpose of future extension.
 
 An exciting possibility is an integration with Facebook, for automated
 retrieval of extensive contact and event information. For example, we can populate a users' contact list on DoC, with his
@@ -584,7 +584,7 @@ later, under design considerations.
 
 ===== HTTP request process
 With the `GoogleCredential` object generated at the end of the **authentication process**, we can now send HTTP requests
-to the Google People API easily using Google's Java API client, specifically it's `PeopleService` class. Its documentation can be found in the following url: +
+to the Google People API easily using Google's Java API client, specifically its' `PeopleService` class. Its documentation can be found in the following url: +
 https://developers.google.com/resources/api-libraries/documentation/people/v1/java/latest/com/google/api/services/people/v1/PeopleService.html
 
 
@@ -995,10 +995,10 @@ for the purpose of this mechanism.
 **Aspect:** Choice of acceptable Levenshtein distance +
 
 **Chosen implementation:** +
-The maximum acceptable Levenshtein distance is set to 2, as the shortest command in DoC is only 3 characters long. +
+Set the maximum acceptable Levenshtein distance to 1 less than the length of the shortest command in DoC, which is currently 3. +
 **Pros:** +
-The similarity matching will be more likely to yield relevant result, than if the Levenshtein distance were to be set at 3 or higher.
-For example, the Levenshtein distance between 'add' and 'hey' is 3. +
+The similarity matching will be more likely to yield relevant result, than if the Levenshtein distance were to be set at the length of the shortest command in DoC or higher.
+For example, the current shortest command in DoC is 'add' with a length of 3. If were to set the maximum acceptable Levenshtein distance to 3, any random 3 letter sequence would be matched successfully. +
 **Cons:** +
 Typos on longer commands have a higher propensity to produce a string with a Levenshtein distance of more than 2.
 These cannot be detected with this implementation. +
