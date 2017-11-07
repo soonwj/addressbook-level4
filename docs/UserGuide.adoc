@@ -120,7 +120,7 @@ Examples:
 
 image::addpic.png[width="700"]
 
-As shown in the image above, after entering the `add` command in the example, the newly added contact will appear in the `Contacts panel`
+As shown in the image above, after entering the `add` command in the example, the newly added contact will appear in the `Contacts panel`.
 
 <<<
 
@@ -167,7 +167,6 @@ Format: `removeTag rm/INDEX t/TAG`
 * The search is case sensitive. e.g `family` will match `family`.
 * `rm/INDEX` is not compulsory. If not given, it will remove the tag from all contacts.
 * If `rm/INDEX` is stated, tags from those indexes in the current list will be removed.
-* Only tag is searched.
 * Only full words will be matched e.g. `Family` will not match `Families`.
 * Contacts having that tag will be returned.
 ====
@@ -198,17 +197,17 @@ Format: `updateProfilePic INDEX [u/imageUrl]`
 
 * Updates the profile picture of the contact at the specified `INDEX`. The index refers to the index number shown in the last contact listing. The index *must be a positive integer* 1, 2, 3, ...
 * The index must be valid.
-* The `imageUrl` must be a valid one. It should start with `file:///` for images stored locally
-* Or a valid web URL for an image stored on the internet
+* The `imageUrl` must be a valid one. It should start with `file:///` for images stored locally, or a valid web URL for an image stored on the internet.
 * If the image used as a profile picture of a particular contact gets moved or deleted, the profile picture of that contact will be changed back to the default one.
 ====
+
 
 Examples:
 
 * `updateProfilePic 1 u/file:///C:/Users/Bobby/image.jpg` +
-Updates the profile picture of the 1st contact to be the image at `file:///C:/Users/Bobby/image.jpg` +
+Updates the profile picture of the 1st contact to be the image at `file:///C:/Users/Bobby/image.jpg`. +
 * `updateProfilePic 2 u/http://www.google.com/images/image.png` +
-Updates the profile picture of the 2nd contact to be the image at `http://www.google.com/images/image.png` +
+Updates the profile picture of the 2nd contact to be the image at `http://www.google.com/images/image.png`. +
 
 <<<
 
@@ -232,7 +231,6 @@ Format: `deleteProfilePic INDEX`
 * Deletes the profile picture of the contact at the specified `INDEX`.
 * The index refers to the index number shown in the most recent listing.
 * The index *must be a positive integer* 1, 2, 3, ...
-* The index must be valid as well.
 ====
 
 Examples:
@@ -299,9 +297,9 @@ Format: `import`
 ====
 
 **Steps** +
-**1.** Enter the `import` command, and wait for the `Browser panel` to navigate to Google's login page +
-**2.** Log in to your Google account on the `Browser panel` +
-**3.** Grant permission to DoC to access your contacts +
+**1.** Enter the `import` command, and wait for the `Browser panel` to navigate to Google's login page. +
+**2.** Log in to your Google account on the `Browser panel`. +
+**3.** Grant permission to DoC to access your contacts. +
 
 **Visual guide**
 
@@ -324,9 +322,9 @@ This feature requires an internet connection.
 ====
 
 **Steps** +
-**1.** Enter the `export` command, and wait for the 'Browser panel' to navigate to Google's login page+
-**2.** Log in to your Google account on the `Browser panel` +
-**3.** Grant permission to DoC to access your contacts +
+**1.** Enter the `export` command, and wait for the 'Browser panel' to navigate to Google's login page. +
+**2.** Log in to your Google account on the `Browser panel`. +
+**3.** Grant permission to DoC to access your contacts. +
 
 **Visual guide**
 
@@ -340,7 +338,6 @@ red boxes in the images above.
 ==== Finding contacts by name and tags: `find`
 Lists all contacts whose name or tags matches any of the given search terms. +
 Format: `find TERM1 [MORE_TERMS]`
-
 
 [TIP]
 ====
@@ -362,7 +359,7 @@ part of name, matching any search term.
 
 ==== Listing all contacts : `list`
 
-Display a list of all contacts currently stored in DoC. +
+Displays a list of all contacts currently stored in DoC. +
 Format: `list`
 
 **Visual guide**
@@ -392,6 +389,7 @@ As demonstrated by the visual guide, you can first enter the command `list` to d
 Emails an existing contact/ a group in the DoC. +
 Format: `email [to/TO] [subject/SUBJECT] [body/BODY]`
 
+
 [TIP]
 ====
 *Quick notes:*
@@ -404,11 +402,11 @@ Format: `email [to/TO] [subject/SUBJECT] [body/BODY]`
 * This feature requires an internet connection.
 ====
 
-Examples:
+Example:
 
-* `email to/friends subject/SUBJECT body/BODY` +
+`email to/friends subject/SUBJECT body/BODY` +
 Opens the default emailing client and adds all the contacts who has the tag `friends` into the `to` area,
-adds the `subject` as `SUBJECT` and `body` as `BODY` .
+adds the `subject` as `SUBJECT` and `body` as `BODY`.
 
 <<<
 
@@ -436,9 +434,9 @@ Format: `map INDEXES`
 * Shows the address of the contact at the specified `INDEX`. The index refers to the index number shown in the last contact listing. The index *must be a positive integer* 1, 2, 3, ...
 ====
 
-Examples:
+Example:
 
-* `map 1` +
+`map 1` +
 
 **Visual guide**
 
@@ -463,9 +461,11 @@ Format: `addE h/HEADER de/DESCRIPTION d/DATE`
 The date must a valid date with format: year-month-day.
 ====
 
-Example:
+
+Examples:
 
 * `addE h/Meeting de/Business meeting at in the afternoon at 2pm d/2017-11-20`
+* `addE h/Birthday de/John Doe's 21st bd celebration d/2018-02-05`
 
 <<<
 
@@ -474,7 +474,7 @@ Example:
 image::addEpic.png[width="700"]
 
 Your newly created event will be listed in the event panel and will be sorted based on its date. Thus, the earliest event will be displayed at the top of the panel.
-As shown in the guide above, yellow panel indicates an event upcoming in 2 or less days, Green panel indicates an event that have yet to come (more than 2 days) and Red panel indicates that the event is already overdue.
+As shown in the guide above, the yellow panel indicates that an event upcoming in 2 or less days, the green panel indicates that an event that have yet to come (more than 2 days) and the red panel indicates that the event is already overdue.
 
 <<<
 
@@ -489,20 +489,20 @@ Format: `editE INDEX [h/HEADER] [de/DESCRIPTION] [d/DATE]`
 
 * Edits the event at the specified `INDEX`. The index refers to the index number shown in the last event listing. The index *must be a positive integer* 1, 2, 3, ...
 * At least one of the optional fields must be provided.
-* The date must a valid date.
+* The date must a valid date with the format: year-month-day (yyyy-MM-dd).
 * Existing values will be updated to the input values.
 ====
 
-Examples:
+Example:
 
-* `editE 3 h/Birthday party d/2017-10-30` +
+`editE 3 h/Birthday party d/2017-10-30` +
 Edits the header and date of the 1st event to be `Birthday party` and `2017-10-30` respectively.
 
 **Visual guide**
 
 image::editEpic.png[width="700"]
 
-According to the image above, if you want to edit an `Event` at index 3 by changing the header and date, the result event will automatically sort itself in the `Events panel` based on the new date.
+According to the image above, if you want to edit an `Event` at index 3 by changing the header and date, the edited event will be automatically sorted in the `Events panel` based on the new date.
 
 <<<
 
@@ -520,9 +520,9 @@ Format: `deleteE INDEX`
 * The index *must be a positive integer* 1, 2, 3, ...
 ====
 
-Examples:
+Example:
 
-* `deleteE 3` +
+`deleteE 3` +
 Deletes the 3rd event in DoC.
 
 **Visual guide**
@@ -549,11 +549,11 @@ Format: `help`
 Displays the history of commands you have entered, starting from the most recent one.  +
 This feature can be accessed in two different ways: +
 
-* Display the history of commands on the status bar +
+* Displays the history of commands on the status bar. +
 Format: `history` +
 
-* Paste previous commands directly to the command box +
-Format: the kbd:[&uarr;] and kbd:[&darr;] arrows will paste the previous and next input respectively into the command box
+* Paste previous commands directly to the command box. +
+Format: the kbd:[&uarr;] and kbd:[&darr;] arrows will paste the previous and next input respectively into the command box.
 
 ==== Undoing previous command : `undo`
 
@@ -625,6 +625,7 @@ e.g. `deleteProfilePic 3`
 e.g. `edit 2 n/James Lee e/jameslee@example.com`
 * *EditE* : `editE INDEX [h/HEADER] [de/DESCRIPTION] [d/DATE]` +
 e.g. `editE 2 h/Party d/2018-01-12` +
+* *Exit* : `exit` +
 * *Export* : `export` +
 * *Find* : `find KEYWORD [MORE_KEYWORDS]` +
 e.g. `find James Jake`
