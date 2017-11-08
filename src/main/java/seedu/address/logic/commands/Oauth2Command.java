@@ -22,12 +22,14 @@ public abstract class Oauth2Command extends Command {
     private boolean commandCompleted;
 
     protected Oauth2Command(String inputType)  {
-        if (inputType == null || inputType.charAt(inputType.length() - 1) == '_') {
-            assert true : "Child classes of Oauth2Command must provide a valid command type!";
+        if (!inputTypeValid(inputType)) {
+            assert true : "Child classes of Oauth2Command must provide a valid command type in the format:"
+                   + " SERVICEPROVIDER_functionality";
         }
         commandType = inputType;
         commandCompleted = false;
     }
+
     protected Oauth2Command() {
         this(null);
     }
@@ -68,4 +70,8 @@ public abstract class Oauth2Command extends Command {
      * @return the authentication URL, based on the scope required of the command
      */
     public abstract String getAuthenticationUrl ();
+
+    private boolean inputTypeValid(String inputType) {
+        return inputType != null && inputType.charAt(inputType.length() - 1) != '_';
+    }
 }

@@ -6,8 +6,6 @@ import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import seedu.address.commons.core.EventsCenter;
-import seedu.address.commons.events.ui.NewResultAvailableEvent;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.AddEventCommand;
 import seedu.address.logic.commands.ClearCommand;
@@ -75,16 +73,12 @@ public class AddressBookParser {
          * switch
          */
         if (correctionPrompted) {
-            if (commandWord.equals("yes") || commandWord.equals("y")) {
-                Command tempCommand = unknownCommand.getSuggestedCommand();
-                unknownCommand = null;
-                correctionPrompted = false;
-                return tempCommand;
+            if (userAcceptsSuggestion(commandWord)) {
+                Command suggestedCommand = unknownCommand.getSuggestedCommand();
+                resetCorrectionChecker();
+                return suggestedCommand;
             } else {
-                unknownCommand = null;
-                correctionPrompted = false;
-                EventsCenter.getInstance().post(new NewResultAvailableEvent(
-                        "Suggested command is discarded", false));
+                resetCorrectionChecker();
             }
         }
         //@@author
@@ -175,6 +169,18 @@ public class AddressBookParser {
             }
             throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
         }
+        //@@author
     }
+
+    //@@author philemontan
+    private boolean userAcceptsSuggestion(String commandWord) {
+        return commandWord.equals("yes") || commandWord.equals("y");
+    }
+
+    private void resetCorrectionChecker() {
+        unknownCommand = null;
+        correctionPrompted = false;
+    }
+    //@@author
 
 }
