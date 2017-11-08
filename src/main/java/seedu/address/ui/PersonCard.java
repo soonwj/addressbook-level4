@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import seedu.address.model.person.ProfilePic;
 import seedu.address.model.person.ReadOnlyPerson;
 
 
@@ -105,8 +106,16 @@ public class PersonCard extends UiPart<Region> {
     }
 
     //@@author soonwj
+    /**
+     * Initializes the profile picture to be displayed by the PersonCard
+     * @param person The person whose information is to be displayed in the PersonCard
+     */
     private void initProfilePic(ReadOnlyPerson person) {
-        imageView.setImage(new Image(person.getProfilePic().toString(), 128, 128, true, false));
+        String url = person.getProfilePic().toString();
+        if (!ProfilePic.isValidUrl(url)) {
+            url = ProfilePic.DEFAULT_URL;
+        }
+        imageView.setImage(new Image(url, 128, 128, true, false));
     }
     //@@author
 
