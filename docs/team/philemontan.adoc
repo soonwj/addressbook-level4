@@ -10,14 +10,16 @@ module `CS2103T` offered by the School of Computing in the National University o
 
 *Code contributed*: [https://github.com/CS2103AUG2017-T11-B1/main/blob/master/collated/main/philemontan.md[Functional code]][https://github.com/CS2103AUG2017-T11-B1/main/blob/master/collated/test/philemontan.md[Test code]]
 
-=== Enhancement Added: Import existing contacts from Google Contacts
+=== Enhancement Added: Command structure to support OAuth2, with `Import` and `Export` functionality via Google Contacts
 
 ==== External behavior
 
 ---
 #Start of Extract [from: User Guide]#
 
-include::../UserGuide.adoc[tag=undoredo]
+include::../UserGuide.adoc[tag=import]
+
+include::../UserGuide.adoc[tag=export]
 
 #End of Extract#
 
@@ -28,33 +30,7 @@ include::../UserGuide.adoc[tag=undoredo]
 The `Import` feature was built to enhance user experience. It enables the user to bypass the lengthy process of manually adding all of his existing contacts. With
 this feature, the set up time required to use DoC meaningfully is minimized, making it more convenient for the user.
 
-==== Implementation
-
----
-#Start of Extract [from: Developer Guide]#
-
-include::../DeveloperGuide.adoc[tag=undoredo]
-
-#End of Extract#
-
----
-
-=== Enhancement Added: Exporting DoC contacts to Google Contacts
-
-==== External behavior
-
----
-#Start of Extract [from: User Guide]#
-
-include::../UserGuide.adoc[tag=undoredo]
-
-#End of Extract#
-
----
-
-==== Justification
-
-The `Export` feature was built to enhance user experience. It acts as a pseudo back-up mechanism,
+The `Export` feature was also built to enhance user experience. It acts as a pseudo back-up mechanism,
 and also provides portability to contacts added in DoC, as the user can quickly
 transfer them across multiple different platforms via Google Contacts. It is now a simple process for the user to
 manage the same list of contacts across different PCs running DoC.
@@ -64,7 +40,7 @@ manage the same list of contacts across different PCs running DoC.
 ---
 #Start of Extract [from: Developer Guide]#
 
-include::../DeveloperGuide.adoc[tag=undoredo]
+include::../DeveloperGuide.adoc[tag=oauth2]
 
 #End of Extract#
 
@@ -77,7 +53,7 @@ include::../DeveloperGuide.adoc[tag=undoredo]
 ---
 #Start of Extract [from: User Guide]#
 
-include::../UserGuide.adoc[tag=undoredo]
+include::../UserGuide.adoc[tag=unknowncommand]
 
 #End of Extract#
 
@@ -100,7 +76,7 @@ user to retype his possibly lengthy command.
 ---
 #Start of Extract [from: Developer Guide]#
 
-include::../DeveloperGuide.adoc[tag=undoredo]
+include::../DeveloperGuide.adoc[tag=unknowncommand]
 
 #End of Extract#
 
@@ -125,5 +101,5 @@ On top of improving security, a local authentication system can also allow multi
 === Other contributions
 
 * Performed acceptance testing of a separate team's (https://github.com/CS2103AUG2017-T16-B1/main[T16-B1]) project, and raised issues for bugs discovered
-(Issues https://github.com/CS2103AUG2017-T16-B1/main/issues/151[#151], https://github.com/CS2103AUG2017-T16-B1/main/issues/152[#152])
-* Wrote additional tests to increase coverage..
+(Issues https://github.com/CS2103AUG2017-T16-B1/main/issues/151[#151], https://github.com/CS2103AUG2017-T16-B1/main/issues/152[#152]).
+* Provided assistance on the module forum (Issue https://github.com/nus-cs2103-AY1718S1/forum/issues/140[#140]).
