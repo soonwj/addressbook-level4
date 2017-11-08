@@ -1,5 +1,6 @@
 package systemtests;
 
+import static org.junit.Assert.assertEquals;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX;
 import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
@@ -16,6 +17,7 @@ import seedu.address.logic.commands.RedoCommand;
 import seedu.address.logic.commands.SelectCommand;
 import seedu.address.logic.commands.UndoCommand;
 import seedu.address.model.Model;
+import seedu.address.model.person.ReadOnlyPerson;
 
 public class SelectCommandSystemTest extends AddressBookSystemTest {
 
@@ -110,14 +112,20 @@ public class SelectCommandSystemTest extends AddressBookSystemTest {
         String expectedResultMessage = String.format(
                 MESSAGE_SELECT_PERSON_SUCCESS, expectedSelectedCardIndex.getOneBased());
         int preExecutionSelectedCardIndex = getPersonListPanel().getSelectedCardIndex();
+        ReadOnlyPerson personSelected =
+                expectedModel.getFilteredPersonList().get(expectedSelectedCardIndex.getZeroBased());
 
         executeCommand(command);
         assertApplicationDisplaysExpected("", expectedResultMessage, expectedModel);
 
         if (preExecutionSelectedCardIndex == expectedSelectedCardIndex.getZeroBased()) {
             assertSelectedCardUnchanged();
+            assertEquals(personSelected.getViewCount(),
+                    getModel().getFilteredPersonList().get(expectedSelectedCardIndex.getZeroBased()).getViewCount());
         } else {
             assertSelectedCardChanged(expectedSelectedCardIndex);
+            assertEquals(personSelected.getViewCount() + 1,
+                    getModel().getFilteredPersonList().get(expectedSelectedCardIndex.getZeroBased()).getViewCount());
         }
 
         assertCommandBoxShowsDefaultStyle();
