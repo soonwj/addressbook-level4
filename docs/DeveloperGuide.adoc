@@ -510,8 +510,27 @@ which is implemented in an event-driven manner.
 
 The following class diagram illustrates the structure of this mechanism, and its' current applications: +
 
-image::Oauth2ClassDiagram.PNG[width="800"]
+image::Oauth2ClassDiagram.PNG[width="100%"]
 _Figure 4.3.1 OAuth2 Class Diagram_
+
+An important requirement for all child classes of the `Oauth2Command` structure, is a valid `commandType` string of the format:
+`SERVICEPROVIDER_functionality`. This is to allow quick identification in token extraction methods, as different service providers will append
+the authentication token differently.
+
+This is enforced in the constructor of the `Oauth2Command` class, and can be seen from the following code snippet:
+----
+protected Oauth2Command(String inputType)  {
+    if (!inputTypeValid(inputType)) {
+        assert true : "Child classes of Oauth2Command must provide a valid command type in the
+            format: SERVICEPROVIDER_functionality";
+    }
+    commandType = inputType;
+    commandCompleted = false;
+}
+----
+
+
+
 
 ==== Current usages
 
