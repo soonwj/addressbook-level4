@@ -995,16 +995,30 @@ To better understand the underlying logic of this enhancement, you can refer to 
 ----
 if (correctionPrompted) {
     if (commandWord.equals("yes") || commandWord.equals("y")) {
-        Command tempCommand = unknownCommand.getSuggestedCommand();
-        unknownCommand = null;
-        correctionPrompted = false;
-        return tempCommand;
+        Command suggestedCommand = unknownCommand.getSuggestedCommand();
+        resetCorrectionChecker();
+        return suggestedCommand;
     } else {
-        unknownCommand = null;
-        correctionPrompted = false;
+        resetCorrectionChecker();
         EventsCenter.getInstance().post(new NewResultAvailableEvent(
                 "Suggested command is discarded", false));
     }
+}
+.
+.
+switch (commandWord) {
+    .
+    .
+    default:
+        unknownCommand = new UnknownCommand(commandWord, arguments);
+
+        if (unknownCommand.suggestionFound()) {
+            correctionPrompted = true;
+            return unknownCommand;
+        } else {
+            unknownCommand = null;
+        }
+        throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
 }
 ----
 
