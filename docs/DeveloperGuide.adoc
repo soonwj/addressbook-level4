@@ -444,11 +444,12 @@ Before modifying the list of events inside the address book, the system may thro
 
 * `EventNotFoundException`: This exception can be thrown by `editE` and `deleteE` command when the an invalid event index is provided by the user. The index needs to be within the size of the event list at the current state of the address book.
 * `DuplicateEventException`: This exception can be thrown by `addE` and `editE` command. The system will first create an `Event` object with the input parameters, compare the object to all events residing in the event list and throw this exception if there is a duplicate found.
-* `DateTimeParseException`: This exception can be thrown by `addE` and `editE` command when the input `EventDate` parameter is not a valid date. The date format and validity of date is checked inside the `Event` class like this: +
+* `DateTimeParseException`: This exception can be thrown by `addE` and `editE` command when the input `EventDate` parameter is not a valid date. The date's format and validity is checked inside the `Event` class like this: +
 [source,java]
 ----
 public EventDate(String eventDate) throws IllegalValueException {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd")
+                    .withResolverStyle(ResolverStyle.STRICT);
     try {
         eventLocalDate = LocalDate.parse(eventDate, formatter);
     } catch (DateTimeParseException ex) {
@@ -479,8 +480,8 @@ The events follow a certain colored background based on its urgency. The visual 
 image::EventColorDiagram.png[width="600"]
 _Figure 4.2.3: Event Colour Diagram_
 
-==== Design Consideration for future enhancement
-**Aspect:** How to implement adding of contacts into an `Event` using a `Person` list parameter +
+==== Design Considerations
+**Aspect(future enhancement):** How to implement adding/tagging of contacts into an `Event` using a `Person` list parameter +
 
 **Chosen Implementation:** +
 Add by the index of contact shown in the `PersonListPanel`. +
