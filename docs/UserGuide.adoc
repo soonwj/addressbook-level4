@@ -445,7 +445,7 @@ image::Location_UG.PNG[width="1000"]
 Shows the address of the 1st contact in Google Maps as shown above.
 
 <<<
-
+// tag::eventUG[]
 === Event features
 You can manage your events through the following commands:
 
@@ -530,7 +530,7 @@ Deletes the 3rd event in DoC.
 image::deleteEpic.png[width="700"]
 
 As shown on the image above, if you want to delete an overdue `Event`, simply key in the `deleteE` command stating the index and the event will be removed from DoC.
-
+// end::eventUG[]
 <<<
 
 === General features
