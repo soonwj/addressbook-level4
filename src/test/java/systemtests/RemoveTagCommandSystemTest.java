@@ -168,7 +168,8 @@ public class RemoveTagCommandSystemTest extends AddressBookSystemTest {
     }
 
     /**
-     * Deletes the person at {@code toDelete} by creating a default {@code RemoveTagCommand} using {@code toDelete} and
+     * RemovesTags from the person at {@code removePersonTag} by
+     * creating a default {@code RemoveTagCommand} using {@code removePersonTag} and
      * performs the same verification as {@code assertCommandSuccess(String, Model, String)}.
      * @see RemoveTagCommandSystemTest#assertCommandSuccess(String, Model, String)
      */
@@ -178,7 +179,7 @@ public class RemoveTagCommandSystemTest extends AddressBookSystemTest {
         String expectedResultMessage = (indexes.isEmpty())
                 ? String.format(MESSAGE_DELETE_TAG_SUCCESS, tags.toString())
                 : String.format(MESSAGE_DELETE_TAG_SUCCESS,
-                        tags.toString()) + String.format("from %s", personToRemoveTag.toString());
+                tags.toString()) + String.format("from %s", personToRemoveTag.toString());
         String tagInitial = "";
         for (Tag tag : tags) {
             tagInitial += tag.tagName;
@@ -216,6 +217,7 @@ public class RemoveTagCommandSystemTest extends AddressBookSystemTest {
         assertCommandSuccess(command, expectedModel, expectedResultMessage, null);
     }
     //@@author
+
     /**
      * Performs the same verification as {@code assertCommandSuccess(String, Model, String)} except that the browser url
      * and selected card are expected to update accordingly depending on the card at {@code expectedSelectedCardIndex}.
@@ -257,8 +259,8 @@ public class RemoveTagCommandSystemTest extends AddressBookSystemTest {
         assertCommandBoxShowsErrorStyle();
         assertStatusBarUnchanged();
     }
-    //@@author sidhmads
 
+    //@@author sidhmads
     /**
      * Creates a ArrayList of Index
      * To be used for the RemoveTagCommand, as it is the input type
