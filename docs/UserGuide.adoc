@@ -116,7 +116,7 @@ Examples:
 
 <<<
 
-**Visual guide**
+**Visual guide:**
 
 image::addpic.png[width="700"]
 
@@ -147,7 +147,7 @@ Edits the phone number and email address of the 1st contact to be `91234567` and
 * `edit 2 n/Betsy Crower t/` +
 Edits the name of the 2nd contact to be `Betsy Crower` and clears all existing tags.
 
-**Visual guide**
+**Visual guide:**
 
 image::editpic.png[width="700"]
 
@@ -178,7 +178,7 @@ Friend tag is removed from all contacts.
 * `removeTag rm/1 2 t/Friend` +
 Friend tag is only removed from Index 1 and 2.
 
-**Visual guide**
+**Visual guide:**
 
 image::removeTagpic.png[width="700"]
 
@@ -211,7 +211,7 @@ Updates the profile picture of the 2nd contact to be the image at `http://www.go
 
 <<<
 
-**Visual guide**
+**Visual guide:**
 
 image::updateProfilePicImageExample.jpg[width="1000"]
 
@@ -242,7 +242,7 @@ Deletes the profile picture of the 2nd contact in the DoC.
 `deleteProfilePic 1` +
 Deletes the profile picture of the 1st contact in the results of the `find` command.
 
-**Visual guide**
+**Visual guide:**
 
 image::deleteProfilePicImageExample.jpg[width="1000"]
 
@@ -275,7 +275,7 @@ Deletes the 1st contact in the results of the `find` command.
 
 <<<
 
-**Visual guide**
+**Visual guide:**
 
 image::deletepic.png[width="700"]
 
@@ -302,7 +302,7 @@ Format: `import`
 **2.** Log in to your Google account on the `Browser panel`. +
 **3.** Grant permission to DoC to access your contacts. +
 
-**Visual guide**
+**Visual guide:**
 
 image::importpic.png[width="1000"]
 
@@ -330,7 +330,7 @@ This feature requires an internet connection.
 **2.** Log in to your Google account on the `Browser panel`. +
 **3.** Grant permission to DoC to access your contacts. +
 
-**Visual guide**
+**Visual guide:**
 
 image::importpic.png[width="1000"]
 
@@ -353,7 +353,7 @@ Format: `find TERM1 [MORE_TERMS]`
 * Name of contacts can be matched partially; e.g a search term of `Han` will match the contact name `Han Solo`.
 ====
 
-**Visual guide**
+**Visual guide:**
 
 image::findpic.png[width="700"]
 
@@ -367,7 +367,7 @@ part of name, matching any search term.
 Displays a list of all contacts currently stored in DoC. +
 Format: `list`
 
-**Visual guide**
+**Visual guide:**
 
 image::listpic.png[width="700"]
 
@@ -381,7 +381,7 @@ Selects the contact identified by the index number used in the last contact list
 Format: `select INDEX` +
 Refer to the following visual guide on how you can retrieve the INDEX of a contact: +
 
-**Visual guide**
+**Visual guide:**
 
 image::selectpic.png[width="700"]
 
@@ -415,7 +415,7 @@ adds the `subject` as `SUBJECT` and `body` as `BODY`.
 
 <<<
 
-**Visual guide**
+**Visual guide:**
 
 image::Email_UG.PNG[width="1000"]
 
@@ -443,7 +443,7 @@ Example:
 
 `map 1` +
 
-**Visual guide**
+**Visual guide:**
 
 image::Location_UG.PNG[width="1000"]
 
@@ -474,7 +474,7 @@ Examples:
 
 <<<
 
-**Visual guide**
+**Visual guide:**
 
 image::addEpic.png[width="700"]
 
@@ -503,7 +503,7 @@ Example:
 `editE 3 h/Birthday party d/2017-10-30` +
 Edits the header and date of the 1st event to be `Birthday party` and `2017-10-30` respectively.
 
-**Visual guide**
+**Visual guide:**
 
 image::editEpic.png[width="700"]
 
@@ -530,7 +530,7 @@ Example:
 `deleteE 3` +
 Deletes the 3rd event in DoC.
 
-**Visual guide**
+**Visual guide:**
 
 image::deleteEpic.png[width="700"]
 
@@ -539,7 +539,8 @@ As shown on the image above, if you want to delete an overdue `Event`, simply ke
 <<<
 
 === General features
-These are commands that can be used in managing both contacts and events:
+The following commands and features are not specific to contacts or events, and can be used system-wide:
+
 
 ==== Clearing all entries : `clear`
 
@@ -574,7 +575,7 @@ Only these commmands are currently undoable: `add`, `addE`, `delete`, `deleteE`,
 
 <<<
 
-**Visual guide**
+**Visual guide:**
 
 image::undoPic.png[width="700"]
 
@@ -588,7 +589,7 @@ reverses the `delete 2` command by adding back the deleted contact.
 Reverses the most recent `undo` command, if any. +
 Format: `redo`
 
-**Visual guide**
+**Visual guide:**
 
 image::redoPic.png[width="700"]
 
@@ -601,6 +602,20 @@ simply deletes the contact with an index of 2 again.
 ==== Exiting the program : `exit`
 Exits the program. +
 Format: `exit`
+
+// tag::unknowncommand[]
+==== Accepting suggested commands
+DoC is forgiving when it comes to mistyped commands. When DoC detects a typo in your input, it will automatically try to match it
+to a known command, and prompt you accordingly.
+
+**Visual guide:** +
+
+image::unknownCommandVisualGuide.png[width="800]
+
+As shown in the visual guide above, when a match is found for mistyped inputs, DoC automatically prompts you with a suggestion.
+You can simply accept the suggestion with an input of `'yes'` or `'y'`. If you do not wish to do so, you can simply ignore the prompt
+and continue with another command.
+// end::unknowncommand[]
 
 ==== Saving the data
 All additions, deletions, and changes performed on the contacts stored in DoC are saved automatically.
