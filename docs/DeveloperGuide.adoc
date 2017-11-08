@@ -994,16 +994,27 @@ To better understand the underlying logic of this enhancement, you can refer to 
 
 ----
 if (correctionPrompted) {
-    if (commandWord.equals("yes") || commandWord.equals("y")) {
+    if (userAcceptsSuggestion(commandWord)) {
         Command suggestedCommand = unknownCommand.getSuggestedCommand();
         resetCorrectionChecker();
         return suggestedCommand;
     } else {
         resetCorrectionChecker();
-        EventsCenter.getInstance().post(new NewResultAvailableEvent(
-                "Suggested command is discarded", false));
     }
 }
+.
+.
+----
+As shown in the snippet above, once a correction has been prompted, the prompting mechanism will be reset one command later
+even if we do not receive a positive response from the user. This means that we only offer the user one window of
+opportunity to accept the suggestion.
+
+Responses that are not recognized in the `userAcceptsSuggestion(commandWord)` method, will be parsed as regular input. This means that we do
+not require a negative response to a correction prompt.
+
+Processing of unknown user input, is performed in the default case of the following switch:
+
+----
 .
 .
 switch (commandWord) {
@@ -1011,7 +1022,6 @@ switch (commandWord) {
     .
     default:
         unknownCommand = new UnknownCommand(commandWord, arguments);
-
         if (unknownCommand.suggestionFound()) {
             correctionPrompted = true;
             return unknownCommand;
@@ -1021,7 +1031,8 @@ switch (commandWord) {
         throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
 }
 ----
-
+As shown in the snippet above, when a possible match is found, we set the boolean `correctionPrompted` to `true`, to begin checking for a
+response to our prompt, which is shown in the previous code snippet.
 
 
 ==== Design considerations

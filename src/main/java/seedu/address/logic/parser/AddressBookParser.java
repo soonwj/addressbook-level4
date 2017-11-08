@@ -75,14 +75,12 @@ public class AddressBookParser {
          * switch
          */
         if (correctionPrompted) {
-            if (commandWord.equals("yes") || commandWord.equals("y")) {
+            if (userAcceptsSuggestion(commandWord)) {
                 Command suggestedCommand = unknownCommand.getSuggestedCommand();
                 resetCorrectionChecker();
                 return suggestedCommand;
             } else {
                 resetCorrectionChecker();
-                EventsCenter.getInstance().post(new NewResultAvailableEvent(
-                        "Suggested command is discarded", false));
             }
         }
         //@@author
@@ -177,6 +175,10 @@ public class AddressBookParser {
     }
 
     //@@author philemontan
+    private boolean userAcceptsSuggestion(String commandWord) {
+        return commandWord.equals("yes") || commandWord.equals("y");
+    }
+
     private void resetCorrectionChecker() {
         unknownCommand = null;
         correctionPrompted = false;
