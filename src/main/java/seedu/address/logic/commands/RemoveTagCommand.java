@@ -6,7 +6,9 @@ import java.util.Set;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
+import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.ReadOnlyPerson;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -48,6 +50,9 @@ public class RemoveTagCommand extends UndoableCommand {
 
         ObservableList<ReadOnlyPerson> personToRemoveTag = FXCollections.observableArrayList();
         for (Index i : this.indexes) {
+            if (i.getZeroBased() >= lastShownList.size()) {
+                throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            }
             personToRemoveTag.add(lastShownList.get(i.getZeroBased()));
         }
         try {
@@ -56,6 +61,8 @@ public class RemoveTagCommand extends UndoableCommand {
             assert false : "The target Tag cannot be missing";
         } catch (DuplicatePersonException dpe) {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+        } catch (IllegalValueException ive) {
+            throw new CommandException("The Tag is invalid!");
         }
         if (this.indexes.isEmpty()) {
             return new CommandResult(String.format(MESSAGE_DELETE_TAG_SUCCESS, this.tags.toString()));
