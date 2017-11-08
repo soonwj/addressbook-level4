@@ -990,6 +990,26 @@ _Figure 4.10.1: ParseCommand Activity Diagram_
 As shown in the diagram above, actions enclosed in a green box are the enhancements applied to the original `AddressBookParser`,
 for the purpose of this mechanism.
 
+To better understand the underlying logic of this enhancement, you can refer to the following code snippets: +
+
+----
+if (correctionPrompted) {
+    if (commandWord.equals("yes") || commandWord.equals("y")) {
+        Command tempCommand = unknownCommand.getSuggestedCommand();
+        unknownCommand = null;
+        correctionPrompted = false;
+        return tempCommand;
+    } else {
+        unknownCommand = null;
+        correctionPrompted = false;
+        EventsCenter.getInstance().post(new NewResultAvailableEvent(
+                "Suggested command is discarded", false));
+    }
+}
+----
+
+
+
 ==== Design considerations
 
 **Aspect:** Choice of acceptable Levenshtein distance +
