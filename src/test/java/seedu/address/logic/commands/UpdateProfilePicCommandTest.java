@@ -11,6 +11,9 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import org.junit.Test;
 
 import seedu.address.commons.core.Messages;
@@ -48,6 +51,8 @@ public class UpdateProfilePicCommandTest {
         expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicturePerson);
 
         assertCommandSuccess(updateProfilePicCommand, model, expectedMessage, expectedModel);
+
+        Files.delete(Paths.get(urlToPath(model.getFilteredPersonList().get(0).getProfilePic().toString())));
     }
 
     @Test
@@ -67,6 +72,8 @@ public class UpdateProfilePicCommandTest {
         expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicturePerson);
 
         assertCommandSuccess(updateProfilePicCommand, model, expectedMessage, expectedModel);
+
+        Files.delete(Paths.get(urlToPath(model.getFilteredPersonList().get(0).getProfilePic().toString())));
     }
 
     @Test
@@ -86,6 +93,8 @@ public class UpdateProfilePicCommandTest {
         expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicturePerson);
 
         assertCommandSuccess(updateProfilePicCommand, model, expectedMessage, expectedModel);
+
+        Files.delete(Paths.get(urlToPath(model.getFilteredPersonList().get(0).getProfilePic().toString())));
     }
 
     @Test
@@ -103,6 +112,8 @@ public class UpdateProfilePicCommandTest {
         expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicturePerson);
 
         assertCommandSuccess(updateProfilePicCommand, model, expectedMessage, expectedModel);
+
+        Files.delete(Paths.get(urlToPath(model.getFilteredPersonList().get(0).getProfilePic().toString())));
     }
 
     @Test
@@ -148,5 +159,9 @@ public class UpdateProfilePicCommandTest {
         UpdateProfilePicCommand updateProfilePicCommand = new UpdateProfilePicCommand(index, profilePic);
         updateProfilePicCommand.setData(model, new CommandHistory(), new UndoRedoStack());
         return updateProfilePicCommand;
+    }
+
+    private String urlToPath(String url) {
+        return url.substring(url.indexOf("ProfilePics"));
     }
 }
