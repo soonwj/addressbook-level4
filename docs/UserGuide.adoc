@@ -283,7 +283,8 @@ According to the image above, let's say you want to delete the contact at index 
 
 <<<
 
-==== Importing contacts: `import`
+// tag::import[]
+=== Importing contacts: `import`
 
 Import contacts to DoC from Google Contacts. +
 Format: `import`
@@ -307,10 +308,13 @@ image::importpic.png[width="1000"]
 
 You can enter your credentials and grant permission to DoC to access your Google contacts, as highlighted by the
 red boxes in the images above.
+// end::import[]
 
 <<<
 
-==== Exporting contacts: `export`
+// tag::export[]
+=== Exporting contacts: `export`
+
 Export your contacts from DoC to Google Contacts. +
 Format: `export` +
 
@@ -332,6 +336,7 @@ image::importpic.png[width="1000"]
 
 You can enter your credentials and grant permission to DoC to access your Google contacts, as highlighted by the
 red boxes in the images above.
+// end::export[]
 
 <<<
 

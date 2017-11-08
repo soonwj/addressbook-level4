@@ -496,6 +496,7 @@ Easier for users to add using names, do not need to refer to the `Person` list. 
 **Cons:** +
 System have to check through the list to check if the contact's name exist in the current address book.
 
+// tag::oauth2[]
 === OAuth2 fulfilment mechanism
 ==== Overview
 A command structure has been set-up to fulfil all commands requiring an authentication process against the OAuth2 protocol.
@@ -668,6 +669,7 @@ in this current version of DoC, due to the following redeeming factors:
 
 - Google Contacts automatically flags possible duplicates, and offers a quick merging service.
 - Contacts exported from DoC will be added to a designated "ImportedFromGoogle" contact group, and can be filtered out on Google Contacts easily.
+// end::oauth2[]
 
 <<<
 
@@ -960,7 +962,7 @@ The app will take a while to start. +
 **Cons:** The app will lag slightly each time a `PersonCard` is selected.
 
 <<<
-
+// tag::unknowncommand[]
 === Unknown input parsing
 
 ==== Overview
@@ -1105,6 +1107,7 @@ An extra step is presented to the user on a wrong match, affecting the user's ex
 
 **Note:** In our chosen implementation, we mitigate the mentioned cons by including explicit instructions in the suggestion prompt,
 that a response is only required if the user accepts the match.
+// end::unknowncommand[]
 
 <<<
 
