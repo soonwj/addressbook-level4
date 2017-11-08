@@ -67,20 +67,21 @@ public class TypicalPersons {
     public static final String KEYWORD_MATCHING_MEIER = "Meier"; // A keyword that matches MEIER
 
     //@@author royceljh
-    public static final ReadOnlyEvent MEETING = new EventBuilder().withHeader(VALID_HEADER_MEETING)
-            .withDesc(VALID_DESC_MEETING).withEventDate(VALID_EVENT_DATE_MEETING).build();
-    public static final ReadOnlyEvent BIRTHDAY = new EventBuilder().withHeader(VALID_HEADER_BIRTHDAY)
-            .withDesc(VALID_DESC_BIRTHDAY).withEventDate(VALID_EVENT_DATE_BIRTHDAY).build();
+    public static final ReadOnlyEvent DATE = new EventBuilder().withHeader("Date").withDesc("dinner at restaurant")
+            .withEventDate("2017-12-20").build();
+    public static final ReadOnlyEvent MARATHON = new EventBuilder().withHeader("Marathon")
+            .withDesc("21km run at sundown").withEventDate("2018-09-01").build();
     public static final ReadOnlyEvent OUTING = new EventBuilder().withHeader("Outing").withDesc("friends")
             .withEventDate("2017-12-12").build();
     public static final ReadOnlyEvent MOVIE = new EventBuilder().withHeader("Movie").withDesc("with date")
             .withEventDate("2017-11-06").build();
 
     // Manually added
-    public static final ReadOnlyEvent DATE = new EventBuilder().withHeader("Date").withDesc("dinner at restaurant")
-            .withEventDate("2017-12-20").build();
-    public static final ReadOnlyEvent MARATHON = new EventBuilder().withHeader("Marathon")
-            .withDesc("21km run at sundown").withEventDate("2018-09-01").build();
+    public static final ReadOnlyEvent MEETING = new EventBuilder().withHeader(VALID_HEADER_MEETING)
+            .withDesc(VALID_DESC_MEETING).withEventDate(VALID_EVENT_DATE_MEETING).build();
+    public static final ReadOnlyEvent BIRTHDAY = new EventBuilder().withHeader(VALID_HEADER_BIRTHDAY)
+            .withDesc(VALID_DESC_BIRTHDAY).withEventDate(VALID_EVENT_DATE_BIRTHDAY).build();
+
     //@@author
     private TypicalPersons() {} // prevents instantiation
 
@@ -107,7 +108,7 @@ public class TypicalPersons {
     }
     //@@author royceljh
     public static List<ReadOnlyEvent> getTypicalEvents() {
-        return new ArrayList<>(Arrays.asList(MEETING, BIRTHDAY, OUTING, MOVIE));
+        return new ArrayList<>(Arrays.asList(DATE, MARATHON, OUTING, MOVIE));
     }
     //@@author
     public static List<ReadOnlyPerson> getTypicalPersons() {
