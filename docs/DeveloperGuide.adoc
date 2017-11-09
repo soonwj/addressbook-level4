@@ -810,6 +810,7 @@ Easier to find a person by name or by tag, if both name and tag have similar Str
 **Cons:** +
 Extra command for the user to remember.
 
+// tag::profilePic[]
 === UpdateProfilePic/DeleteProfilePic mechanism
 
 ==== Overview
@@ -884,18 +885,58 @@ Initial download may cause a visible lag and freeze the UI for some time. +
 No space requirement to store the images locally +
 **Cons:** +
 There might be a visible lag every time an image is displayed as a profile picture, if the image is too big and on the internet.
+// end::profilePic[]
 
+// tag::viewCount[]
 === ViewCount Tracking
 
 ==== Overview
 
 The `viewCount` variable is a `private int` variable of the `Person` class. This variable is updated whenever a `PersonPanelSelectionChangedEvent` is raised. This means that whenever a contact is selected, whether by the `select` command or by clicking on the `PersonCard` on the UI, the contact associated with the selected `PersonCard` will have its `viewCount` variable incremented by 1.
 
-To listen for the `PersonPanelSelectionChangedEvent`, a listener is placed in the `MainApp` object, which ensures that the `Model` associated to it is updated with the right `Person` object that has its `viewCount` updated.
+To listen for the `PersonPanelSelectionChangedEvent`, a listener is placed in the `MainApp` object, which ensures that the `Model` associated to it is updated with the right `Person` object that has its `viewCount` updated. (See code snippet below)
+[source,java]
+----
+private void handlePersonPanelSelectionChangedEvent(PersonPanelSelectionChangedEvent event) {
+    logger.info(LogsCenter.getEventHandlingLogMessage(event));
+    if (event.getNewSelection().person != null) {
+        Person personSelected = new Person(event.getNewSelection().person);
+        personSelected.setViewCount(personSelected.getViewCount() + 1);
+        try {
+            model.updatePerson(event.getNewSelection().person, personSelected);
+        } catch (DuplicatePersonException dpe) {
+            assert false : "Impossible to be duplicate";
+        } catch (PersonNotFoundException pnfe) {
+            assert false : "Impossible not to be found";
+        }
+    }
+}
+----
 
 As the `viewCount` is not displayed on the UI, when this variable of a contact is updated, no `AddressBookChangedEvent` is raised, so the UI will not be refreshed unnecessarily.
 
-Right before the app closes, the app will sort the `Person` objects in the `AddressBook` such that the `Person` objects will be displayed from highest `viewCount` to lowest.
+Right before the app closes, the app will sort the `Person` objects in the `AddressBook` such that the `Person` objects will be displayed from highest `viewCount` to lowest. (See code snippet below)
+
+[source,java]
+----
+public void sortByViewCount() {
+    AddressBook addressBookToSort = new AddressBook(addressBook);
+    ObservableList<ReadOnlyPerson> listToSort = addressBookToSort.getPersonList();
+    ArrayList<ReadOnlyPerson> listToSortedCopy = new ArrayList<>();
+    for (ReadOnlyPerson r : listToSort) {
+        listToSortedCopy.add(r);
+    }
+    Collections.sort(listToSortedCopy, new ViewCountComparator());
+
+    try {
+        addressBookToSort.setPersons(listToSortedCopy);
+    } catch (DuplicatePersonException dpe) {
+        assert false : "Impossible to be duplicate";
+    }
+
+    resetData(addressBookToSort);
+}
+----
 
 <<<
 
@@ -961,6 +1002,7 @@ The app will take a while to start. +
 **Alternative 3:** Whenever a viewCount is changed. +
 **Pros:** The app will always show the updated order. +
 **Cons:** The app will lag slightly each time a `PersonCard` is selected.
+// end::viewCount[]
 
 <<<
 // tag::unknowncommand[]
