@@ -20,7 +20,6 @@ import seedu.address.logic.parser.exceptions.ParseException;
 
 //@@author philemontan
 /**
- * Created by Philemon1 on 29/10/2017.
  * This class is used to process all unknown commands, i.e user input that does not match any existing COMMAND_WORD
  * this is done by searching for COMMAND_WORDs with a Levenshtein distance <= the set ACCEPTABLE_LEVENSHTEIN_DISTANCE,
  * away from the user input command word
@@ -56,15 +55,17 @@ public class UnknownCommand extends Command {
     private String arguments;
     private String promptToUser;
     private Command suggestedCommand;
+    private boolean suggestionFoundHasBeenExecuted = false;
 
     public UnknownCommand(String inputCommandWord, String inputArguments) {
         commandWord = inputCommandWord;
         arguments = inputArguments;
     }
 
-
     @Override
     public CommandResult execute() throws CommandException {
+        assert suggestionFoundHasBeenExecuted : "Invalid behaviour: UnknownCommand.execute() has been called before"
+                + "UnknownCommand.suggestionFound()";
         return new CommandResult(promptToUser);
     }
 
@@ -72,50 +73,57 @@ public class UnknownCommand extends Command {
         return suggestedCommand;
     }
 
-
     /**
      * This method initiates the computation of Levenshtein distance between the user input commandWord, and each of
      * the system-recognized COMMAND_WORDs, in the constant String[] ALL_COMMAND_WORDS.
-     * This method also sets the suggested command, and updates the PROMPT_TO_USER accordingly, if any matches are
-     * found.
-     * This method will only check for user-entered commandWord <= ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH in length
-     * In the case of equal Levenshtein distance, the first encountered in the order of delcaration in the
-     * String[] ALL_COMMAND_WORDS, will be used.
-     * This method should always be executed before execute() method is called
+     * This method should always be executed before the execute() method is called
      * @return true if minimum distance found is <= the ACCEPTABLE_LEVENSHTEIN_DISTANCE constant set, else false
      */
     public boolean suggestionFound() throws ParseException {
-        int min = ACCEPTABLE_LEVENSHTEIN_DISTANCE + 1;
-        int tempDistance;
-        String closestCommandWord = null;
+        suggestionFoundHasBeenExecuted = true;
 
-        //Checks for invalid commandWord length, i.e 18 and above (To prevent performance issues)
+        //Checks for invalid commandWord length, i.e 19 and above (To prevent performance issues)
         if (invalidLengthDetected()) {
             return false;
         }
 
-        /**
-         * Iterates through all known COMMAND_WORDs, and find the smallest possible Levenshtein distance.
-         * In the case of equal Levenshtein distance, the first encountered in the order of delcaration in the String[]
-         * ALL_COMMAND_WORDS, will be used.
-         */
+        String closestCommandWord = searchMinDistanceCommand();
+
+        //closestCommandWord is set to null if no acceptable match is found
+        if (closestCommandWord == null) {
+            return false;
+        } else {
+            setSuggestedCommand(closestCommandWord);
+            setPromptToUser(closestCommandWord);
+            return true;
+        }
+    }
+
+    //Sets the prompt to the user based on the match found
+    private void setPromptToUser(String closestCommandWord) {
+        promptToUser = "Did you mean: " + closestCommandWord + arguments + " ?" + "\n" + "Respond: "
+                + "'yes' or 'y' to accept the suggested command." + "\n"
+                + "Suggested command will be discarded otherwise.";
+    }
+
+    /**
+     * Iterative search for an acceptable & minimum distance match to a known command.
+     * @return null if no acceptable match found (i.e Levenshtein distance between commandWord and all known Commands
+     * is more than the ACCEPTABLE_LEVENSTHEIN_DISTANCE), else returns the match with smallest Levenshtein distance.
+     */
+    private String searchMinDistanceCommand() {
+        int min = ACCEPTABLE_LEVENSHTEIN_DISTANCE + 1;
+        int tempDistance;
+        String closestCommandWord = null;
+
         for (String s: ALL_COMMAND_WORDS) {
             tempDistance = levenshteinDistance(s, commandWord);
-            if (tempDistance < min) {
+            if (tempDistance < min) { // tempDistance within acceptable range
                 min = tempDistance;
                 closestCommandWord = s;
             }
         }
-        //An unchanged min indicates that no acceptable substitute has been found
-        if (min == ACCEPTABLE_LEVENSHTEIN_DISTANCE + 1) {
-            return false;
-        } else {
-            setSuggestedCommand(closestCommandWord);
-            promptToUser = "Did you mean: " + closestCommandWord + arguments + " ?" + "\n" + "Respond: "
-                    + "'yes' or 'y' to accept the suggested command." + "\n"
-                    + "Suggested command will be discarded otherwise.";
-            return true;
-        }
+        return closestCommandWord;
     }
 
     /**
@@ -124,21 +132,14 @@ public class UnknownCommand extends Command {
      * @throws ParseException if user input command length is 0
      */
     private boolean invalidLengthDetected () {
-        if (commandWord.length() > ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH) {
-            return true;
-        }
-        if (commandWord.length() == 0) {
-            assert true : "Unexpected behaviour: Empty input has gone through the AddressBookParser parseCommand()"
-                    + "matcher check";
-        }
-        return false;
+        return commandWord.length() > ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH || commandWord.length() == 0;
     }
 
     //@@author philemontan-reused
     /**
      * This switch is adapted from the original AddressBookParser.
-     * If a match is found, but its parameters are invalid, we will not prompt the user for a response, but instead
-     * with a formatting alert, through the exception thrown by the existings command parsers.
+     * If a match is found, but input arguments are invalid, the user will be prompted with the MESSAGE_USAGE of the
+     * matched Command
      * @param closestCommandWord
      * @throws ParseException
      */
