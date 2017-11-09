@@ -155,18 +155,19 @@ public class AddressBookParser {
             return new SortCommand();
 
         //@@author philemontan
+        /**
+         * The default case will attempt to guess the intended user input
+         */
         default:
             unknownCommand = new UnknownCommand(commandWord, arguments);
-            /**
-             * initiate the similarity checking logic. If suggestionFound() returns false, we will reset the
-             * unknownCommand to null, as no matches were found
-             */
+
             if (unknownCommand.suggestionFound()) {
                 correctionPrompted = true;
                 return unknownCommand;
             } else {
                 unknownCommand = null;
             }
+
             throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
         }
         //@@author
