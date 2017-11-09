@@ -18,7 +18,7 @@ import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.model.AddressBookChangedEvent;
 import seedu.address.commons.events.ui.FindLocationRequestEvent;
-import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.ReadOnlyPerson;
 import seedu.address.model.person.event.ReadOnlyEvent;
@@ -103,7 +103,7 @@ public class ModelManager extends ComponentManager implements Model {
     //@@author sidhmads
     @Override
     public void removeTag(ObservableList<ReadOnlyPerson> persons, Set<Tag> tag)
-            throws PersonNotFoundException, DuplicatePersonException, CommandException {
+            throws PersonNotFoundException, IllegalValueException {
         int counter = 0;
         if (persons.isEmpty()) {
             persons.setAll(addressBook.getPersonList());
@@ -121,7 +121,7 @@ public class ModelManager extends ComponentManager implements Model {
             }
         }
         if (counter == 0) {
-            throw new CommandException("The Tag is invalid!");
+            throw new IllegalValueException("The Tag is invalid!");
         }
     }
     //@@author

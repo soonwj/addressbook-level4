@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
-import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.person.ReadOnlyPerson;
 import seedu.address.model.person.event.ReadOnlyEvent;
 import seedu.address.model.person.exceptions.DuplicateEventException;
@@ -66,7 +66,7 @@ public interface Model {
 
     //@@author sidhmads
     void removeTag(ObservableList<ReadOnlyPerson> persons, Set<Tag> tag)
-            throws PersonNotFoundException, DuplicatePersonException, CommandException;
+            throws PersonNotFoundException, IllegalValueException;
     //@@author
 
     //@@author sidhmads
