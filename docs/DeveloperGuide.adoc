@@ -444,11 +444,12 @@ Before modifying the list of events inside the address book, the system may thro
 
 * `EventNotFoundException`: This exception can be thrown by `editE` and `deleteE` command when the an invalid event index is provided by the user. The index needs to be within the size of the event list at the current state of the address book.
 * `DuplicateEventException`: This exception can be thrown by `addE` and `editE` command. The system will first create an `Event` object with the input parameters, compare the object to all events residing in the event list and throw this exception if there is a duplicate found.
-* `DateTimeParseException`: This exception can be thrown by `addE` and `editE` command when the input `EventDate` parameter is not a valid date. The date's format and validity is checked inside the `Event` class like this: +
+* `DateTimeParseException`: This exception can be thrown by `addE` and `editE` command when the input `EventDate` parameter is not a valid date. The date's format and validity is checked inside the `Event` class like this:
+
 [source,java]
 ----
 public EventDate(String eventDate) throws IllegalValueException {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd")
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-mm-dd")
                     .withResolverStyle(ResolverStyle.STRICT);
     try {
         eventLocalDate = LocalDate.parse(eventDate, formatter);
@@ -521,6 +522,7 @@ An important requirement for all child classes of the `Oauth2Command` structure,
 the authentication token differently.
 
 This is enforced in the constructor of the `Oauth2Command` class, and can be seen from the following code snippet:
+[source,java]
 ----
 protected Oauth2Command(String inputType)  {
     if (!inputTypeValid(inputType)) {
@@ -690,6 +692,29 @@ Note that the `EmailCommandParser` will raise a `ParseException` if the `to/` is
 
 Once identified, the `execute` function is called. This function in the `EmailCommand` would call the `updateEmailRecipient` function in the Model. Once the fields are updated properly, the `EmailCommand` will call the desktop mail app and fill in the necessary details.
 
+The code below shows the link between the Java Application and the Desktop Mail App.
+[source,java]
+----
+private void sendEmail(String emailTo) throws ParseException {
+    if (emailTo.equalsIgnoreCase("")) {
+        throw new ParseException("Invalid recipient email.");
+    }
+    Desktop desktop = Desktop.getDesktop();
+    String url = "";
+    URI mailTo;
+
+    // the calling of the desktop mail app happens here
+    try {
+        url = "mailTo:" + emailTo + "?subject=" + this.subject
+                + "&body=" + this.body;
+        mailTo = new URI(url);
+        desktop.mail(mailTo);
+    }
+
+    // ... catches the possible errors and throws the appropriate exceptions
+}
+----
+
 <<<
 
 ==== Design Considerations
@@ -727,7 +752,22 @@ Once the Address book parser identifies the user command as a valid location com
 The browser panel has subscribed for that particular event and therefore when the event is passed, the browser panel will pick it up and execute the function.
 If the there is only one INDEX, This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested contact.
 If there would be more than one INDEX present, then the direction from one place to another will be shown by the Google Maps.
-This rendering of Google Maps is done via calling the URL.
+
+This rendering of Google Maps is done via calling the URL over in `BrowserPanel` as shown in the code snippet below.
+
+[source,java]
+----
+private void loadPersonLocation(List<ReadOnlyPerson> person) {
+        // determines if it is either a location url or a route url based on the input
+        String url = (person.size() == 1) ? GOOGLE_MAPS_URL_PLACE : GOOGLE_MAPS_URL_DIR;
+        String result = "";
+        for (ReadOnlyPerson ppl: person) {
+            // ... logic to add the addresses to the result string ...
+        }
+        // loads the Google Map with the appropriate URL
+        loadPage(url + result);
+    }
+----
 
 ==== Design Considerations
 
@@ -764,8 +804,35 @@ _Figure 4.6.1: RemoveTag Sequence Diagram_
 As shown in the diagram above, when the user executes the command `removeTag`, the `RemoveTagCommandParser` class will parse the tag and indexes if given, then call the `RemoveTagCommand`. In `RemoveTagCommand` the `execute()` function is called.
 This will invoke the `removeTag` function that resides in the `LogicManager`, which will remove the specific tag from specific or all contacts based on the call made by the user. This changes will then be updated and stored.
 
+The main logic behind `RemoveTagCommand` happens in the `ModelManager`. A brief overview of that code is shown below.
+
+[source,java]
+----
+public void removeTag(ObservableList<ReadOnlyPerson> persons, Set<Tag> tag)
+        throws PersonNotFoundException, IllegalValueException {
+    int counter = 0; // to help in determining if the tag is valid
+
+    // if an empty list of persons is provided, it is assumed to removeTags from everyone
+    if (persons.isEmpty()) {
+        persons.setAll(addressBook.getPersonList());
+    }
+    for (ReadOnlyPerson person : persons) {
+        // only executed if the contact has that particular tag present
+        if (!Collections.disjoint(person.getTags(), tag)) {
+            // ... logic to removeTags from the respective contacts ...
+            counter ++;
+        }
+    }
+
+    // to check if the tag is valid
+    if (counter == 0) {
+        throw new IllegalValueException("The Tag is invalid!");
+    }
+}
+----
+
 [NOTE]
-Note that the `removeTag` function will raise a `CommandException` if the `tag` is not valid.
+Note that the `removeTag` function will raise a `IllegalValueException` if the `tag` is not valid. This is shown in the above code snippet.
 
 ==== Design Considerations
 
@@ -792,6 +859,25 @@ It is very tiring for the user to update each and everyone of the contacts in th
 
 The `FindCommand` class is inherited from the
 `Command` class.It allows the user to search his contacts either by the name of the contact or by the tag of the contact.
+
+
+The existing `NameContainsKeywordsPredicate` was modified to suit the new needs.
+The modified code is shown below.
+
+[source,java]
+----
+public boolean test(ReadOnlyPerson person) {
+        // ...  find by name logic ...
+        if (validNames) {
+            return validNames;
+        }
+        // ... find by tags logic ...
+        if (validTags) {
+            break;
+        }
+        return validTags;
+    }
+----
 
 image::FindSequenceDiagram.png[width="800"]
 _Figure 4.7.1: Find Sequence Diagram_
