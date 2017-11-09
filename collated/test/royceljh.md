@@ -129,6 +129,20 @@ public class AddEventCommandTest {
         }
 
 ```
+###### \java\seedu\address\logic\commands\CommandTestUtil.java
+``` java
+    /**
+     * Updates {@code model}'s filtered list to show only the first event in the {@code model}'s address book.
+     */
+    public static void showFirstEventOnly(Model model) {
+        ReadOnlyEvent event = model.getAddressBook().getEventList().get(0);
+        final String[] splitHeader = event.getHeader().value.split("\\s+");
+        model.updateFilteredEventList(new HeaderContainsKeywordsPredicate(Arrays.asList(splitHeader[0])));
+
+        assert model.getFilteredEventList().size() == 1;
+    }
+}
+```
 ###### \java\seedu\address\logic\commands\DeleteEventCommandTest.java
 ``` java
 /**
@@ -957,27 +971,45 @@ public class EventUtil {
     }
 }
 ```
+###### \java\seedu\address\testutil\TestUtil.java
+``` java
+    /**
+     * Returns the last index of the event in the {@code model}'s event list.
+     */
+    public static Index getEventLastIndex(Model model) {
+        return Index.fromOneBased(model.getAddressBook().getEventList().size());
+    }
+
+    /**
+     * Returns the event in the {@code model}'s event list at {@code index}.
+     */
+    public static ReadOnlyEvent getEvent(Model model, Index index) {
+        return model.getAddressBook().getEventList().get(index.getZeroBased());
+    }
+}
+```
 ###### \java\seedu\address\testutil\TypicalPersons.java
 ``` java
-    public static final ReadOnlyEvent MEETING = new EventBuilder().withHeader(VALID_HEADER_MEETING)
-            .withDesc(VALID_DESC_MEETING).withEventDate(VALID_EVENT_DATE_MEETING).build();
-    public static final ReadOnlyEvent BIRTHDAY = new EventBuilder().withHeader(VALID_HEADER_BIRTHDAY)
-            .withDesc(VALID_DESC_BIRTHDAY).withEventDate(VALID_EVENT_DATE_BIRTHDAY).build();
+    public static final ReadOnlyEvent DATE = new EventBuilder().withHeader("Date").withDesc("dinner at restaurant")
+            .withEventDate("2017-12-20").build();
+    public static final ReadOnlyEvent MARATHON = new EventBuilder().withHeader("Marathon")
+            .withDesc("21km run at sundown").withEventDate("2018-09-01").build();
     public static final ReadOnlyEvent OUTING = new EventBuilder().withHeader("Outing").withDesc("friends")
             .withEventDate("2017-12-12").build();
     public static final ReadOnlyEvent MOVIE = new EventBuilder().withHeader("Movie").withDesc("with date")
             .withEventDate("2017-11-06").build();
 
     // Manually added
-    public static final ReadOnlyEvent DATE = new EventBuilder().withHeader("Date").withDesc("dinner at restaurant")
-            .withEventDate("2017-12-20").build();
-    public static final ReadOnlyEvent MARATHON = new EventBuilder().withHeader("Marathon")
-            .withDesc("21km run at sundown").withEventDate("2018-09-01").build();
+    public static final ReadOnlyEvent MEETING = new EventBuilder().withHeader(VALID_HEADER_MEETING)
+            .withDesc(VALID_DESC_MEETING).withEventDate(VALID_EVENT_DATE_MEETING).build();
+    public static final ReadOnlyEvent BIRTHDAY = new EventBuilder().withHeader(VALID_HEADER_BIRTHDAY)
+            .withDesc(VALID_DESC_BIRTHDAY).withEventDate(VALID_EVENT_DATE_BIRTHDAY).build();
+
 ```
 ###### \java\seedu\address\testutil\TypicalPersons.java
 ``` java
     public static List<ReadOnlyEvent> getTypicalEvents() {
-        return new ArrayList<>(Arrays.asList(MEETING, BIRTHDAY, OUTING, MOVIE));
+        return new ArrayList<>(Arrays.asList(DATE, MARATHON, OUTING, MOVIE));
     }
 ```
 ###### \java\seedu\address\ui\EventCardTest.java
@@ -1083,4 +1115,428 @@ public class EventListPanelTest extends GuiUnitTest {
         assertEquals(expectedEvent.getDesc().value, actualCard.getDesc());
         assertEquals(expectedEvent.getEventDate().value, actualCard.getEventDate());
     }
+```
+###### \java\systemtests\AddEventCommandSystemTest.java
+``` java
+public class AddEventCommandSystemTest extends AddressBookSystemTest {
+
+    @Test
+    public void add() throws Exception {
+        Model model = getModel();
+        /* Case: add an event Birthday to a non-empty address book, command with leading spaces and trailing spaces
+         * -> Birthday event added
+         */
+        ReadOnlyEvent toAdd = BIRTHDAY;
+        String command = "   " + AddEventCommand.COMMAND_WORD + "  " + HEADER_DESC_BIRTHDAY + "  "
+                + DESC_DESC_BIRTHDAY + " " + EVENT_DATE_DESC_BIRTHDAY + " ";
+        assertCommandSuccess(command, toAdd);
+
+        /* Case: undo adding Birthday to the list ->  Birthday deleted */
+        command = UndoCommand.COMMAND_WORD;
+        String expectedResultMessage = UndoCommand.MESSAGE_SUCCESS;
+        assertCommandSuccess(command, model, expectedResultMessage);
+
+        /* Case: redo adding Birthday to the list -> Birthday added again */
+        command = RedoCommand.COMMAND_WORD;
+        model.addEvent(toAdd);
+        expectedResultMessage = RedoCommand.MESSAGE_SUCCESS;
+        assertCommandSuccess(command, model, expectedResultMessage);
+
+        /* Case: add a duplicate event -> rejected */
+        command = AddEventCommand.COMMAND_WORD + HEADER_DESC_BIRTHDAY + DESC_DESC_BIRTHDAY + EVENT_DATE_DESC_BIRTHDAY;
+        assertCommandFailure(command, AddEventCommand.MESSAGE_DUPLICATE_EVENT);
+
+
+        /* Case: add an event with all fields same as another event in the address book except header -> added */
+        toAdd = new EventBuilder().withHeader(VALID_HEADER_MEETING).withDesc(VALID_DESC_BIRTHDAY)
+                .withEventDate(VALID_EVENT_DATE_BIRTHDAY).build();
+        command = AddEventCommand.COMMAND_WORD + HEADER_DESC_MEETING + DESC_DESC_BIRTHDAY + EVENT_DATE_DESC_BIRTHDAY;
+        assertCommandSuccess(command, toAdd);
+
+        /* Case: add an event with all fields same as another event in the address book except desc -> added */
+        toAdd = new EventBuilder().withHeader(VALID_HEADER_BIRTHDAY).withDesc(VALID_DESC_MEETING)
+                .withEventDate(VALID_EVENT_DATE_BIRTHDAY).build();
+        command = AddEventCommand.COMMAND_WORD + HEADER_DESC_BIRTHDAY + DESC_DESC_MEETING + EVENT_DATE_DESC_BIRTHDAY;
+        assertCommandSuccess(command, toAdd);
+
+        /* Case: add an event with all fields same as another event in the address book except event date -> added */
+        toAdd = new EventBuilder().withHeader(VALID_HEADER_BIRTHDAY).withDesc(VALID_DESC_BIRTHDAY)
+                .withEventDate(VALID_EVENT_DATE_MEETING).build();
+        command = AddEventCommand.COMMAND_WORD + HEADER_DESC_BIRTHDAY + DESC_DESC_BIRTHDAY + EVENT_DATE_DESC_MEETING;
+        assertCommandSuccess(command, toAdd);
+
+        /* Case: add to empty address book -> added */
+        executeCommand(ClearCommand.COMMAND_WORD);
+        assert getModel().getAddressBook().getEventList().size() == 0;
+        assertCommandSuccess(OUTING);
+
+        /* Case: add an event with parameters in random order -> added */
+        toAdd = MEETING;
+        command = AddEventCommand.COMMAND_WORD + DESC_DESC_MEETING + HEADER_DESC_MEETING + EVENT_DATE_DESC_MEETING;
+        assertCommandSuccess(command, toAdd);
+
+        /* Case: missing header -> rejected */
+        command = AddEventCommand.COMMAND_WORD + DESC_DESC_BIRTHDAY + EVENT_DATE_DESC_BIRTHDAY;
+        assertCommandFailure(command, String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddEventCommand.MESSAGE_USAGE));
+
+        /* Case: missing desc -> rejected */
+        command = AddEventCommand.COMMAND_WORD + HEADER_DESC_BIRTHDAY + EVENT_DATE_DESC_BIRTHDAY;
+        assertCommandFailure(command, String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddEventCommand.MESSAGE_USAGE));
+
+        /* Case: missing event date -> rejected */
+        command = AddEventCommand.COMMAND_WORD + HEADER_DESC_BIRTHDAY + DESC_DESC_BIRTHDAY;
+        assertCommandFailure(command, String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddEventCommand.MESSAGE_USAGE));
+
+        /* Case: invalid keyword -> rejected */
+        command = "addEv ";
+        assertCommandFailure(command, String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddEventCommand.MESSAGE_USAGE));
+
+        /* Case: invalid header -> rejected */
+        command = AddEventCommand.COMMAND_WORD + INVALID_HEADER_DESC + DESC_DESC_BIRTHDAY + EVENT_DATE_DESC_BIRTHDAY;
+        assertCommandFailure(command, Header.MESSAGE_HEADER_CONSTRAINTS);
+
+        /* Case: invalid desc -> rejected */
+        command = AddEventCommand.COMMAND_WORD + HEADER_DESC_BIRTHDAY + INVALID_DESC_DESC + EVENT_DATE_DESC_BIRTHDAY;
+        assertCommandFailure(command, Desc.MESSAGE_DESC_CONSTRAINTS);
+
+        /* Case: invalid event date -> rejected */
+        command = AddEventCommand.COMMAND_WORD + HEADER_DESC_BIRTHDAY + DESC_DESC_BIRTHDAY + INVALID_EVENT_DATE_DESC;
+        assertCommandFailure(command, EventDate.MESSAGE_EVENT_DATE_CONSTRAINTS);
+    }
+
+    /**
+     * Executes the {@code AddEventCommand} that adds {@code toAdd} to the model and verifies that the command box
+     * displays an empty string, the result display box displays the success message of executing
+     * {@code AddEventCommand} with the details of {@code toAdd}, and the model related components equal to
+     * the current model added with {@code toAdd}.
+     * These verifications are done by
+     * {@code AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)}.<br>
+     * Also verifies that the command box has the default style class, the status bar's sync status changes.
+     * @see AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)
+     */
+    private void assertCommandSuccess(ReadOnlyEvent toAdd) {
+        assertCommandSuccess(EventUtil.getAddEventCommand(toAdd), toAdd);
+    }
+
+    /**
+     * Performs the same verification as {@code assertCommandSuccess(ReadOnlyEvent)}. Executes {@code command}
+     * instead.
+     * @see AddEventCommandSystemTest#assertCommandSuccess(ReadOnlyEvent)
+     */
+    private void assertCommandSuccess(String command, ReadOnlyEvent toAdd) {
+        Model expectedModel = getModel();
+        try {
+            expectedModel.addEvent(toAdd);
+        } catch (DuplicateEventException dpe) {
+            throw new IllegalArgumentException("toAdd already exists in the model.");
+        }
+        String expectedResultMessage = String.format(AddEventCommand.MESSAGE_SUCCESS, toAdd);
+
+        assertCommandSuccess(command, expectedModel, expectedResultMessage);
+    }
+
+    /**
+     * Performs the same verification as {@code assertCommandSuccess(String, ReadOnlyEvent)} except that the result
+     * display box displays {@code expectedResultMessage} and the model related components equal to
+     * {@code expectedModel}.
+     * @see AddEventCommandSystemTest#assertCommandSuccess(String, ReadOnlyEvent)
+     */
+    private void assertCommandSuccess(String command, Model expectedModel, String expectedResultMessage) {
+        executeCommand(command);
+        assertApplicationDisplaysExpected("", expectedResultMessage, expectedModel);
+        assertCommandBoxShowsDefaultStyle();
+        assertStatusBarUnchangedExceptSyncStatus();
+    }
+
+    /**
+     * Executes {@code command} and verifies that the command box displays {@code command}, the result display
+     * box displays {@code expectedResultMessage} and the model related components equal to the current model.
+     * These verifications are done by
+     * {@code AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)}.<br>
+     * Also verifies that the browser url, selected card and status bar remain unchanged, and the command box has the
+     * error style.
+     * @see AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)
+     */
+    private void assertCommandFailure(String command, String expectedResultMessage) {
+        Model expectedModel = getModel();
+
+        executeCommand(command);
+        assertApplicationDisplaysExpected(command, expectedResultMessage, expectedModel);
+        assertCommandBoxShowsErrorStyle();
+        assertStatusBarUnchanged();
+    }
+}
+```
+###### \java\systemtests\DeleteEventCommandSystemTest.java
+``` java
+public class DeleteEventCommandSystemTest extends AddressBookSystemTest {
+
+    private static final String MESSAGE_INVALID_DELETE_COMMAND_FORMAT =
+            String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, DeleteEventCommand.MESSAGE_USAGE);
+
+    @Test
+    public void delete() {
+
+        /* Case: delete the first event in the list, command with leading spaces and trailing spaces -> deleted */
+        Model expectedModel = getModel();
+        String command = "     " + DeleteEventCommand.COMMAND_WORD + "      " + INDEX_FIRST_EVENT.getOneBased()
+                + "       ";
+        ReadOnlyEvent deletedEvent = removeEvent(expectedModel, INDEX_FIRST_EVENT);
+        String expectedResultMessage = String.format(MESSAGE_DELETE_EVENT_SUCCESS, deletedEvent);
+        assertCommandSuccess(command, expectedModel, expectedResultMessage);
+
+        /* Case: delete the last event in the list -> deleted */
+        Model modelBeforeDeletingLast = getModel();
+        Index lastEventIndex = getEventLastIndex(modelBeforeDeletingLast);
+        assertCommandSuccess(lastEventIndex);
+
+        /* Case: undo deleting the last event in the list -> last event restored */
+        command = UndoCommand.COMMAND_WORD;
+        expectedResultMessage = UndoCommand.MESSAGE_SUCCESS;
+        assertCommandSuccess(command, modelBeforeDeletingLast, expectedResultMessage);
+
+        /* Case: redo deleting the last event in the list -> last event deleted */
+        command = RedoCommand.COMMAND_WORD;
+        removeEvent(modelBeforeDeletingLast, lastEventIndex);
+        expectedResultMessage = RedoCommand.MESSAGE_SUCCESS;
+        assertCommandSuccess(command, modelBeforeDeletingLast, expectedResultMessage);
+
+        /* --------------------------------- Performing invalid delete operation ------------------------------------ */
+
+        /* Case: invalid index (0) -> rejected */
+        command = DeleteEventCommand.COMMAND_WORD + " 0";
+        assertCommandFailure(command, MESSAGE_INVALID_DELETE_COMMAND_FORMAT);
+
+        /* Case: invalid index (-1) -> rejected */
+        command = DeleteEventCommand.COMMAND_WORD + " -1";
+        assertCommandFailure(command, MESSAGE_INVALID_DELETE_COMMAND_FORMAT);
+
+        /* Case: invalid index (size + 1) -> rejected */
+        Index outOfBoundsIndex = Index.fromOneBased(
+                getModel().getAddressBook().getEventList().size() + 1);
+        command = DeleteEventCommand.COMMAND_WORD + " " + outOfBoundsIndex.getOneBased();
+        assertCommandFailure(command, MESSAGE_INVALID_EVENT_DISPLAYED_INDEX);
+
+        /* Case: invalid arguments (alphabets) -> rejected */
+        assertCommandFailure(DeleteEventCommand.COMMAND_WORD + " abc", MESSAGE_INVALID_DELETE_COMMAND_FORMAT);
+
+        /* Case: invalid arguments (extra argument) -> rejected */
+        assertCommandFailure(DeleteEventCommand.COMMAND_WORD + " 1 abc",
+                MESSAGE_INVALID_DELETE_COMMAND_FORMAT);
+
+        /* Case: mixed case command word -> rejected */
+        assertCommandFailure("DelETEE 1", MESSAGE_UNKNOWN_COMMAND);
+    }
+
+    /**
+     * Removes the {@code ReadOnlyEvent} at the specified {@code index} in {@code model}'s address book.
+     * @return the removed event
+     */
+    private ReadOnlyEvent removeEvent(Model model, Index index) {
+        ReadOnlyEvent targetEvent = getEvent(model, index);
+        try {
+            model.deleteEvent(targetEvent);
+        } catch (EventNotFoundException enfe) {
+            throw new AssertionError("targetEvent is retrieved from model.");
+        }
+        return targetEvent;
+    }
+
+    /**
+     * Deletes the event at {@code toDelete} by creating a default {@code DeleteEventCommand} using {@code toDelete}
+     * and performs the same verification as {@code assertCommandSuccess(String, Model, String)}.
+     * @see DeleteCommandSystemTest#assertCommandSuccess(String, Model, String)
+     */
+    private void assertCommandSuccess(Index toDelete) {
+        Model expectedModel = getModel();
+        ReadOnlyEvent deletedEvent = removeEvent(expectedModel, toDelete);
+        String expectedResultMessage = String.format(MESSAGE_DELETE_EVENT_SUCCESS, deletedEvent);
+
+        assertCommandSuccess(
+                DeleteEventCommand.COMMAND_WORD + " " + toDelete.getOneBased(), expectedModel,
+                expectedResultMessage);
+    }
+
+    /**
+     * Executes {@code command} and in addition,<br>
+     * 1. Asserts that the command box displays an empty string.<br>
+     * 2. Asserts that the result display box displays {@code expectedResultMessage}.<br>
+     * 3. Asserts that the model related components equal to {@code expectedModel}.<br>
+     * 4. Asserts that the status bar's sync status changes.<br>
+     * 5. Asserts that the command box has the default style class.<br>
+     * Verifications 1 to 3 are performed by
+     * {@code AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)}.
+     * @see AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)
+     */
+    private void assertCommandSuccess(String command, Model expectedModel, String expectedResultMessage) {
+        executeCommand(command);
+        assertApplicationDisplaysExpected("", expectedResultMessage, expectedModel);
+        assertCommandBoxShowsDefaultStyle();
+        assertStatusBarUnchangedExceptSyncStatus();
+    }
+
+    /**
+     * Executes {@code command} and in addition,<br>
+     * 1. Asserts that the command box displays {@code command}.<br>
+     * 2. Asserts that result display box displays {@code expectedResultMessage}.<br>
+     * 3. Asserts that the model related components equal to the current model.<br>
+     * 4. Asserts that the command box has the error style.<br>
+     * Verifications 1 to 3 are performed by
+     * {@code AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)}.<br>
+     * @see AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)
+     */
+    private void assertCommandFailure(String command, String expectedResultMessage) {
+        Model expectedModel = getModel();
+        executeCommand(command);
+        assertApplicationDisplaysExpected(command, expectedResultMessage, expectedModel);
+        assertCommandBoxShowsErrorStyle();
+        assertStatusBarUnchanged();
+    }
+}
+```
+###### \java\systemtests\EditEventCommandSystemTest.java
+``` java
+public class EditEventCommandSystemTest extends AddressBookSystemTest {
+
+    @Test
+    public void edit() throws Exception {
+        Model model = getModel();
+
+        /* Case: edit all fields, command with leading spaces, trailing spaces and multiple spaces between each field
+         * -> event edited
+         */
+        Index index = INDEX_FIRST_EVENT;
+        String command = " " + EditEventCommand.COMMAND_WORD + "  " + index.getOneBased() + "  " + HEADER_DESC_BIRTHDAY
+                + "  " + DESC_DESC_BIRTHDAY + " " + EVENT_DATE_DESC_BIRTHDAY + " ";
+        Event editedEvent = new EventBuilder().withHeader(VALID_HEADER_BIRTHDAY).withDesc(VALID_DESC_BIRTHDAY)
+                .withEventDate(VALID_EVENT_DATE_BIRTHDAY).build();
+        assertCommandSuccess(command, index, editedEvent);
+
+        /* Case: undo editing the last event in the list -> last event restored */
+        command = UndoCommand.COMMAND_WORD;
+        String expectedResultMessage = UndoCommand.MESSAGE_SUCCESS;
+        assertCommandSuccess(command, model, expectedResultMessage);
+
+        /* Case: redo editing the last event in the list -> last event edited again */
+        command = RedoCommand.COMMAND_WORD;
+        expectedResultMessage = RedoCommand.MESSAGE_SUCCESS;
+        model.updateEvent(
+                getModel().getFilteredEventList().get(INDEX_FIRST_EVENT.getZeroBased()), editedEvent);
+        assertCommandSuccess(command, model, expectedResultMessage);
+
+        /* Case: edit some fields -> edited */
+        index = INDEX_FIRST_EVENT;
+        command = EditEventCommand.COMMAND_WORD + " " + index.getOneBased() + DESC_DESC_MEETING;
+        ReadOnlyEvent eventToEdit = getModel().getFilteredEventList().get(index.getZeroBased());
+        editedEvent = new EventBuilder(eventToEdit).withDesc(VALID_DESC_MEETING).build();
+        assertCommandSuccess(command, index, editedEvent);
+
+        /* --------------------------------- Performing invalid edit operation -------------------------------------- */
+
+        /* Case: invalid index (0) -> rejected */
+        assertCommandFailure(EditEventCommand.COMMAND_WORD + " 0" + HEADER_DESC_MEETING,
+                String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditEventCommand.MESSAGE_USAGE));
+
+        /* Case: invalid index (-1) -> rejected */
+        assertCommandFailure(EditEventCommand.COMMAND_WORD + " -1" + HEADER_DESC_MEETING,
+                String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditEventCommand.MESSAGE_USAGE));
+
+        /* Case: invalid index (size + 1) -> rejected */
+        int invalidIndex = getModel().getFilteredPersonList().size() + 1;
+        assertCommandFailure(EditEventCommand.COMMAND_WORD + " " + invalidIndex + HEADER_DESC_MEETING,
+                Messages.MESSAGE_INVALID_EVENT_DISPLAYED_INDEX);
+
+        /* Case: missing index -> rejected */
+        assertCommandFailure(EditEventCommand.COMMAND_WORD + HEADER_DESC_MEETING,
+                String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditEventCommand.MESSAGE_USAGE));
+
+        /* Case: missing all fields -> rejected */
+        assertCommandFailure(EditEventCommand.COMMAND_WORD + " " + INDEX_FIRST_EVENT.getOneBased(),
+                EditEventCommand.MESSAGE_NOT_EDITED);
+
+        /* Case: invalid header -> rejected */
+        assertCommandFailure(EditEventCommand.COMMAND_WORD + " " + INDEX_FIRST_EVENT.getOneBased()
+                        + INVALID_HEADER_DESC, Header.MESSAGE_HEADER_CONSTRAINTS);
+
+        /* Case: invalid desc -> rejected */
+        assertCommandFailure(EditEventCommand.COMMAND_WORD + " " + INDEX_FIRST_EVENT.getOneBased()
+                        + INVALID_DESC_DESC, Desc.MESSAGE_DESC_CONSTRAINTS);
+
+        /* Case: invalid event date -> rejected */
+        assertCommandFailure(EditEventCommand.COMMAND_WORD + " " + INDEX_FIRST_EVENT.getOneBased()
+                        + INVALID_EVENT_DATE_DESC, EventDate.MESSAGE_EVENT_DATE_CONSTRAINTS);
+
+        /* Case: edit an event with new values same as another event's values -> rejected */
+        executeCommand(EventUtil.getAddEventCommand(BIRTHDAY));
+        assertTrue(getModel().getAddressBook().getEventList().contains(BIRTHDAY));
+        index = INDEX_FIRST_EVENT;
+        assertFalse(getModel().getFilteredEventList().get(index.getZeroBased()).equals(BIRTHDAY));
+        command = EditEventCommand.COMMAND_WORD + " " + index.getOneBased() + HEADER_DESC_BIRTHDAY
+                + DESC_DESC_BIRTHDAY + EVENT_DATE_DESC_BIRTHDAY;
+        assertCommandFailure(command, EditEventCommand.MESSAGE_DUPLICATE_EVENT);
+    }
+
+    /**
+     * Performs the same verification as {@code assertCommandSuccess(String, Model, String)} and in addition,<br>
+     * 1. Asserts that result display box displays the success message of executing {@code EditCommand}.<br>
+     * 2. Asserts that the model related components are updated to reflect the person at index {@code toEdit} being
+     * updated to values specified {@code editedPerson}.<br>
+     * @param toEdit the index of the current model's filtered list.
+     * @see EditCommandSystemTest#assertCommandSuccess(String, Model, String, Index)
+     */
+    private void assertCommandSuccess(String command, Index toEdit, ReadOnlyEvent editedEvent) {
+        Model expectedModel = getModel();
+        try {
+            expectedModel.updateEvent(
+                    expectedModel.getFilteredEventList().get(toEdit.getZeroBased()), editedEvent);
+            expectedModel.updateFilteredEventList(PREDICATE_SHOW_ALL_EVENTS);
+        } catch (DuplicateEventException | EventNotFoundException e) {
+            throw new IllegalArgumentException(
+                    "editedEvent is a duplicate in expectedModel, or it isn't found in the model.");
+        }
+
+        assertCommandSuccess(command, expectedModel,
+                String.format(EditEventCommand.MESSAGE_EDIT_EVENT_SUCCESS, editedEvent));
+    }
+
+    /**
+     * Executes {@code command} and in addition,<br>
+     * 1. Asserts that the command box displays an empty string.<br>
+     * 2. Asserts that the result display box displays {@code expectedResultMessage}.<br>
+     * 3. Asserts that the model related components equal to {@code expectedModel}.<br>
+     * 4. Asserts that the status bar's sync status changes.<br>
+     * 5. Asserts that the command box has the default style class.<br>
+     * Verifications 1 to 3 are performed by
+     * {@code AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)}.<br>
+     * @see AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)
+     * @see AddressBookSystemTest#assertSelectedCardChanged(Index)
+     */
+    private void assertCommandSuccess(String command, Model expectedModel, String expectedResultMessage) {
+        executeCommand(command);
+        expectedModel.updateFilteredEventList(PREDICATE_SHOW_ALL_EVENTS);
+        assertApplicationDisplaysExpected("", expectedResultMessage, expectedModel);
+        assertCommandBoxShowsDefaultStyle();
+        assertStatusBarUnchangedExceptSyncStatus();
+    }
+
+    /**
+     * Executes {@code command} and in addition,<br>
+     * 1. Asserts that the command box displays {@code command}.<br>
+     * 2. Asserts that result display box displays {@code expectedResultMessage}.<br>
+     * 3. Asserts that the model related components equal to the current model.<br>
+     * 4. Asserts that the command box has the error style.<br>
+     * Verifications 1 to 3 are performed by
+     * {@code AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)}.<br>
+     * @see AddressBookSystemTest#assertApplicationDisplaysExpected(String, String, Model)
+     */
+    private void assertCommandFailure(String command, String expectedResultMessage) {
+        Model expectedModel = getModel();
+
+        executeCommand(command);
+        assertApplicationDisplaysExpected(command, expectedResultMessage, expectedModel);
+        assertSelectedCardUnchanged();
+        assertCommandBoxShowsErrorStyle();
+        assertStatusBarUnchanged();
+    }
+}
 ```
