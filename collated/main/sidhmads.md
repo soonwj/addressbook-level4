@@ -3,10 +3,10 @@
 ``` java
 public class FindLocationRequestEvent extends BaseEvent {
 
-    public final ReadOnlyPerson targetPerson;
+    public final List<ReadOnlyPerson> targetPersons;
 
-    public FindLocationRequestEvent(ReadOnlyPerson targetPerson) {
-        this.targetPerson = targetPerson;
+    public FindLocationRequestEvent(List<ReadOnlyPerson> targetPersons) {
+        this.targetPersons = targetPersons;
     }
 
     @Override
@@ -92,17 +92,20 @@ public class EmailCommand extends Command {
 ``` java
 public class LocationCommand extends Command {
 
-    public static final String COMMAND_WORD = "location";
+    public static final String COMMAND_WORD = "map";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds the location of selected person. "
-            + "Parameters: INDEX (must be a positive integer)\n"
-            + "Example: " + COMMAND_WORD + " 1";
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": If only one index found,"
+            + " it finds the location of selected person."
+            + "If more than one indexes are present, a map with the route that joins all the locations will be shown."
+            + "Parameters: INDEXES (must be a positive integer)\n"
+            + "Example: " + COMMAND_WORD + " 1\n"
+            + "Example: " + COMMAND_WORD + "1 2 3 4";
 
-    public static final String MESSAGE_FIND_LOCATION_SUCCESS = "Location of %1$s: %2$s";
+    public static final String MESSAGE_FIND_LOCATION_SUCCESS = "Opened Map";
 
-    private final Index targetIndex;
+    private final List<String> targetIndex;
 
-    public LocationCommand(Index targetIndex) {
+    public LocationCommand(List<String> targetIndex) {
         this.targetIndex = targetIndex;
     }
 
@@ -110,21 +113,24 @@ public class LocationCommand extends Command {
     public CommandResult execute() throws CommandException {
 
         List<ReadOnlyPerson> lastShownList = model.getFilteredPersonList();
+        List<ReadOnlyPerson> personToFind = new ArrayList<>();
 
-        if (targetIndex.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        for (String index: this.targetIndex) {
+            try {
+                Index person =  ParserUtil.parseIndex(index);
+                personToFind.add(lastShownList.get(person.getZeroBased()));
+            } catch (IllegalValueException ive) {
+                throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            }
+
         }
-
-        ReadOnlyPerson personToFind = lastShownList.get(targetIndex.getZeroBased());
-
         try {
             model.findLocation(personToFind);
         } catch (PersonNotFoundException pnfe) {
-            assert false : "The target person cannot be missing";
+            throw new CommandException("The target person cannot be missing");
         }
 
-        return new CommandResult(String.format(MESSAGE_FIND_LOCATION_SUCCESS,
-                personToFind.getName().fullName, personToFind.getAddress()));
+        return new CommandResult(MESSAGE_FIND_LOCATION_SUCCESS);
     }
 
     @Override
@@ -168,6 +174,9 @@ public class RemoveTagCommand extends UndoableCommand {
 
         ObservableList<ReadOnlyPerson> personToRemoveTag = FXCollections.observableArrayList();
         for (Index i : this.indexes) {
+            if (i.getZeroBased() >= lastShownList.size()) {
+                throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            }
             personToRemoveTag.add(lastShownList.get(i.getZeroBased()));
         }
         try {
@@ -176,6 +185,8 @@ public class RemoveTagCommand extends UndoableCommand {
             assert false : "The target Tag cannot be missing";
         } catch (DuplicatePersonException dpe) {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+        } catch (IllegalValueException ive) {
+            throw new CommandException("The Tag is invalid!");
         }
         if (this.indexes.isEmpty()) {
             return new CommandResult(String.format(MESSAGE_DELETE_TAG_SUCCESS, this.tags.toString()));
@@ -242,7 +253,9 @@ public class EmailCommandParser implements Parser<EmailCommand> {
 
             String[] toList = ParserUtil.parseEmailToCommand(argMultimap.getAllValues(PREFIX_EMAIL_TO));
             String subject = String.join("", argMultimap.getAllValues(PREFIX_EMAIL_SUBJECT)).replace(" ", "%20");
-            String body = String.join("", argMultimap.getAllValues(PREFIX_EMAIL_BODY)).replace(" ", "%20");
+            String body = String.join("", argMultimap.getAllValues(PREFIX_EMAIL_BODY)).replace(" ",
+                    "%20").replace("\"", "\'");
+
             return new EmailCommand(new NameContainsKeywordsPredicate(Arrays.asList(toList)), subject, body);
         } catch (IllegalValueException ive) {
             throw new ParseException(ive.getMessage(), ive);
@@ -269,13 +282,14 @@ public class LocationCommandParser implements Parser<LocationCommand> {
      * @throws ParseException if the user input does not conform the expected format
      */
     public LocationCommand parse(String args) throws ParseException {
-        try {
-            Index index = ParserUtil.parseIndex(args);
-            return new LocationCommand(index);
-        } catch (IllegalValueException ive) {
+        String trimmedArgs = args.trim();
+        if (trimmedArgs.isEmpty()) {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, LocationCommand.MESSAGE_USAGE));
         }
+        String[] indexKeywords = trimmedArgs.split("\\s+");
+        return new LocationCommand(Arrays.asList(indexKeywords));
+
     }
 
 }
@@ -334,11 +348,11 @@ public class RemoveTagCommandParser implements Parser<RemoveTagCommand> {
 ###### \java\seedu\address\model\Model.java
 ``` java
     void removeTag(ObservableList<ReadOnlyPerson> persons, Set<Tag> tag)
-            throws PersonNotFoundException, DuplicatePersonException, CommandException;
+            throws PersonNotFoundException, IllegalValueException;
 ```
 ###### \java\seedu\address\model\Model.java
 ``` java
-    void findLocation(ReadOnlyPerson person) throws PersonNotFoundException;
+    void findLocation(List<ReadOnlyPerson> person) throws PersonNotFoundException;
 ```
 ###### \java\seedu\address\model\Model.java
 ``` java
@@ -354,7 +368,7 @@ public class RemoveTagCommandParser implements Parser<RemoveTagCommand> {
 ``` java
     @Override
     public void removeTag(ObservableList<ReadOnlyPerson> persons, Set<Tag> tag)
-            throws PersonNotFoundException, DuplicatePersonException, CommandException {
+            throws PersonNotFoundException, IllegalValueException {
         int counter = 0;
         if (persons.isEmpty()) {
             persons.setAll(addressBook.getPersonList());
@@ -372,14 +386,17 @@ public class RemoveTagCommandParser implements Parser<RemoveTagCommand> {
             }
         }
         if (counter == 0) {
-            throw new CommandException("The Tag is invalid!");
+            throw new IllegalValueException("The Tag is invalid!");
         }
     }
 ```
 ###### \java\seedu\address\model\ModelManager.java
 ``` java
     @Override
-    public void findLocation(ReadOnlyPerson person) throws PersonNotFoundException {
+    public void findLocation(List<ReadOnlyPerson> person) throws PersonNotFoundException {
+        if (person.size() == 0) {
+            throw new PersonNotFoundException();
+        }
         raise(new FindLocationRequestEvent(person));
     }
 ```
@@ -444,15 +461,21 @@ public class RemoveTagCommandParser implements Parser<RemoveTagCommand> {
     /**
      * Loads Google Maps.
      */
-    private void loadPersonLocation(ReadOnlyPerson person) {
-        String add = person.getAddress().toString();
-        String[] address = add.split("\\s");
-        String location = "";
-        for (String s: address) {
-            location += s;
-            location += "+";
+    private void loadPersonLocation(List<ReadOnlyPerson> person) {
+        String url = (person.size() == 1) ? GOOGLE_MAPS_URL_PLACE : GOOGLE_MAPS_URL_DIR;
+        String result = "";
+        for (ReadOnlyPerson ppl: person) {
+            String add = ppl.getAddress().toString();
+            String[] address = add.split("\\s");
+            for (String s: address) {
+                if (!s.contains("#")) {
+                    result += s;
+                    result += "+";
+                }
+            }
+            result += "/";
         }
-        loadPage(GOOGLE_MAPS_URL + location);
+        loadPage(url + result);
     }
 ```
 ###### \java\seedu\address\ui\BrowserPanel.java
@@ -464,7 +487,7 @@ public class RemoveTagCommandParser implements Parser<RemoveTagCommand> {
     @Subscribe
     private void handleFindLocationRequestEvent(FindLocationRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event,
-                "Getting location of " + event.targetPerson.getName().fullName));
-        loadPersonLocation(event.targetPerson);
+                "Getting location"));
+        loadPersonLocation(event.targetPersons);
     }
 ```

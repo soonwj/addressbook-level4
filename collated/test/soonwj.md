@@ -121,6 +121,8 @@ public class UpdateProfilePicCommandTest {
         expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicturePerson);
 
         assertCommandSuccess(updateProfilePicCommand, model, expectedMessage, expectedModel);
+
+        Files.delete(Paths.get(urlToPath(model.getFilteredPersonList().get(0).getProfilePic().toString())));
     }
 
     @Test
@@ -140,6 +142,8 @@ public class UpdateProfilePicCommandTest {
         expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicturePerson);
 
         assertCommandSuccess(updateProfilePicCommand, model, expectedMessage, expectedModel);
+
+        Files.delete(Paths.get(urlToPath(model.getFilteredPersonList().get(0).getProfilePic().toString())));
     }
 
     @Test
@@ -159,6 +163,8 @@ public class UpdateProfilePicCommandTest {
         expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicturePerson);
 
         assertCommandSuccess(updateProfilePicCommand, model, expectedMessage, expectedModel);
+
+        Files.delete(Paths.get(urlToPath(model.getFilteredPersonList().get(0).getProfilePic().toString())));
     }
 
     @Test
@@ -176,6 +182,8 @@ public class UpdateProfilePicCommandTest {
         expectedModel.updatePerson(model.getFilteredPersonList().get(0), updatedProfilePicturePerson);
 
         assertCommandSuccess(updateProfilePicCommand, model, expectedMessage, expectedModel);
+
+        Files.delete(Paths.get(urlToPath(model.getFilteredPersonList().get(0).getProfilePic().toString())));
     }
 
     @Test
@@ -221,6 +229,10 @@ public class UpdateProfilePicCommandTest {
         UpdateProfilePicCommand updateProfilePicCommand = new UpdateProfilePicCommand(index, profilePic);
         updateProfilePicCommand.setData(model, new CommandHistory(), new UndoRedoStack());
         return updateProfilePicCommand;
+    }
+
+    private String urlToPath(String url) {
+        return url.substring(url.indexOf("ProfilePics"));
     }
 }
 ```

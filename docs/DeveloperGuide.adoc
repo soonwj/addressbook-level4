@@ -673,7 +673,7 @@ in this current version of DoC, due to the following redeeming factors:
 // end::oauth2[]
 
 <<<
-
+// tag::email[]
 === Email
 
 ==== Overview
@@ -708,7 +708,9 @@ A new application has to be opened. +
 Can be emailed from the browser panel itself. +
 **Cons:** +
 The UI for GMail is very poor on `JavaFX WebView`.
+// end::email[]
 
+// tag::map[]
 === Map
 
 ==== Overview
@@ -743,8 +745,10 @@ Only functions that can be sent via URL can be used. +
 More functions such as radius and many more could have been added. +
 **Cons:** +
 Take a longer time to load the map.
+// end::map[]
 
 <<<
+// tag::removeTag[]
 
 === RemoveTag
 
@@ -779,7 +783,9 @@ It only can remove one tag at a time. If more tags has to be removed from multip
 One lesser command for the user to remember. +
 **Cons:** +
 It is very tiring for the user to update each and everyone of the contacts in the contact list, if he decided to remove the tag from everyone.
+// end::removeTag[]
 
+// tag::Find[]
 === Find
 
 ==== Overview
@@ -809,6 +815,7 @@ If name and tag are similar, the contacts with both the same name and tag will b
 Easier to find a person by name or by tag, if both name and tag have similar Strings. +
 **Cons:** +
 Extra command for the user to remember.
+// end::find[]
 
 // tag::profilePic[]
 === UpdateProfilePic/DeleteProfilePic mechanism

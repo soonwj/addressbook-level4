@@ -740,7 +740,8 @@ public class EventDate {
      */
     public EventDate(String eventDate) throws IllegalValueException {
         requireNonNull(eventDate);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd")
+                .withResolverStyle(ResolverStyle.STRICT);
         try {
             eventLocalDate = LocalDate.parse(eventDate, formatter);
         } catch (DateTimeParseException ex) {

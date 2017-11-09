@@ -65,7 +65,8 @@ public class UpdateProfilePicCommand extends Command {
             + "Example of image stored locally: " + COMMAND_WORD + " 1 "
             + PREFIX_IMAGE_URL + "file:///C:/Users/Bobby/Images/picture.jpg\n"
             + "Example of image stored on the internet: " + COMMAND_WORD + " 1 "
-            + PREFIX_IMAGE_URL + "http://www.google.com/images/picture2.png\n";
+            + PREFIX_IMAGE_URL
+            + "https://koreaboo.global.ssl.fastly.net/wp-content/uploads/2017/04/Girls-Generation-Sooyoung.jpg\n";
 
     public static final String MESSAGE_UPDATE_PROFILE_PIC_SUCCESS = "Update profile pic of Person: %1$s";
     public static final String MESSAGE_NOT_UPDATED = "Please enter a valid image URL.";
@@ -100,6 +101,7 @@ public class UpdateProfilePicCommand extends Command {
         ReadOnlyPerson personToUpdateProfilePic = lastShownList.get(index.getZeroBased());
         Person updatedProfilePicPerson = new Person(personToUpdateProfilePic);
         ProfilePic newProfilePic;
+
         if (profilePic.toString().compareTo(ProfilePic.DEFAULT_URL) == 0) {
             String oldFile = personToUpdateProfilePic.getProfilePic().toString();
             if (oldFile.compareTo(ProfilePic.DEFAULT_URL) != 0) {
@@ -113,8 +115,15 @@ public class UpdateProfilePicCommand extends Command {
             newProfilePic = profilePic;
         } else {
             String newFile;
+            if (!Files.isDirectory(Paths.get("ProfilePics"))) {
+                try {
+                    Files.createDirectory(Paths.get("ProfilePics"));
+                } catch (IOException ioe) {
+                    throw new CommandException("ProfilePics directory failed to be created");
+                }
+            }
             if (personToUpdateProfilePic.getProfilePic().toString().compareTo(ProfilePic.DEFAULT_URL) == 0) {
-                newFile = "ProfilePics/" + updatedProfilePicPerson.hashCode() + ".png";
+                newFile = "ProfilePics/" + new Date().getTime() + ".png";
             } else {
                 newFile = personToUpdateProfilePic.getProfilePic().toString();
                 newFile = urlToPath(newFile);
@@ -433,8 +442,16 @@ public class ViewCountComparator implements Comparator<ReadOnlyPerson> {
 ```
 ###### \java\seedu\address\ui\PersonCard.java
 ``` java
+    /**
+     * Initializes the profile picture to be displayed by the PersonCard
+     * @param person The person whose information is to be displayed in the PersonCard
+     */
     private void initProfilePic(ReadOnlyPerson person) {
-        imageView.setImage(new Image(person.getProfilePic().toString(), 128, 128, true, false));
+        String url = person.getProfilePic().toString();
+        if (!ProfilePic.isValidUrl(url)) {
+            url = ProfilePic.DEFAULT_URL;
+        }
+        imageView.setImage(new Image(url, 128, 128, true, false));
     }
 ```
 ###### \java\seedu\address\ui\StatusBarFooter.java

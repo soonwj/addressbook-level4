@@ -155,6 +155,7 @@ As you can see from the image above, the `edit` command from the example will ed
 
 <<<
 
+// tag::removeTag[]
 ==== Removing tags: `removeTag`
 
 Finds contacts whose names or tags contain any of the given tag and removes that tag. +
@@ -183,6 +184,7 @@ Friend tag is only removed from Index 1 and 2.
 image::removeTagpic.png[width="700"]
 
 As shown in the image above, the `removeTag` command will remove given `Tag` from all the appropriate contacts in Doc.
+// end::removeTag[]
 
 <<<
 
@@ -342,6 +344,8 @@ red boxes in the images above.
 
 <<<
 
+// tag::find[]
+
 ==== Finding contacts by name and tags: `find`
 Lists all contacts whose name or tags matches any of the given search terms. +
 Format: `find TERM1 [MORE_TERMS]`
@@ -361,6 +365,7 @@ image::findpic.png[width="700"]
 
 As demonstrated by the image above, entering the command `find Family han` displays all contacts with a tag or
 part of name, matching any search term.
+// end::find[]
 
 <<<
 
@@ -391,6 +396,7 @@ As demonstrated by the visual guide, you can first enter the command `list` to d
 
 <<<
 
+// tag::email[]
 ==== Emailing contacts : `email`
 
 Emails an existing contact/ a group in the DoC. +
@@ -411,21 +417,24 @@ Format: `email [to/TO] [subject/SUBJECT] [body/BODY]`
 
 Example:
 
-`email to/friends subject/SUBJECT body/BODY` +
+* `email to/Adam` +
+Opens the default emailing client and adds Adam to the `to` field and has the subject and body as null.
+
+
+* `email to/friends subject/SUBJECT body/BODY` +
 Opens the default emailing client and adds all the contacts who has the tag `friends` into the `to` area,
-adds the `subject` as `SUBJECT` and `body` as `BODY`.
+adds the `subject` as `SUBJECT` and `body` as `BODY`. Please refer to the visual guide attached below.
 
 <<<
 
 **Visual guide:**
 
 image::Email_UG.PNG[width="1000"]
-
-* `email to/Adam` +
-Opens the default emailing client and adds Adam to the `to` field and has the subject and body as null.
+// end::email[]
 
 <<<
 
+// tag::map[]
 ==== Locating a contact : `map`
 
 Shows the address of the contact or the directions from one location to another in Google Maps. +
@@ -450,7 +459,7 @@ Example:
 image::Location_UG.PNG[width="1000"]
 
 Shows the address of the 1st contact in Google Maps as shown above.
-
+// end::map[]
 <<<
 // tag::eventUG[]
 === Event features
