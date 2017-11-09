@@ -11,8 +11,10 @@ import seedu.address.logic.parser.exceptions.ParseException;
 //@@author philemontan
 /**
  * Unit testing for {@link seedu.address.logic.commands.UnknownCommand}
+ * Integration tests with model not required, as interactions with model happen only on the actual matched Command
+ * subclasses
  * Tests are written to check for positive matching by UnknownCommand. To reduce redundancy,
- * test cases use inputs that are at the set maximum accetable levenshtein distance:
+ * test cases use inputs that are at the set maximum acceptable levenshtein distance:
  * @see seedu.address.logic.commands.UnknownCommand#ACCEPTABLE_LEVENSHTEIN_DISTANCE
  */
 public class UnknownCommandTest {
