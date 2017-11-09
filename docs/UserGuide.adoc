@@ -186,6 +186,7 @@ As shown in the image above, the `removeTag` command will remove given `Tag` fro
 
 <<<
 
+// tag::profilePic[]
 ==== Updating a contact's profile picture: `updateProfilePic`
 
 Updates the profile picture of a contact. +
@@ -247,6 +248,7 @@ Deletes the profile picture of the 1st contact in the results of the `find` comm
 image::deleteProfilePicImageExample.jpg[width="1000"]
 
 As shown in the image above, after entering the `deleteProfilePic` command, the profile picture of the contact at the specified index is reverted back to the default.
+// end::profilePic[]
 
 <<<
 
