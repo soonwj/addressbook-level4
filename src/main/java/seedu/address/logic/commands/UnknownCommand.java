@@ -38,8 +38,8 @@ public class UnknownCommand extends Command {
      * the ACCEPTABLE_MAXIMUM_COMMAND_WORD_LENGTH should be computed by summing the longest system-recognized
      * COMMAND_WORD available, and the set ACCEPTABLE_LEVENSHTEIN_DISTANCE, to prevent needless checking
      */
-    private static final int ACCEPTABLE_LEVENSHTEIN_DISTANCE = 2;
-    private static final int ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH = 18;
+    public static final int ACCEPTABLE_LEVENSHTEIN_DISTANCE = 2;
+    public static final int ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH = 18;
 
     //A constant String[] of all known COMMAND WORDS; this list should be extended when new Command types are created
     private static final String[] ALL_COMMAND_WORDS = {

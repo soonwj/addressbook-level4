@@ -1,142 +1,170 @@
 package seedu.address.logic.commands;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import seedu.address.logic.commands.ClearCommand;
+
+import org.junit.Test;
 
 import seedu.address.logic.parser.exceptions.ParseException;
 
+//@@author philemontan
 /**
- * Created by Philemon1 on 9/11/2017.
+ * Unit testing for {@link seedu.address.logic.commands.UnknownCommand}
+ * Tests are written to check for positive matching by UnknownCommand. To reduce redundancy,
+ * test cases use inputs that are at the set maximum accetable levenshtein distance:
+ * @see seedu.address.logic.commands.UnknownCommand#ACCEPTABLE_LEVENSHTEIN_DISTANCE
  */
 public class UnknownCommandTest {
-    //Mistyped Add command with invalid (empty) parameters. Negative test.
+    /**
+     * This test case tests parsing of all commands that require input parameters.
+     * We can test 2 separate functionality simultaneously to maximize efficiency.
+     * 1: Correct matching to existing command if Levenshtein distance < current acceptable maximum:
+     * @see seedu.address.logic.commands.UnknownCommand#ACCEPTABLE_LEVENSHTEIN_DISTANCE
+     * 2: Parse exception thrown on invalid parameter input to command parsers.
+     * We do this by instantiating the UnknownCommand with commandWords that are close enough to match known
+     * commandWords, but we enter invalid arguments.
+     */
     @Test
-    public void mistypedAddTest() throws ParseException {
-        UnknownCommand mistypedAddInvalidParameters = new UnknownCommand("ad", "");
+    public void acceptableDistanceMistypedInputWithInvalidParameters() {
+        UnknownCommand tempCommand;
+
+        //AddCommand test
+        tempCommand = new UnknownCommand("a", "");
+        executeTest(tempCommand, AddCommand.MESSAGE_USAGE);
+
+        //AddECommand test
+        tempCommand = new UnknownCommand("addEve", "");
+        executeTest(tempCommand, AddEventCommand.MESSAGE_USAGE);
+
+        //DeleteCommand test
+        tempCommand  = new UnknownCommand("dele", "");
+        executeTest(tempCommand, DeleteCommand.MESSAGE_USAGE);
+
+        //DeleteEventCommand test
+        tempCommand = new UnknownCommand("leteE", "");
+        executeTest(tempCommand, DeleteEventCommand.MESSAGE_USAGE);
+
+        //DeleteProfilePicCommand test
+        tempCommand  = new UnknownCommand("deleteProfileP", "");
+        executeTest(tempCommand, DeleteProfilePicCommand.MESSAGE_USAGE);
+
+        //EditCommand test
+        tempCommand = new UnknownCommand("edittt", "");
+        executeTest(tempCommand, EditCommand.MESSAGE_USAGE);
+
+        //EditEventCommand test
+        tempCommand = new UnknownCommand("itE", "");
+        executeTest(tempCommand, EditEventCommand.MESSAGE_USAGE);
+
+        //EmailCommand test
+        tempCommand = new UnknownCommand("ema", "");
+        executeTest(tempCommand, EmailCommand.MESSAGE_USAGE);
+
+        //FindCommand test
+        tempCommand = new UnknownCommand("fi", "");
+        executeTest(tempCommand, FindCommand.MESSAGE_USAGE);
+
+        //LocationCommand test
+        tempCommand = new UnknownCommand("locati", "");
+        executeTest(tempCommand, LocationCommand.MESSAGE_USAGE);
+
+        //RemoveTagCommand test
+        tempCommand = new UnknownCommand("removet", "");
+        executeTest(tempCommand, RemoveTagCommand.MESSAGE_USAGE);
+
+        //SelectCommand test
+        tempCommand = new UnknownCommand("sele", "");
+        executeTest(tempCommand, SelectCommand.MESSAGE_USAGE);
+
+        //UpdateProfilePicCommand test
+        tempCommand = new UnknownCommand("updateProfileP", "");
+        executeTest(tempCommand, UpdateProfilePicCommand.MESSAGE_USAGE);
+    }
+
+    /**
+     * Executes the actual testing for {@link #acceptableDistanceMistypedInputWithInvalidParameters()}
+     * @param tempCommand
+     * @param expectedCommandMessageUsage
+     */
+    public void executeTest(UnknownCommand tempCommand, String expectedCommandMessageUsage) {
         try {
-            mistypedAddInvalidParameters.suggestionFound();
+            tempCommand.suggestionFound();
         } catch (ParseException E) {
-            assertEquals(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE), E.getMessage());
+            assertEquals(String.format(MESSAGE_INVALID_COMMAND_FORMAT, expectedCommandMessageUsage), E.getMessage());
         }
     }
 
-    //Mistyped AddE command with invalid (empty) parameters. Negative test.
+    /**
+     * Similar to {@link #acceptableDistanceMistypedInputWithInvalidParameters}, this test case is written for
+     * Commands that do not require parameters.
+     * In this test case, we only test for positive matching of mistyped inputs.
+     */
     @Test
-    public void mistypedAddETest() throws ParseException {
-        UnknownCommand mistypedAddEInvalidParameters = new UnknownCommand("adddE", "");
-        try {
-            mistypedAddEInvalidParameters.suggestionFound();
-        } catch (ParseException E) {
-            assertEquals(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddEventCommand.MESSAGE_USAGE), E.getMessage());
-        }
+    public void acceptableDistanceMistypedInputWithNoRequiredParameters() {
+        UnknownCommand tempCommand = null;
+        String commandBaseClassPath = "seedu.address.logic.commands.";
+
+        //ClearCommand test
+        tempCommand = new UnknownCommand("cle", "");
+        executeTestCommandWithoutParameterRequirement(tempCommand, commandBaseClassPath + "ClearCommand");
+
+        //ExitCommand test
+        tempCommand = new UnknownCommand("ex", "");
+        executeTestCommandWithoutParameterRequirement(tempCommand, commandBaseClassPath + "ExitCommand");
+
+        //Export test
+        tempCommand = new UnknownCommand("exporttt", "");
+        executeTestCommandWithoutParameterRequirement(tempCommand, commandBaseClassPath + "ExportCommand");
+
+        //Help test
+        tempCommand = new UnknownCommand("he", "");
+        executeTestCommandWithoutParameterRequirement(tempCommand, commandBaseClassPath + "HelpCommand");
+
+        //History test
+        tempCommand = new UnknownCommand("histo", "");
+        executeTestCommandWithoutParameterRequirement(tempCommand, commandBaseClassPath + "HistoryCommand");
+
+        //Import test
+        tempCommand = new UnknownCommand("impo", "");
+        executeTestCommandWithoutParameterRequirement(tempCommand, commandBaseClassPath + "ImportCommand");
+
+        //List test
+        tempCommand = new UnknownCommand("li", "");
+        executeTestCommandWithoutParameterRequirement(tempCommand, commandBaseClassPath + "ListCommand");
+
+        //Redo test
+        tempCommand = new UnknownCommand("re", "");
+        executeTestCommandWithoutParameterRequirement(tempCommand, commandBaseClassPath + "RedoCommand");
+
+        //Sort test
+        tempCommand = new UnknownCommand("so", "");
+        executeTestCommandWithoutParameterRequirement(tempCommand, commandBaseClassPath + "SortCommand");
+
+        //Undo test
+        tempCommand = new UnknownCommand("un", "");
+        executeTestCommandWithoutParameterRequirement(tempCommand, commandBaseClassPath + "UndoCommand");
     }
 
-    //Mistyped Clear command. Negative test.
-    @Test
-    public void mistypedClearTest() throws ParseException {
-        UnknownCommand mistypedClearCommand = new UnknownCommand("cler", "");
-        Class clearCommandClass = null;
+    /**
+     * Executes the actual testing for {@link #acceptableDistanceMistypedInputWithNoRequiredParameters}
+     * @param tempCommand
+     * @param fullyQualifiedActualClassPath
+     */
+    public void executeTestCommandWithoutParameterRequirement(UnknownCommand tempCommand,
+                                                              String fullyQualifiedActualClassPath) {
+        Class actualClass = null;
         try {
-            mistypedClearCommand.suggestionFound();
+            tempCommand.suggestionFound();
         } catch (ParseException E1) {
-            assert false: "Unexpected behaviour: Clear should not throw a parse exception with empty parameters";
+            assert false : "Unexpected behaviour: Clear should not throw a parse exception with empty parameters";
         }
         try {
-            clearCommandClass = Class.forName("seedu.address.logic.commands.ClearCommand");
+            actualClass = Class.forName(fullyQualifiedActualClassPath);
         } catch (ClassNotFoundException E2) {
-            assert false: "Unexpected behaviour: ClearCommand class cannot be found";
+            assert false : "Unexpected behaviour: ClearCommand class cannot be found";
         }
-        assertTrue(mistypedClearCommand.getSuggestedCommand().getClass().getSimpleName()
-                .equals(clearCommandClass.getSimpleName()));
+        assertTrue(tempCommand.getSuggestedCommand().getClass().getSimpleName()
+                .equals(actualClass.getSimpleName()));
     }
-    //Mistyped Delete command with invalid (empty) parameters. Negative test.
-    @Test
-    public void mistypedDeleteTest() throws ParseException {
-        UnknownCommand mistypedAddInvalidParameters = new UnknownCommand("dele", "");
-        try {
-            mistypedAddInvalidParameters.suggestionFound();
-        } catch (ParseException E) {
-            assertEquals(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE), E.getMessage());
-        }
-    }
-
-    //Mistyped DeleteE command with invalid (empty) parameters. Negative test.
-    @Test
-    public void mistypedDeleteETest() throws ParseException {
-        UnknownCommand mistypedAddInvalidParameters = new UnknownCommand("leteE", "");
-        try {
-            mistypedAddInvalidParameters.suggestionFound();
-        } catch (ParseException E) {
-            assertEquals(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteEventCommand.MESSAGE_USAGE),
-                    E.getMessage());
-        }
-    }
-
-    //Mistyped Delete command with invalid (empty) parameters. Negative test.
-    @Test
-    public void mistypedDeleteProfilePicTest() throws ParseException {
-        UnknownCommand mistypedAddInvalidParameters = new UnknownCommand("deleteProfileP",
-                "");
-        try {
-            mistypedAddInvalidParameters.suggestionFound();
-        } catch (ParseException E) {
-            assertEquals(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteProfilePicCommand.MESSAGE_USAGE),
-                    E.getMessage());
-        }
-    }
-
-
-
-
-
-
-
-
-
-// Mistyped Add command with invalid (empty) parameters. Negative test.
-//    @Test
-//    public void mistypedAddTest() throws ParseException {
-//        UnknownCommand mistypedAddInvalidParameters = new UnknownCommand("ad", "");
-//        try {
-//            mistypedAddInvalidParameters.suggestionFound();
-//        } catch (ParseException E) {
-//            assertEquals(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE), E.getMessage());
-//        }
-//    }    //Mistyped Add command with invalid (empty) parameters. Negative test.
-//    @Test
-//    public void mistypedAddTest() throws ParseException {
-//        UnknownCommand mistypedAddInvalidParameters = new UnknownCommand("ad", "");
-//        try {
-//            mistypedAddInvalidParameters.suggestionFound();
-//        } catch (ParseException E) {
-//            assertEquals(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE), E.getMessage());
-//        }
-//    }    //Mistyped Add command with invalid (empty) parameters. Negative test.
-//    @Test
-//    public void mistypedAddTest() throws ParseException {
-//        UnknownCommand mistypedAddInvalidParameters = new UnknownCommand("ad", "");
-//        try {
-//            mistypedAddInvalidParameters.suggestionFound();
-//        } catch (ParseException E) {
-//            assertEquals(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE), E.getMessage());
-//        }
-//    }    //Mistyped Add command with invalid (empty) parameters. Negative test.
-//    @Test
-//    public void mistypedAddTest() throws ParseException {
-//        UnknownCommand mistypedAddInvalidParameters = new UnknownCommand("ad", "");
-//        try {
-//            mistypedAddInvalidParameters.suggestionFound();
-//        } catch (ParseException E) {
-//            assertEquals(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE), E.getMessage());
-//        }
-//    }
-
-
-
-
 }
