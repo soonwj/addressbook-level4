@@ -86,8 +86,8 @@ include::../UserGuide.adoc[tag=email]
 ==== Justification
 
 The `Email` feature  was built to reduce the workload on the User. The `Email` Command will allow user to email by `Tag`. Simply put,
-when the User selects `Email Friends`, all the contacts with the `Friends` tag will be added to the recipient list automatically. 
-This feature will also work in tandem with the `Events` feature. When an `Event` is due, the user can immediately email the 
+when the User selects `Email Friends`, all the contacts with the `Friends` tag will be added to the recipient list automatically.
+This feature will also work in tandem with the `Events` feature. When an `Event` is due, the user can immediately email the
 necessary contacts in a jiffy.
 
 ==== Implementation
@@ -116,7 +116,7 @@ include::../UserGuide.adoc[tag=map]
 
 ==== Justification
 
-The `Map` feature  was built to show the contact's location to the User. The User can also determine the route from 
+The `Map` feature  was built to show the contact's location to the User. The User can also determine the route from
 one contact's location to the next. This will help the User plan his activities better.
 
 ==== Implementation
