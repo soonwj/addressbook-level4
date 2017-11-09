@@ -421,7 +421,7 @@ We do not need to maintain a separate stack, and just reuse what is already in t
 **Cons:** +
 Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two different things. +
 // end::undoredo[]
-
+// tag::eventDG[]
 === Event class mechanism
 ==== Summary
 The `Event` class, which is located inside `Model`, is implemented with similar logic as `Person` class. We have introduced three commands that modifies the address book: `addE`, `editE` and `deleteE`, which extends `UndoableCommand`.
@@ -444,11 +444,12 @@ Before modifying the list of events inside the address book, the system may thro
 
 * `EventNotFoundException`: This exception can be thrown by `editE` and `deleteE` command when the an invalid event index is provided by the user. The index needs to be within the size of the event list at the current state of the address book.
 * `DuplicateEventException`: This exception can be thrown by `addE` and `editE` command. The system will first create an `Event` object with the input parameters, compare the object to all events residing in the event list and throw this exception if there is a duplicate found.
-* `DateTimeParseException`: This exception can be thrown by `addE` and `editE` command when the input `EventDate` parameter is not a valid date. The date format and validity of date is checked inside the `Event` class like this: +
+* `DateTimeParseException`: This exception can be thrown by `addE` and `editE` command when the input `EventDate` parameter is not a valid date. The date's format and validity is checked inside the `Event` class like this: +
 [source,java]
 ----
 public EventDate(String eventDate) throws IllegalValueException {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd")
+                    .withResolverStyle(ResolverStyle.STRICT);
     try {
         eventLocalDate = LocalDate.parse(eventDate, formatter);
     } catch (DateTimeParseException ex) {
@@ -479,8 +480,8 @@ The events follow a certain colored background based on its urgency. The visual 
 image::EventColorDiagram.png[width="600"]
 _Figure 4.2.3: Event Colour Diagram_
 
-==== Design Consideration for future enhancement
-**Aspect:** How to implement adding of contacts into an `Event` using a `Person` list parameter +
+==== Design Considerations
+**Aspect(future enhancement):** How to implement adding/tagging of contacts into an `Event` using a `Person` list parameter +
 
 **Chosen Implementation:** +
 Add by the index of contact shown in the `PersonListPanel`. +
@@ -494,7 +495,9 @@ Requires user to refer to the `PersonListPanel` before executing command to add 
 Easier for users to add using names, do not need to refer to the `Person` list. +
 **Cons:** +
 System have to check through the list to check if the contact's name exist in the current address book.
+// end::eventDG[]
 
+// tag::oauth2[]
 === OAuth2 fulfilment mechanism
 ==== Overview
 A command structure has been set-up to fulfil all commands requiring an authentication process against the OAuth2 protocol.
@@ -510,8 +513,27 @@ which is implemented in an event-driven manner.
 
 The following class diagram illustrates the structure of this mechanism, and its' current applications: +
 
-image::Oauth2ClassDiagram.PNG[width="800"]
+image::Oauth2ClassDiagram.PNG[width="100%"]
 _Figure 4.3.1 OAuth2 Class Diagram_
+
+An important requirement for all child classes of the `Oauth2Command` structure, is a valid `commandType` string of the format:
+`SERVICEPROVIDER_functionality`. This is to allow quick identification in token extraction methods, as different service providers will append
+the authentication token differently.
+
+This is enforced in the constructor of the `Oauth2Command` class, and can be seen from the following code snippet:
+----
+protected Oauth2Command(String inputType)  {
+    if (!inputTypeValid(inputType)) {
+        assert true : "Child classes of Oauth2Command must provide a valid command type in the
+            format: SERVICEPROVIDER_functionality";
+    }
+    commandType = inputType;
+    commandCompleted = false;
+}
+----
+
+
+
 
 ==== Current usages
 
@@ -648,9 +670,10 @@ in this current version of DoC, due to the following redeeming factors:
 
 - Google Contacts automatically flags possible duplicates, and offers a quick merging service.
 - Contacts exported from DoC will be added to a designated "ImportedFromGoogle" contact group, and can be filtered out on Google Contacts easily.
+// end::oauth2[]
 
 <<<
-
+// tag::email[]
 === Email
 
 ==== Overview
@@ -685,7 +708,9 @@ A new application has to be opened. +
 Can be emailed from the browser panel itself. +
 **Cons:** +
 The UI for GMail is very poor on `JavaFX WebView`.
+// end::email[]
 
+// tag::map[]
 === Map
 
 ==== Overview
@@ -720,8 +745,10 @@ Only functions that can be sent via URL can be used. +
 More functions such as radius and many more could have been added. +
 **Cons:** +
 Take a longer time to load the map.
+// end::map[]
 
 <<<
+// tag::removeTag[]
 
 === RemoveTag
 
@@ -756,7 +783,9 @@ It only can remove one tag at a time. If more tags has to be removed from multip
 One lesser command for the user to remember. +
 **Cons:** +
 It is very tiring for the user to update each and everyone of the contacts in the contact list, if he decided to remove the tag from everyone.
+// end::removeTag[]
 
+// tag::Find[]
 === Find
 
 ==== Overview
@@ -786,7 +815,9 @@ If name and tag are similar, the contacts with both the same name and tag will b
 Easier to find a person by name or by tag, if both name and tag have similar Strings. +
 **Cons:** +
 Extra command for the user to remember.
+// end::find[]
 
+// tag::profilePic[]
 === UpdateProfilePic/DeleteProfilePic mechanism
 
 ==== Overview
@@ -861,18 +892,58 @@ Initial download may cause a visible lag and freeze the UI for some time. +
 No space requirement to store the images locally +
 **Cons:** +
 There might be a visible lag every time an image is displayed as a profile picture, if the image is too big and on the internet.
+// end::profilePic[]
 
+// tag::viewCount[]
 === ViewCount Tracking
 
 ==== Overview
 
 The `viewCount` variable is a `private int` variable of the `Person` class. This variable is updated whenever a `PersonPanelSelectionChangedEvent` is raised. This means that whenever a contact is selected, whether by the `select` command or by clicking on the `PersonCard` on the UI, the contact associated with the selected `PersonCard` will have its `viewCount` variable incremented by 1.
 
-To listen for the `PersonPanelSelectionChangedEvent`, a listener is placed in the `MainApp` object, which ensures that the `Model` associated to it is updated with the right `Person` object that has its `viewCount` updated.
+To listen for the `PersonPanelSelectionChangedEvent`, a listener is placed in the `MainApp` object, which ensures that the `Model` associated to it is updated with the right `Person` object that has its `viewCount` updated. (See code snippet below)
+[source,java]
+----
+private void handlePersonPanelSelectionChangedEvent(PersonPanelSelectionChangedEvent event) {
+    logger.info(LogsCenter.getEventHandlingLogMessage(event));
+    if (event.getNewSelection().person != null) {
+        Person personSelected = new Person(event.getNewSelection().person);
+        personSelected.setViewCount(personSelected.getViewCount() + 1);
+        try {
+            model.updatePerson(event.getNewSelection().person, personSelected);
+        } catch (DuplicatePersonException dpe) {
+            assert false : "Impossible to be duplicate";
+        } catch (PersonNotFoundException pnfe) {
+            assert false : "Impossible not to be found";
+        }
+    }
+}
+----
 
 As the `viewCount` is not displayed on the UI, when this variable of a contact is updated, no `AddressBookChangedEvent` is raised, so the UI will not be refreshed unnecessarily.
 
-Right before the app closes, the app will sort the `Person` objects in the `AddressBook` such that the `Person` objects will be displayed from highest `viewCount` to lowest.
+Right before the app closes, the app will sort the `Person` objects in the `AddressBook` such that the `Person` objects will be displayed from highest `viewCount` to lowest. (See code snippet below)
+
+[source,java]
+----
+public void sortByViewCount() {
+    AddressBook addressBookToSort = new AddressBook(addressBook);
+    ObservableList<ReadOnlyPerson> listToSort = addressBookToSort.getPersonList();
+    ArrayList<ReadOnlyPerson> listToSortedCopy = new ArrayList<>();
+    for (ReadOnlyPerson r : listToSort) {
+        listToSortedCopy.add(r);
+    }
+    Collections.sort(listToSortedCopy, new ViewCountComparator());
+
+    try {
+        addressBookToSort.setPersons(listToSortedCopy);
+    } catch (DuplicatePersonException dpe) {
+        assert false : "Impossible to be duplicate";
+    }
+
+    resetData(addressBookToSort);
+}
+----
 
 <<<
 
@@ -938,9 +1009,10 @@ The app will take a while to start. +
 **Alternative 3:** Whenever a viewCount is changed. +
 **Pros:** The app will always show the updated order. +
 **Cons:** The app will lag slightly each time a `PersonCard` is selected.
+// end::viewCount[]
 
 <<<
-
+// tag::unknowncommand[]
 === Unknown input parsing
 
 ==== Overview
@@ -989,6 +1061,51 @@ _Figure 4.10.1: ParseCommand Activity Diagram_
 
 As shown in the diagram above, actions enclosed in a green box are the enhancements applied to the original `AddressBookParser`,
 for the purpose of this mechanism.
+
+To better understand the underlying logic of this enhancement, you can refer to the following code snippets: +
+
+----
+if (correctionPrompted) {
+    if (userAcceptsSuggestion(commandWord)) {
+        Command suggestedCommand = unknownCommand.getSuggestedCommand();
+        resetCorrectionChecker();
+        return suggestedCommand;
+    } else {
+        resetCorrectionChecker();
+    }
+}
+.
+.
+----
+As shown in the snippet above, once a correction has been prompted, the prompting mechanism will be reset one command later
+even if we do not receive a positive response from the user. This means that we only offer the user one window of
+opportunity to accept the suggestion.
+
+Responses that are not recognized in the `userAcceptsSuggestion(commandWord)` method, will be parsed as regular input. This means that we do
+not require a negative response to a correction prompt.
+
+Processing of unknown user input, is performed in the default case of the following switch:
+
+----
+.
+.
+switch (commandWord) {
+    .
+    .
+    default:
+        unknownCommand = new UnknownCommand(commandWord, arguments);
+        if (unknownCommand.suggestionFound()) {
+            correctionPrompted = true;
+            return unknownCommand;
+        } else {
+            unknownCommand = null;
+        }
+        throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
+}
+----
+As shown in the snippet above, when a possible match is found, we set the boolean `correctionPrompted` to `true`, to begin checking for a
+response to our prompt, which is shown in the previous code snippet.
+
 
 ==== Design considerations
 
@@ -1040,6 +1157,7 @@ An extra step is presented to the user on a wrong match, affecting the user's ex
 
 **Note:** In our chosen implementation, we mitigate the mentioned cons by including explicit instructions in the suggestion prompt,
 that a response is only required if the user accepts the match.
+// end::unknowncommand[]
 
 <<<
 

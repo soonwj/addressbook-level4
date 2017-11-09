@@ -620,12 +620,14 @@ public abstract class Oauth2Command extends Command {
     private boolean commandCompleted;
 
     protected Oauth2Command(String inputType)  {
-        if (inputType == null || inputType.charAt(inputType.length() - 1) == '_') {
-            assert true : "Child classes of Oauth2Command must provide a valid command type!";
+        if (!inputTypeValid(inputType)) {
+            assert true : "Child classes of Oauth2Command must provide a valid command type in the format:"
+                   + " SERVICEPROVIDER_functionality";
         }
         commandType = inputType;
         commandCompleted = false;
     }
+
     protected Oauth2Command() {
         this(null);
     }
@@ -666,6 +668,10 @@ public abstract class Oauth2Command extends Command {
      * @return the authentication URL, based on the scope required of the command
      */
     public abstract String getAuthenticationUrl ();
+
+    private boolean inputTypeValid(String inputType) {
+        return inputType != null && inputType.charAt(inputType.length() - 1) != '_';
+    }
 }
 ```
 ###### \java\seedu\address\logic\commands\UnknownCommand.java
@@ -796,16 +802,12 @@ public class UnknownCommand extends Command {
          * switch
          */
         if (correctionPrompted) {
-            if (commandWord.equals("yes") || commandWord.equals("y")) {
-                Command tempCommand = unknownCommand.getSuggestedCommand();
-                unknownCommand = null;
-                correctionPrompted = false;
-                return tempCommand;
+            if (userAcceptsSuggestion(commandWord)) {
+                Command suggestedCommand = unknownCommand.getSuggestedCommand();
+                resetCorrectionChecker();
+                return suggestedCommand;
             } else {
-                unknownCommand = null;
-                correctionPrompted = false;
-                EventsCenter.getInstance().post(new NewResultAvailableEvent(
-                        "Suggested command is discarded", false));
+                resetCorrectionChecker();
             }
         }
 ```
@@ -825,9 +827,17 @@ public class UnknownCommand extends Command {
             }
             throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
         }
+```
+###### \java\seedu\address\logic\parser\AddressBookParser.java
+``` java
+    private boolean userAcceptsSuggestion(String commandWord) {
+        return commandWord.equals("yes") || commandWord.equals("y");
     }
 
-}
+    private void resetCorrectionChecker() {
+        unknownCommand = null;
+        correctionPrompted = false;
+    }
 ```
 ###### \java\seedu\address\ui\BrowserPanel.java
 ``` java

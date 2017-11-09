@@ -87,7 +87,7 @@ public class CommandTestUtil {
     public static final String INVALID_HEADER_DESC = " " + PREFIX_HEADER; // empty string not allowed for addresses
     public static final String INVALID_DESC_DESC = " " + PREFIX_DESC; // empty string not allowed for addresses
     public static final String INVALID_EVENT_DATE_DESC = " "
-            + PREFIX_EVENT_DATE; // empty string not allowed for addresses
+            + PREFIX_EVENT_DATE + "2017-02-29"; // date does not exist
 
     public static final EditEventCommand.EditEventDescriptor DESC_MEETING;
     public static final EditEventCommand.EditEventDescriptor DESC_BIRTHDAY;
@@ -172,6 +172,7 @@ public class CommandTestUtil {
         }
     }
 
+    //@@author royceljh
     /**
      * Updates {@code model}'s filtered list to show only the first event in the {@code model}'s address book.
      */
