@@ -23,7 +23,7 @@ public abstract class Oauth2Command extends Command {
 
     protected Oauth2Command(String inputType)  {
         if (!inputTypeValid(inputType)) {
-            assert true : "Child classes of Oauth2Command must provide a valid command type in the format:"
+            assert false : "Child classes of Oauth2Command must provide a valid command type in the format:"
                    + " SERVICEPROVIDER_functionality";
         }
         commandType = inputType;
