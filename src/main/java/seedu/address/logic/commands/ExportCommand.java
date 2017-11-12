@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl;
 import com.google.api.services.people.v1.PeopleService;
@@ -13,6 +14,8 @@ import com.google.api.services.people.v1.model.CreateContactGroupRequest;
 import com.google.api.services.people.v1.model.ModifyContactGroupMembersRequest;
 import com.google.common.eventbus.Subscribe;
 
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.logic.GoogleAuthenticationSuccessEvent;
 import seedu.address.commons.events.logic.GoogleCommandCompleteEvent;
@@ -75,11 +78,6 @@ public class ExportCommand extends GoogleCommand {
                     .setApplicationName("CS2103T - Doc")
                     .build();
 
-            //Conversion calls
-            List<ReadOnlyPerson> docPersonList = model.getAddressBook().getPersonList();
-            List<com.google.api.services.people.v1.model.Person> googlePersonList =
-                    GooglePersonConverterUtil.listDocToGooglePersonConversion(docPersonList);
-
             //Set contactGroupId for exporting to a specific contact group: `Imported From DoC`
             String contactGroupId = retrieveExistingContractGroupResourceName();
 
@@ -88,23 +86,40 @@ public class ExportCommand extends GoogleCommand {
                 contactGroupId = createNewContactGroup();
             }
 
-            //HTTP calls - exporting
-            for (com.google.api.services.people.v1.model.Person p : googlePersonList) {
-                try {
-                    //create Contact
-                    String newPersonId;
-                    newPersonId = peopleService.people().createContact(p).execute().getResourceName();
 
-                    //set Contact's group
-                    peopleService.contactGroups().members().modify(contactGroupId,
-                            new ModifyContactGroupMembersRequest()
-                                    .setResourceNamesToAdd(GooglePersonConverterUtil
-                                            .makeListFromOne(newPersonId)))
-                            .execute();
-                } catch (IOException E) {
-                    System.out.println(E);
-                }
-            }
+//            //Conversion calls
+//            List<ReadOnlyPerson> docPersonList = model.getAddressBook().getPersonList();
+//            List<com.google.api.services.people.v1.model.Person> googlePersonList =
+//                    GooglePersonConverterUtil.listDocToGooglePersonConversion(docPersonList);
+//
+//            //Set contactGroupId for exporting to a specific contact group: `Imported From DoC`
+//            String contactGroupId = retrieveExistingContractGroupResourceName();
+//
+//            //Create a new contact group titled `Imported From DoC`, if still not set
+//            if (contactGroupId == null) {
+//                contactGroupId = createNewContactGroup();
+//            }
+//
+//            //HTTP calls - exporting
+//            for (com.google.api.services.people.v1.model.Person p : googlePersonList) {
+//                try {
+//                    //create Contact
+//                    String newPersonId;
+//                    newPersonId = peopleService.people().createContact(p).execute().getResourceName();
+//
+//                    //set Contact's group
+//                    peopleService.contactGroups().members().modify(contactGroupId,
+//                            new ModifyContactGroupMembersRequest()
+//                                    .setResourceNamesToAdd(GooglePersonConverterUtil
+//                                            .makeListFromOne(newPersonId)))
+//                            .execute();
+//                } catch (IOException E) {
+//                    System.out.println(E);
+//                }
+//            }
+            ExportBackgroundService exportBackgroundService = new ExportBackgroundService(contactGroupId);
+            exportBackgroundService.start();
+
             EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
                     googleContactsGroupView + contactGroupId.split("/")[1], getCommandType()));
             setCommandCompleted();
@@ -122,8 +137,8 @@ public class ExportCommand extends GoogleCommand {
                     new CreateContactGroupRequest()
                             .setContactGroup(new ContactGroup().setName("Imported From DoC")))
                     .execute().getResourceName();
-        } catch (IOException e7) {
-            System.out.println(e7);
+        } catch (IOException E) {
+            System.out.println(E);
             assert true : "google server error";
         }
         return contactGroupId;
@@ -165,4 +180,46 @@ public class ExportCommand extends GoogleCommand {
         return accessScope;
     }
 
+    class ExportBackgroundService extends Service {
+        private String contactGroupId;
+
+        public ExportBackgroundService(String inputContactGroupId) {
+            contactGroupId = inputContactGroupId;
+        }
+
+        @Override
+        protected Task createTask() {
+            return new Task() {
+                @Override
+                protected Object call() throws Exception {
+                    //Conversion calls
+                    List<ReadOnlyPerson> docPersonList = model.getAddressBook().getPersonList();
+                    List<com.google.api.services.people.v1.model.Person> googlePersonList =
+                            GooglePersonConverterUtil.listDocToGooglePersonConversion(docPersonList);
+
+                    //HTTP calls - exporting
+                    for (com.google.api.services.people.v1.model.Person p : googlePersonList) {
+                        try {
+                            //create Contact
+                            String newPersonId;
+                            newPersonId = peopleService.people().createContact(p).execute().getResourceName();
+
+                            //set Contact's group
+                            peopleService.contactGroups().members().modify(contactGroupId,
+                                    new ModifyContactGroupMembersRequest()
+                                            .setResourceNamesToAdd(GooglePersonConverterUtil
+                                                    .makeListFromOne(newPersonId)))
+                                    .execute();
+                        } catch (IOException E) {
+                            System.out.println(E);
+                        }
+                    }
+                    return null;
+                }
+            };
+        }
+    }
+
 }
+
+

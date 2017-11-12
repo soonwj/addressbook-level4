@@ -57,6 +57,9 @@ public class ImportCommand extends GoogleCommand {
     @Override
     @Subscribe
     protected void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event) {
+        if (!commandTypeCheck(event.getCommandType())) {
+            return;
+        }
         if (!getCommandCompleted()) {
             //Fire event to alert status bar of conversion process
             EventsCenter.getInstance().post(
@@ -68,10 +71,6 @@ public class ImportCommand extends GoogleCommand {
 
             //List of converted DoC person
             List<Person> docPersonList = new ArrayList<>();
-
-            if (!commandTypeCheck(event.getCommandType())) {
-                return;
-            }
 
             //set up credentials
             setupCredentials(event.getAuthCode());
