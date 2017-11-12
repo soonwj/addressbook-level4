@@ -36,8 +36,6 @@ public class ExportCommand extends GoogleCommand {
 
     private static final String GOOGLE_CONTACTS_GROUP_VIEW = "https://contacts.google.com/label/";
 
-    private PeopleService peopleService;
-
     public ExportCommand() {
         super(COMMAND_WORD, ACCESS_SCOPE);
         EventsCenter.getInstance().registerHandler(this);
@@ -75,18 +73,12 @@ public class ExportCommand extends GoogleCommand {
         }
 
         setupCredentials(event.getAuthCode());
-        setUpPeopleService();
+        setupPeopleService();
         String contactGroupId = getContactGroupId();
         startBackgroundConversionAndHttpCalls(contactGroupId);
         EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
                 GOOGLE_CONTACTS_GROUP_VIEW + contactGroupId.split("/")[1], getCommandType()));
         setCommandCompleted();
-    }
-
-    private void setUpPeopleService() {
-        peopleService = new PeopleService.Builder(httpTransport, jsonFactory, credential)
-                .setApplicationName(APPLICATION_NAME_FOR_GOOGLE)
-                .build();
     }
 
     /**

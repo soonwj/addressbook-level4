@@ -5,6 +5,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.people.v1.PeopleService;
 
 //@@author philemontan
 /**
@@ -27,6 +28,8 @@ public abstract class GoogleCommand extends Oauth2Command {
     protected GoogleCredential credential;
     protected HttpTransport httpTransport;
     protected JacksonFactory jsonFactory;
+    protected PeopleService peopleService;
+
 
     protected GoogleCommand(String googleCommandType, String inputAccessScope)  {
         super(SERVICE_SOURCE + "_" + googleCommandType);
@@ -43,6 +46,16 @@ public abstract class GoogleCommand extends Oauth2Command {
         authToken = new TokenResponse();
         authToken.setAccessToken(authCode);
         credential = new GoogleCredential().setFromTokenResponse(authToken);
+    }
+
+    /**
+     * This method can only be called after the setupCredentials method has been called
+     */
+    protected void setupPeopleService() {
+        assert (credential != null): "setupPeopleService() should not be called before setupCredentials()";
+        peopleService = new PeopleService.Builder(httpTransport, jsonFactory, credential)
+                .setApplicationName(APPLICATION_NAME_FOR_GOOGLE)
+                .build();
     }
 
     protected static String getClientId() {

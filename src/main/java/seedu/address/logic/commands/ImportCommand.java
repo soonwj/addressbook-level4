@@ -6,33 +6,37 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl;
-import com.google.api.services.people.v1.PeopleService;
+
 import com.google.api.services.people.v1.model.ListConnectionsResponse;
 import com.google.common.eventbus.Subscribe;
+
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 
 import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.logic.GoogleAuthenticationSuccessEvent;
 import seedu.address.commons.events.logic.GoogleCommandCompleteEvent;
-import seedu.address.commons.events.ui.NewResultAvailableEvent;
+
 import seedu.address.commons.util.GooglePersonConverterUtil;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.Person;
+
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 
 //@@author philemontan
 /**
- * Purpose: Import contacts from Google Contacts, with Google's OAuth2 protocol.
- * Limit of contacts retrieved set at : 1000, until multithreading is implemented in v2.0, to prevent excess blocking
+ * Purpose: Import contacts from Google Contacts to DoC, with the OAuth2 protocol against the Google People API.
+ * Limit of contacts retrieved set at : 2000, which is the People API's inherent limit
  * of UI
  */
 public class ImportCommand extends GoogleCommand {
     public static final String COMMAND_WORD = "import";
-    public static final int CONTACT_RETRIEVAL_LIMIT = 1000;
+    public static final int CONTACT_RETRIEVAL_LIMIT = 2000;
 
-    //Scope includes read-only access to a users' Google Contacts
+    //This scope includes read-only access to a users' Google Contacts
     public static final String ACCESS_SCOPE = "https://www.googleapis.com/auth/contacts.readonly";
 
-    protected PeopleService peopleService;
+    private static final String GOOGLE_CONTACTS_DEFAULT_VIEW = "https://contacts.google.com/";
 
     public ImportCommand() {
         super(COMMAND_WORD, ACCESS_SCOPE);
@@ -45,14 +49,15 @@ public class ImportCommand extends GoogleCommand {
         try {
             triggerBrowserAuth();
         } catch (IOException E) {
-            throw new CommandException("Failed to trigger browser auth");
+            throw new CommandException(TRIGGER_BROWSER_AUTH_FAILED_MESSAGE);
         }
-        return new CommandResult("Authentication in process");
+        return new CommandResult(TRIGGER_BROWSER_AUTH_SUCCESS_MESSAGE);
     }
 
     /**
      * Event listener for a successful authentication
-     * @param event Should be fired from the BrowserPanel, with an authcode
+     * @param event should be fired from the {@link seedu.address.ui.BrowserPanel} once it retrieves the authentication
+     * code
      */
     @Override
     @Subscribe
@@ -60,41 +65,28 @@ public class ImportCommand extends GoogleCommand {
         if (!commandTypeCheck(event.getCommandType())) {
             return;
         }
-        if (!getCommandCompleted()) {
-            //Fire event to alert status bar of conversion process
-            EventsCenter.getInstance().post(
-                    new NewResultAvailableEvent("Successfully authenticated - Conversion in process now",
-                            false));
 
-            //Incoming Google Person List
-            List<com.google.api.services.people.v1.model.Person> googlePersonList = new ArrayList<>();
+        if (getCommandCompleted()) {
+            return;
+        }
 
-            //List of converted DoC person
-            List<Person> docPersonList = new ArrayList<>();
+        setupCredentials(event.getAuthCode());
+        setupPeopleService();
+        ImportBackgroundService importBackgroundService = setupImportBackgroundService();
+        importBackgroundService.start();
+        EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
+                GOOGLE_CONTACTS_DEFAULT_VIEW, getCommandType()));
+        setCommandCompleted();
+    }
 
-            //set up credentials
-            setupCredentials(event.getAuthCode());
-
-            //set up people service
-            peopleService = new PeopleService.Builder(httpTransport, jsonFactory, credential)
-                    .setApplicationName("CS2103T - Doc")
-                    .build();
-
-            //HTTP calls
-            try {
-                ListConnectionsResponse response = peopleService.people().connections().list("people/me")
-                        .setPersonFields("names,emailAddresses,phoneNumbers,addresses")
-                        .setPageSize(CONTACT_RETRIEVAL_LIMIT)
-                        .execute();
-                googlePersonList = response.getConnections();
-            } catch (IOException e) {
-                System.out.print(e);
-            }
-            //Conversion call
-            docPersonList = GooglePersonConverterUtil.listGoogleToDoCPersonConversion(googlePersonList);
-
-            //Adding to the model
-            for (Person p : docPersonList) {
+    /**
+     * Creates and primes an ImportBackgroundService to update the Model once background task has completed
+     * @return the primed Service
+     */
+    private ImportBackgroundService setupImportBackgroundService() {
+        ImportBackgroundService importBackgroundService = new ImportBackgroundService();
+        importBackgroundService.setOnSucceeded(event1 -> {
+            for (Person p : importBackgroundService.producedDocPersonList) {
                 try {
                     model.addPerson(p);
                 } catch (DuplicatePersonException e) {
@@ -102,10 +94,8 @@ public class ImportCommand extends GoogleCommand {
                     continue;
                 }
             }
-            EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
-                    "https://contacts.google.com/", getCommandType()));
-            setCommandCompleted();
-        }
+        });
+        return importBackgroundService;
     }
 
     @Override
@@ -115,6 +105,38 @@ public class ImportCommand extends GoogleCommand {
     }
 
     private boolean commandTypeCheck(String inputCommandType) {
-        return inputCommandType.equals("GOOGLE_import");
+        return inputCommandType.equals(SERVICE_SOURCE + "_" + COMMAND_WORD);
+    }
+
+    /**
+     * This class extends the {@link javafx.concurrent.Service} class, to run the intensive conversion and http calls
+     * in a separate background thread.
+     */
+    class ImportBackgroundService extends Service {
+        private List<Person> producedDocPersonList;
+
+        @Override
+        protected Task createTask() {
+            return new Task() {
+                @Override
+                protected Object call() throws Exception {
+                    List<com.google.api.services.people.v1.model.Person> incomingGooglePersonList = new ArrayList<>();
+                    //HTTP calls
+                    try {
+                        ListConnectionsResponse response = peopleService.people().connections().list("people/me")
+                                .setPersonFields("names,emailAddresses,phoneNumbers,addresses")
+                                .setPageSize(CONTACT_RETRIEVAL_LIMIT)
+                                .execute();
+                        incomingGooglePersonList = response.getConnections();
+                    } catch (IOException e) {
+                        System.out.print(e);
+                    }
+                    //Conversion call
+                    producedDocPersonList = GooglePersonConverterUtil
+                            .listGoogleToDoCPersonConversion(incomingGooglePersonList);
+                    return null;
+                }
+            };
+        }
     }
 }
