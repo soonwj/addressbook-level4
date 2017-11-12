@@ -10,10 +10,11 @@ import seedu.address.commons.events.ui.NewResultAvailableEvent;
  * commandType are provided by the firer, for identifying the the GoogleCommand subclass of the instance.
  */
 public class GoogleCommandCompleteEvent extends BaseEvent {
-    private static final String EXPORT_PROGRESS_MESSAGE = "Export to Google will be executed in the background. You "
-            + "can track this progress by reloading the Google Contacts page. " +
+    private static final String EXPORT_PROGRESS_MESSAGE = "The export to Google will be executed in the background."
+            + " You can track this progress by reloading the Google Contacts page. " +
             "\nSimply right click the browser -> click reload page.";
-    private static final String IMPORT_PROGRESS_MESSAGE = "Import from Google has completed";
+    private static final String IMPORT_PROGRESS_MESSAGE = "Import from Google is executing.\nNote: Limit of import" +
+            " is 2000 contacts. Some lag with DoC is to be expected, if you are importing close to this limit.";
     private static final String EXPORT_COMMAND_TYPE = "GOOGLE_export";
     private static final String IMPORT_COMMAND_TYPE = "GOOGLE_import";
     private String redirectUrl;
