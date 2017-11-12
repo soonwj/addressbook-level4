@@ -21,12 +21,13 @@ import seedu.address.model.person.exceptions.DuplicatePersonException;
 
 //@@author philemontan
 /**
- * Purpose: Imports contacts from Google Contacts, fulfilling Google's OAuth2 protocol.
- * Limit of contacts retrieved set at : 1000
- * Created by Philemon1 on 11/10/2017.
+ * Purpose: Import contacts from Google Contacts, with Google's OAuth2 protocol.
+ * Limit of contacts retrieved set at : 1000, until multithreading is implemented in v2.0, to prevent excess blocking
+ * of UI
  */
 public class ImportCommand extends GoogleCommand {
     public static final String COMMAND_WORD = "import";
+    public static final int CONTACT_RETRIEVAL_LIMIT = 1000;
 
     //Scope includes read-only access to a users' Google Contacts
     public static final String ACCESS_SCOPE = "https://www.googleapis.com/auth/contacts.readonly";
@@ -38,13 +39,12 @@ public class ImportCommand extends GoogleCommand {
         EventsCenter.getInstance().registerHandler(this);
     }
 
-
     @Override
     public CommandResult execute() throws CommandException {
         //Fires an event to the BrowserPanel
         try {
             triggerBrowserAuth();
-        } catch (IOException e) {
+        } catch (IOException E) {
             throw new CommandException("Failed to trigger browser auth");
         }
         return new CommandResult("Authentication in process");
@@ -85,7 +85,7 @@ public class ImportCommand extends GoogleCommand {
             try {
                 ListConnectionsResponse response = peopleService.people().connections().list("people/me")
                         .setPersonFields("names,emailAddresses,phoneNumbers,addresses")
-                        .setPageSize(1000)
+                        .setPageSize(CONTACT_RETRIEVAL_LIMIT)
                         .execute();
                 googlePersonList = response.getConnections();
             } catch (IOException e) {
@@ -104,18 +104,17 @@ public class ImportCommand extends GoogleCommand {
                 }
             }
             EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
-                    "https://contacts.google.com/", commandType));
+                    "https://contacts.google.com/", getCommandType()));
             setCommandCompleted();
         }
-
     }
+
     @Override
     public String getAuthenticationUrl() {
-        return new GoogleBrowserClientRequestUrl(CLIENT_ID, getRedirectUrl(), Arrays.asList(getAccessScope())).build();
+        return new GoogleBrowserClientRequestUrl(getClientId(), getRedirectUrl(),
+                Arrays.asList(ACCESS_SCOPE)).build();
     }
-    public String getAccessScope() {
-        return accessScope;
-    }
+
     private boolean commandTypeCheck(String inputCommandType) {
         return inputCommandType.equals("GOOGLE_import");
     }

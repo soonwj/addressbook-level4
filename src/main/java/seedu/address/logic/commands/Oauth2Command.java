@@ -10,49 +10,58 @@ import seedu.address.commons.events.ui.Oauth2BrowserRequestEvent;
 
 //@@author philemontan
 /**
- * This class is the parent class for all commands requiring OAuth2 authentication using the BrowserPanel.
- * This class is abstract, and requires child classes to define the commandType.
- * Child classes are also expected to implement the event listener: handleAuthenticationSuccessEvent()
- * Created by Philemon1 on 21/10/2017.
+ * This is the abstract parent class for all commands requiring OAuth2 authentication using the BrowserPanel.
+ * Child classes are expected to implement the event listener: handleAuthenticationSuccessEvent(), and provide the
+ * commandType
  */
 public abstract class Oauth2Command extends Command {
-    public static final String INVALID_COMMAND_TYPE_MESSAGE = "The COMMAND_TYPE cannot be null";
+    public static final String INVALID_COMMAND_TYPE_MESSAGE = "Child classes of Oauth2Command must provide a valid"
+            + " command type in the format: SERVICEPROVIDER_functionality";
     private static final String REDIRECT_URL = "https://cs2103tdummyendpoint.herokuapp.com";
-    protected final String commandType;
+
+    private final String commandType;
+
+    private String authenticationUrl;
+
     private boolean commandCompleted;
 
     protected Oauth2Command(String inputType)  {
         if (!inputTypeValid(inputType)) {
-            assert false : "Child classes of Oauth2Command must provide a valid command type in the format:"
-                   + " SERVICEPROVIDER_functionality";
+            assert false : INVALID_COMMAND_TYPE_MESSAGE;
         }
         commandType = inputType;
         commandCompleted = false;
+        authenticationUrl = getAuthenticationUrl();
     }
 
     protected Oauth2Command() {
         this(null);
     }
 
-    public static String getRedirectUrl() {
+    protected static String getRedirectUrl() {
         return REDIRECT_URL;
     }
 
-    public void setCommandCompleted() {
+    protected void setCommandCompleted() {
         commandCompleted = true;
     }
-    public boolean getCommandCompleted() {
+
+    protected boolean getCommandCompleted() {
         return commandCompleted;
     }
 
+    public String getCommandType() {
+        return commandType;
+    }
+
     /**
-     * Main common functionality for all Oauth2Command childs classes. Fires an event intended for the BrowserPanel,
+     * Common functionality of all Oauth2Command child classes. Fires an event intended for the BrowserPanel,
      * triggering it to start the UI authentication process within the BrowserPanel
      * @throws IOException
      */
     protected void triggerBrowserAuth() throws IOException {
         try {
-            Oauth2BrowserRequestEvent trigger = new Oauth2BrowserRequestEvent(commandType, getAuthenticationUrl());
+            Oauth2BrowserRequestEvent trigger = new Oauth2BrowserRequestEvent(commandType, authenticationUrl);
             EventsCenter.getInstance().post(trigger);
         } catch (IOException E) {
             throw E;
@@ -60,17 +69,19 @@ public abstract class Oauth2Command extends Command {
     }
 
     /**
-     * Event listener to be implemented by child classes
+     * Authentication success handling is to be implemented by child classes.
      */
     @Subscribe
     protected abstract void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event);
 
     /**
-     * All child classes should provide this URL based on their scope required
-     * @return the authentication URL, based on the scope required of the command
+     *  To be defined by child classes, URL is expected to be unique, based on service provider and scope required.
      */
     public abstract String getAuthenticationUrl ();
 
+    /**
+     *  Expected formatting: SERVICEPROVIDER_FUNCTIONALITY
+     */
     private boolean inputTypeValid(String inputType) {
         return inputType != null && inputType.charAt(inputType.length() - 1) != '_';
     }

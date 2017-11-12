@@ -106,7 +106,7 @@ public class ExportCommand extends GoogleCommand {
                 }
             }
             EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
-                    googleContactsGroupView + contactGroupId.split("/")[1], commandType));
+                    googleContactsGroupView + contactGroupId.split("/")[1], getCommandType()));
             setCommandCompleted();
         }
     }
@@ -153,7 +153,8 @@ public class ExportCommand extends GoogleCommand {
 
     @Override
     public String getAuthenticationUrl() {
-        return new GoogleBrowserClientRequestUrl(CLIENT_ID, getRedirectUrl(), Arrays.asList(getAccessScope())).build();
+        return new GoogleBrowserClientRequestUrl(getClientId(), getRedirectUrl(),
+                Arrays.asList(ACCESS_SCOPE)).build();
     }
 
     private boolean commandTypeCheck(String inputCommandType) {

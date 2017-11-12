@@ -10,12 +10,11 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 /**
  * This class inherits from the Oauth2Command class and is the parent class for all commands making calls to
  * Google's APIs.
- * Created by Philemon1 on 21/10/2017.
  */
 public abstract class GoogleCommand extends Oauth2Command {
-    protected static final String CLIENT_ID =
+    public static final String SERVICE_SOURCE = "GOOGLE";
+    private static final String CLIENT_ID =
             "591065149112-69ikmid17q2trahg28gip4o8srmo47pv.apps.googleusercontent.com";
-    private static final String SERVICE_SOURCE = "GOOGLE";
     protected String accessScope;
     protected TokenResponse authToken;
     protected GoogleCredential credential;
@@ -28,13 +27,19 @@ public abstract class GoogleCommand extends Oauth2Command {
         httpTransport = new NetHttpTransport();
         jsonFactory = new JacksonFactory();
     }
-    /**Instantiates the GoogleCredentials for OAuth2 requests.
+
+    /**Instantiates the GoogleCredential for OAuth2 requests.
      * This is the final step in the OAuth2 protocol for Google APIs
-     * @param authCode
+     * @param authCode is obtained from service provider, after successful authentication
      */
     protected void setupCredentials(String authCode) {
         authToken = new TokenResponse();
         authToken.setAccessToken(authCode);
         credential = new GoogleCredential().setFromTokenResponse(authToken);
     }
+
+    protected static String getClientId() {
+        return CLIENT_ID;
+    }
+
 }

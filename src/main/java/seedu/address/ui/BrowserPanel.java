@@ -166,7 +166,7 @@ public class BrowserPanel extends UiPart<Region> {
      * Reloads page according to the completed Google Command
      */
     @Subscribe
-    private void handleGoogleCOmmandCompleteEvent(GoogleCommandCompleteEvent event) {
+    private void handleGoogleCommandCompleteEvent(GoogleCommandCompleteEvent event) {
         loadPage(event.getRedirectUrl());
     }
     //@@author
