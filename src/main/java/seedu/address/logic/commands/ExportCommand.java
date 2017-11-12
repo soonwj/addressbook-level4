@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl;
-import com.google.api.services.people.v1.PeopleService;
 
 import com.google.api.services.people.v1.model.ContactGroup;
 import com.google.api.services.people.v1.model.CreateContactGroupRequest;
