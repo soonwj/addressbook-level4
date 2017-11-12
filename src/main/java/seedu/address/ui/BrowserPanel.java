@@ -119,7 +119,8 @@ public class BrowserPanel extends UiPart<Region> {
      */
     @Subscribe
     private void handleOauth2BrowserRequestEvent(Oauth2BrowserRequestEvent event) {
-        logger.info(LogsCenter.getEventHandlingLogMessage(event, "Authentication with BrowserPanel in progress."));
+        logger.info(LogsCenter.getEventHandlingLogMessage(event, "Authentication with BrowserPanel "
+                + "in progress."));
         loadPage(event.getRequestUrl());
         resetUrlListener();
         currentUrlListener = new UrlListener(event.getCommandType());
