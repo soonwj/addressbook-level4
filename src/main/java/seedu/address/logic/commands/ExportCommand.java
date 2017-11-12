@@ -32,7 +32,7 @@ import seedu.address.model.person.ReadOnlyPerson;
 public class ExportCommand extends GoogleCommand {
     public static final String COMMAND_WORD = "export";
 
-    //Scope includes write access to a users' Google Contacts
+    //This scope includes write access to a users' Google Contacts
     public static final String ACCESS_SCOPE = "https://www.googleapis.com/auth/contacts";
 
     private static final String googleContactsGroupView = "https://contacts.google.com/label/";
@@ -49,9 +49,10 @@ public class ExportCommand extends GoogleCommand {
         try {
             triggerBrowserAuth();
         } catch (IOException e) {
-            throw new CommandException("Failed to trigger browser auth");
+            throw new CommandException("Failed to trigger the authentication process with the built-in browser.");
         }
-        return new CommandResult("Authentication in process");
+        return new CommandResult("Authentication process initiated. Please login on the built-in " +
+                "browser.");
     }
 
     /**
@@ -70,7 +71,7 @@ public class ExportCommand extends GoogleCommand {
             if (!commandTypeCheck(event.getCommandType())) {
                 return;
             }
-            //set up credentials
+
             setupCredentials(event.getAuthCode());
 
             //set up people service
@@ -78,52 +79,31 @@ public class ExportCommand extends GoogleCommand {
                     .setApplicationName("CS2103T - Doc")
                     .build();
 
-            //Set contactGroupId for exporting to a specific contact group: `Imported From DoC`
-            String contactGroupId = retrieveExistingContractGroupResourceName();
+            String contactGroupId = setContactGroupId();
 
-            //Create a new contact group titled `Imported From DoC`, if still not set
-            if (contactGroupId == null) {
-                contactGroupId = createNewContactGroup();
-            }
-
-
-//            //Conversion calls
-//            List<ReadOnlyPerson> docPersonList = model.getAddressBook().getPersonList();
-//            List<com.google.api.services.people.v1.model.Person> googlePersonList =
-//                    GooglePersonConverterUtil.listDocToGooglePersonConversion(docPersonList);
-//
-//            //Set contactGroupId for exporting to a specific contact group: `Imported From DoC`
-//            String contactGroupId = retrieveExistingContractGroupResourceName();
-//
-//            //Create a new contact group titled `Imported From DoC`, if still not set
-//            if (contactGroupId == null) {
-//                contactGroupId = createNewContactGroup();
-//            }
-//
-//            //HTTP calls - exporting
-//            for (com.google.api.services.people.v1.model.Person p : googlePersonList) {
-//                try {
-//                    //create Contact
-//                    String newPersonId;
-//                    newPersonId = peopleService.people().createContact(p).execute().getResourceName();
-//
-//                    //set Contact's group
-//                    peopleService.contactGroups().members().modify(contactGroupId,
-//                            new ModifyContactGroupMembersRequest()
-//                                    .setResourceNamesToAdd(GooglePersonConverterUtil
-//                                            .makeListFromOne(newPersonId)))
-//                            .execute();
-//                } catch (IOException E) {
-//                    System.out.println(E);
-//                }
-//            }
-            ExportBackgroundService exportBackgroundService = new ExportBackgroundService(contactGroupId);
-            exportBackgroundService.start();
+            startBackgroundConversionAndHttpCalls(contactGroupId);
 
             EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
                     googleContactsGroupView + contactGroupId.split("/")[1], getCommandType()));
+
             setCommandCompleted();
         }
+    }
+
+    private String setContactGroupId() {
+        //Set contactGroupId for exporting to a specific contact group: `Imported From DoC`
+        String contactGroupId = retrieveExistingContractGroupResourceName();
+
+        //Create a new contact group titled `Imported From DoC`, if still not set
+        if (contactGroupId == null) {
+            contactGroupId = createNewContactGroup();
+        }
+        return contactGroupId;
+    }
+
+    private void startBackgroundConversionAndHttpCalls(String contactGroupId) {
+        ExportBackgroundService exportBackgroundService = new ExportBackgroundService(contactGroupId);
+        exportBackgroundService.start();
     }
 
     /**
@@ -138,8 +118,8 @@ public class ExportCommand extends GoogleCommand {
                             .setContactGroup(new ContactGroup().setName("Imported From DoC")))
                     .execute().getResourceName();
         } catch (IOException E) {
-            System.out.println(E);
-            assert true : "google server error";
+            EventsCenter.getInstance().post(new NewResultAvailableEvent(FAILED_CONNECTION_MESSAGE, true));
+            setCommandCompleted();
         }
         return contactGroupId;
     }
@@ -154,8 +134,9 @@ public class ExportCommand extends GoogleCommand {
         List<ContactGroup> contactGroupList = new ArrayList<>();
         try {
             contactGroupList = peopleService.contactGroups().list().execute().getContactGroups();
-        } catch (IOException e4) {
-            System.out.println(e4);
+        } catch (IOException E) {
+            EventsCenter.getInstance().post(new NewResultAvailableEvent(FAILED_CONNECTION_MESSAGE, true));
+            setCommandCompleted();
         }
         for (ContactGroup c : contactGroupList) {
             if (c.getFormattedName().equals("Imported From DoC")) {
@@ -180,6 +161,10 @@ public class ExportCommand extends GoogleCommand {
         return accessScope;
     }
 
+    /**
+     * This class extends the javafx.concurrent.Service class, to run the intensive conversion and http calls in
+     * a separate background thread.
+     */
     class ExportBackgroundService extends Service {
         private String contactGroupId;
 

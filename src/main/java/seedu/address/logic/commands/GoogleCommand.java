@@ -13,6 +13,8 @@ import com.google.api.client.json.jackson2.JacksonFactory;
  */
 public abstract class GoogleCommand extends Oauth2Command {
     public static final String SERVICE_SOURCE = "GOOGLE";
+    public static final String FAILED_CONNECTION_MESSAGE = "Unable to reach Google's servers. Please check that you" +
+            "have an active internet connection.";
     private static final String CLIENT_ID =
             "591065149112-69ikmid17q2trahg28gip4o8srmo47pv.apps.googleusercontent.com";
     protected String accessScope;
