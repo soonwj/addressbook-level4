@@ -213,8 +213,8 @@ Examples:
 
 * `updateProfilePic 1 u/file:///C:/Users/Bobby/image.jpg` +
 Updates the profile picture of the 1st contact to be the image at `file:///C:/Users/Bobby/image.jpg`. +
-* `updateProfilePic 2 u/http://www.google.com/images/image.png` +
-Updates the profile picture of the 2nd contact to be the image at `http://www.google.com/images/image.png`. +
+* `updateProfilePic 2 u/https://pbs.twimg.com/profile_images/889736688624312321/xVAFH9ZH_400x400.jpg` +
+Updates the profile picture of the 2nd contact to be the image at `https://pbs.twimg.com/profile_images/889736688624312321/xVAFH9ZH_400x400.jpg`. +
 
 <<<
 
