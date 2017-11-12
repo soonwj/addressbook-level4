@@ -83,7 +83,7 @@ public class EditEventCommandSystemTest extends AddressBookSystemTest {
                 String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditEventCommand.MESSAGE_USAGE));
 
         /* Case: invalid index (size + 1) -> rejected */
-        int invalidIndex = getModel().getFilteredPersonList().size() + 1;
+        int invalidIndex = getModel().getFilteredEventList().size() + 1;
         assertCommandFailure(EditEventCommand.COMMAND_WORD + " " + invalidIndex + HEADER_DESC_MEETING,
                 Messages.MESSAGE_INVALID_EVENT_DISPLAYED_INDEX);
 
@@ -120,8 +120,8 @@ public class EditEventCommandSystemTest extends AddressBookSystemTest {
     /**
      * Performs the same verification as {@code assertCommandSuccess(String, Model, String)} and in addition,<br>
      * 1. Asserts that result display box displays the success message of executing {@code EditCommand}.<br>
-     * 2. Asserts that the model related components are updated to reflect the person at index {@code toEdit} being
-     * updated to values specified {@code editedPerson}.<br>
+     * 2. Asserts that the model related components are updated to reflect the event at index {@code toEdit} being
+     * updated to values specified {@code editedEvent}.<br>
      * @param toEdit the index of the current model's filtered list.
      * @see EditCommandSystemTest#assertCommandSuccess(String, Model, String, Index)
      */
