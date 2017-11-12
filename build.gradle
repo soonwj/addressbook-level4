@@ -93,7 +93,7 @@ allprojects {
     }
 
     shadowJar {
-        archiveName = "Directory of Contacts v1.4.jar"
+        archiveName = "Directory of Contacts v1.5.jar"
 
         destinationDir = file("${buildDir}/jar/")
     }
