@@ -15,8 +15,13 @@ public abstract class GoogleCommand extends Oauth2Command {
     public static final String SERVICE_SOURCE = "GOOGLE";
     public static final String FAILED_CONNECTION_MESSAGE = "Unable to reach Google's servers. Please check that you" +
             "have an active internet connection.";
+    public static final String CONTACT_GROUP_NAME_ON_GOOGLE = "Imported From DoC";
+    public static final String APPLICATION_NAME_FOR_GOOGLE = "CS2103T - DoC";
+
     private static final String CLIENT_ID =
             "591065149112-69ikmid17q2trahg28gip4o8srmo47pv.apps.googleusercontent.com";
+
+
     protected String accessScope;
     protected TokenResponse authToken;
     protected GoogleCredential credential;

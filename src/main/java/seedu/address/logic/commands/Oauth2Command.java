@@ -17,6 +17,11 @@ import seedu.address.commons.events.ui.Oauth2BrowserRequestEvent;
 public abstract class Oauth2Command extends Command {
     public static final String INVALID_COMMAND_TYPE_MESSAGE = "Child classes of Oauth2Command must provide a valid"
             + " command type in the format: SERVICEPROVIDER_functionality";
+    public static final String TRIGGER_BROWSER_AUTH_FAILED_MESSAGE = "Failed to trigger the authentication process "
+            + "with the built-in browser.";
+    public static final String TRIGGER_BROWSER_AUTH_SUCCESS_MESSAGE = "Authentication process initiated. Please login" +
+            " on the built-in browser." + "\nNote: An active internet connection is required for this command.";
+
     private static final String REDIRECT_URL = "https://cs2103tdummyendpoint.herokuapp.com";
 
     private final String commandType;
