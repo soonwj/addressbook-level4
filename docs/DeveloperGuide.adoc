@@ -862,7 +862,7 @@ The `FindCommand` class is inherited from the
 
 
 The existing `NameContainsKeywordsPredicate` was modified to suit the new needs.
-The modified code is shown below.
+The modified code snippet is shown below.
 
 [source,java]
 ----
