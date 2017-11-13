@@ -41,7 +41,7 @@ public class UpdateProfilePicCommand extends Command {
             + PREFIX_IMAGE_URL + "file:///C:/Users/Bobby/Images/picture.jpg\n"
             + "Example of image stored on the internet: " + COMMAND_WORD + " 1 "
             + PREFIX_IMAGE_URL
-            + "https://koreaboo.global.ssl.fastly.net/wp-content/uploads/2017/04/Girls-Generation-Sooyoung.jpg\n";
+            + "http://asianwiki.com/images/4/45/Sooyoung-p2.jpg\n";
 
     public static final String MESSAGE_UPDATE_PROFILE_PIC_SUCCESS = "Updated profile pic of Person: %1$s";
     public static final String MESSAGE_NOT_UPDATED = "Please enter a valid image URL.";
