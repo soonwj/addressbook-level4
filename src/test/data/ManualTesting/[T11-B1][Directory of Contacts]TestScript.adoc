@@ -3,6 +3,10 @@ ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 :imagesDir: images
 :stylesDir: ../stylesheets
 
+== Loading of Sample Data
+. Place the downloaded [T11-B1][Directory of Contacts]SampleData.xml into the data folder inside DoC1.5
+. Launch the application
+
 == Unknown Command Test
 
 . *Enter:* ad n/Zonald Dump p/98765432 e/zonaldDump@example.com a/Trump street, block 123, #01-01 +
@@ -108,11 +112,11 @@ Example: edit 1 p/91234567 e/johndoe@example.com”
 
 .. *Enter:* “removeTag t/stranger” +
 *Expected Message:* +
-“Deleted Tag: [[stranger]]”
+“Deleted Tag: [stranger]”
 
 .. *Enter:* “removeTag t/friend rm/1” +
 *Expected Message:* +
-“Deleted Tag: [[friend]]from [Alice Pauline Phone: 85355255 Email: alice@example.com Address: 123, Jurong West Ave 6, #08-111 Tags: [friend]]”
+“Deleted Tag: [friend]from [Alice Pauline Phone: 85355255 Email: alice@example.com Address: 123, Jurong West Ave 6, #08-111 Tags: [friend]”
 
 . Unsuccessful Removal
 
@@ -140,7 +144,12 @@ Updated profile pic of Person: Alice Pauline Phone: 85355255 Email: alice@exampl
 
 .. *Enter:* “updateProfilePic 0 u/https://0.soompi.io/wp-content/uploads/2012/12/Picture-15.png” +
 *Expected Message:* +
-“The person index provided is invalid”
+“Invalid command format! +
+updateProfilePic: Updates the profile picture of the person identified by the index number used in the last person listing. Existing profile picture will be overwritten by the input. +
+Parameters: INDEX (must be a positive integer) [u/valid URL of image] +
+Example of image stored locally: updateProfilePic 1 u/file:///C:/Users/Bobby/Images/picture.jpg +
+Example of image stored on the internet: updateProfilePic 1 u/http://asianwiki.com/images/4/45/Sooyoung-p2.jpg"
+
 
 .. *Enter:* “updateProfilePic 1 u/https://0.soompi.io/wp-content/uploads/2012/12/Picture-15.pn” +
 *Expected Message:* +
@@ -250,7 +259,7 @@ Example: find alice bob charlie”
 == Clear Contacts Test
 
 . *Enter:* “clear”
-. *Expected Message:* “DoC’s contacts has been cleared”
+. *Expected Message:* “DoC’s contacts has been cleared!”
 . *Observe:* all contacts cleared
 
 == Undo Test
@@ -391,7 +400,7 @@ Example: 2018-02-20”
 .. *Enter:* “editE 3 de/Jack neo's 40th bd at changi airport” +
 *Expected Message:* +
 “Edited Event: Jack neo's 40th bd at changi airport Header: Birthday Desc: Jack neo's 40th bd at changi airport Date: 2018-01-20 +
-Event in: 0years 2months 7days” +
+Event in: 0years 2months 3days” +
 *Note:* The number of days as of 2017-11-17
 
 .. *Enter:* “editE 3 d/2017-06-12” +
@@ -450,7 +459,10 @@ Event is overdue.”
 
 .. *Enter:* “deleteE” +
 *Expected Message:* +
-“The event index provided is invalid”
+“Invalid command format! +
+deleteE: Deletes the event identified by the index number used in the last event listing. +
+Parameters: INDEX (must be a positive integer) +
+Example: deleteE 1”
 
 .. *Enter:* “deleteE 0” +
 *Expected Message:* +
