@@ -307,7 +307,7 @@ Format: `import`
 ====
 *Quick notes:*
 
-* Number of contacts imported is limited to 1000.
+* Number of contacts imported is limited to 2000.
 * This features requires an internet connection.
 ====
 
