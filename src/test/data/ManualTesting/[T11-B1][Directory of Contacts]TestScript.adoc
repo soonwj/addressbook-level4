@@ -1,0 +1,477 @@
+= Directory of Contacts - TestScript
+ifdef::env-github,env-browser[:outfilesuffix: .adoc]
+:imagesDir: ../images
+:stylesDir: ../stylesheets
+
+== Unknown Command Test
+
+. *Enter:* ad n/Zonald Dump p/98765432 e/zonaldDump@example.com a/Trump street, block 123, #01-01 +
+*Expected Message:* +
+“Did you mean: add n/Zonald Dump p/98765432 e/zonaldDump@example.com a/Trump street, block 123, #01-01 ? +
+Respond: 'yes' or 'y' to accept the suggested command. +
+Suggested command will be discarded otherwise.”
+
+. *Enter:* y +
+*Expected Message:* +
+“New person added: Zonald Dump Phone: 98765432 Email: zonaldDump@example.com Address: Trump street, block 123, #01-01 Tags:”
+
+== History Test
+
+. *Enter:* history +
+*Expected Message:* +
+“Entered commands (from most recent to earliest): +
+y +
+ad n/Zonald Dump p/98765432 e/zonaldDump@example.com a/Trump street, block 123, #01-01”
+
+== Add Tests:
+
+. Successful addition
+
+.. *Enter:* “add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01  t/friend” +
+*Expected Message:* +
+“New person added: John Doe Phone: 98765432 Email: johnd@example.com Address: John street, block 123, #01-01 Tags: [friend]”
+
+.. *Enter:* “add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal” +
+*Expected Message:* +
+“New person added: Betsy Crowe Phone: 1234567 Email: betsycrowe@example.com Address: Newgate Prison Tags: [friend][criminal]”
+
+. Unsuccessful addition
+
+.. *Enter:* “add n/John Doe p/98765432” +
+*Expected Message:* +
+“Invalid command format! +
+add: Adds a person to the address book. Parameters: n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]... +
+Example: add n/John Doe p/98765432 e/johnd@example.com a/311, Clementi Ave 2, #02-25 t/friends t/owesMoney”
+
+.. *Enter:* “add n/Alice Pauline p/85355255 e/alice@example.com a/123, Jurong West Ave 6, #08-111 t/friend” +
+*Expected Message:* +
+“This person already exists in the address book”
+
+== Select Test
+
+. *Enter:* select 1
+. *Expected Message:* “Selected Person: 1”
+. *Observe:* a google search for Alice Pauline
+
+== Edit Tests
+
+. Successful edit
+
+.. *Enter:* “edit 22 p/91234567 e/johndoe@example.com” +
+*Expected Message:* +
+“Edited Person: John Doe Phone: 91234567 Email:	johndoe@example.com Address: John street, block 123, #01-01 Tags: [friend]”
+
+.. *Enter:* “edit 4 t/” +
+*Expected Message:* +
+“Edited Person: Daniel Meier Phone: 87652533 Email: daniel@example.com Address: 10th street Tags:”
+
+.. *Enter:* “edit 5 t/stranger t/criminal” +
+*Expected Message:* +
+“Edited Person: Elle Meyer Phone: 94822245 Email: elle@example.com Address: michegan ave Tags: [stranger][criminal]”
+
+. Unsuccessful edit
+
+.. *Enter:* “edit” +
+*Expected Message:* +
+“Invalid command format! +
+edit: Edits the details of the person identified by the index number used in the last person listing. Existing values will be overwritten by the input values. +
+Parameters: INDEX (must be a positive integer) [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]... +
+Example: edit 1 p/91234567 e/johndoe@example.com”
+
+.. *Enter:* “edit 3” +
+*Expected Message:* +
+“At least one field to edit must be provided.”
+
+.. *Enter:* “edit 25 n/Lao” +
+*Expected Message:* +
+“The person index provided is invalid”
+
+.. *Enter:* “edit 10 p/123d” +
+*Expected Message:* +
+“Phone numbers can only contain numbers, and should be at least 3 digits long”
+
+.. *Enter:* “edit 10 e/testemail” +
+*Expected Message:* +
+“Person emails should be 2 alphanumeric/period strings separated by '@'”
+
+.. *Enter:* “edit 10 a/” +
+*Expected Message:* +
+“Person addresses can take any values, and it should not be blank”
+
+.. *Enter:* “edit 10 n/” +
+*Expected Message:* +
+“Person names should only contain alphanumeric characters and spaces, and it should not be blank”
+
+== Removing Tags Tests
+
+. Successful Removal
+
+.. *Enter:* “removeTag t/stranger” +
+*Expected Message:* +
+“Deleted Tag: [[stranger]]”
+
+.. *Enter:* “removeTag t/friend rm/1” +
+*Expected Message:* +
+“Deleted Tag: [[friend]]from [Alice Pauline Phone: 85355255 Email: alice@example.com Address: 123, Jurong West Ave 6, #08-111 Tags: [friend]]”
+
+. Unsuccessful Removal
+
+.. *Enter:* “removeTag t/sdasd” +
+*Expected Message:* +
+“The Tag is invalid!”
+
+.. *Enter:* “removeTag t/friend rm/0” +
+*Expected Message:* +
+“Invalid command format! +
+removeTag: Deletes the tag identified from all person if no index stated.Else, removes only from those selected indexes. +
+Example with index: removeTag rm/1 2 t/friends +
+Example without index: removeTag t/friends”
+
+== Updating Profile Pictures Tests
+
+. Successful Update
+
+.. *Enter:* Enter “updateProfilePic 1 u/https://0.soompi.io/wp-content/uploads/2012/12/Picture-15.png” +
+*Expected Message:* +
+Updated profile pic of Person: Alice Pauline Phone: 85355255 Email: alice@example.com Address: 123, Jurong West Ave 6, #08-111 Tags: [friend] +
+*Observe:* The profile picture of the specified contact should be that of the image obtained from the link
+
+. Unsuccessful Update
+
+.. *Enter:* “updateProfilePic 0 u/https://0.soompi.io/wp-content/uploads/2012/12/Picture-15.png” +
+*Expected Message:* +
+“The person index provided is invalid”
+
+.. *Enter:* “updateProfilePic 1 u/https://0.soompi.io/wp-content/uploads/2012/12/Picture-15.pn” +
+*Expected Message:* +
+“Person profile pictures must be a valid image URL, and it should not be blank”
+
+== Deleting Profile Pictures Tests
+
+. Successful Delete
+
+.. *Enter:* “deleteProfilePic 1” +
+*Expected Message:* +
+“Deleted profile pic of Person: Alice Pauline Phone: 85355255 Email: alice@example.com Address: 123, Jurong West Ave 6, #08-111 Tags: [friend]” +
+*Observe:* The profile picture of the specified contact should be the default one
+
+.. *Enter:*  “deleteProfilePic 0” +
+*Expected Message:* +
+“Invalid command format! +
+deleteProfilePic: Deletes the profile picture of the person identified by the index number used in the last person listing. +
+Parameters: INDEX (must be a positive integer) +
+Example: deleteProfilePic 1”
+
+== Find Tests
+
+. Successful find
+
+.. *Enter:* “find Jack” +
+*Expected Message:* “1 persons listed!”
+
+.. *Enter:* “find friend” +
+*Expected Message:* “19 persons listed!”
+
+.. *Enter:* “find dassad” +
+*Expected Message:* “0 persons listed!”
+
+.. *Enter:* “find jack alice betsy” +
+*Expected Message:* “3 persons listed!”
+
+. Unsuccessful find
+
+.. *Enter:* “find” +
+*Expected Message:* +
+“Invalid command format! +
+find: Finds all persons whose names or tags contain any of the specified keywords (case-insensitive) and displays them as a list with index numbers. +
+Parameters: KEYWORD [MORE_KEYWORDS]... +
+Example: find alice bob charlie”
+
+
+== List Test
+
+. *Enter:* “list”
+. *Expected Message:* “Listed all persons”
+. *Observe:* all contacts listed
+
+== Map Tests
+
+. Successful
+
+.. *Enter:* “map 1” +
+*Expected Message:* “Opened Map” +
+*Observe:* Browser panel updated with the location marker
+
+.. *Enter:* “map 1 2 3” +
+*Expected Message:* “Opened Map”
+
+. Unsuccessful
+
+.. *Enter:* “map a” +
+*Expected Message:* “The person index provided is invalid”
+
+.. *Enter:* “map 1000” +
+*Expected Message:* “The person index provided is invalid”
+
+
+== Email Tests
+
+. Successful
+
+.. *Enter:* “email to/friend” +
+*Expected Message:* “Opened Email Application”
+
+.. *Enter:* “email to/daniel” +
+*Expected Message:* “Opened Email Application”
+
+.. *Enter:* “email to/friend subject/hi body/works right” +
+*Expected Message:* “Opened Email Application”
+
+. Unsuccessful
+
+.. *Enter:* “email to/asdas” +
+*Expected Message:* “Please enter a valid name/tag with a valid Email ID.”
+
+== Delete Tests
+
+. Successful Delete
+
+.. *Enter:* “delete 1” +
+*Expected Message:* +
+“Deleted Person: Alice Pauline Phone: 85355255 Email: alice@example.com Address: 123, Jurong West Ave 6, #08-111 Tags: [friend]” +
+*Observe:* Alice Pauline removed from the person’s list
+
+. Unsuccessful Delete
+
+.. *Enter:* “delete 0” +
+*Expected Message:* +
+“Invalid command format! delete: Deletes the person identified by the index number used in the last person listing.Parameters: INDEX (must be a positive integer)”
+
+== Clear Contacts Test
+
+. *Enter:* “clear”
+. *Expected Message:* “DoC’s contacts has been cleared”
+. *Observe:* all contacts cleared
+
+== Undo Test
+
+. *Enter:* “undo”
+. *Expected Message:* “Undo success!”
+. *Observe:* cleared contacts restored
+
+== Redo Test
+
+. *Enter:* “redo”
+. *Expected Message:* “Redo success!”
+. *Observe:* all contacts cleared again
+
+== Import Contacts Test
+
+[TIP]
+Please only use this specified dummy account for import test. For the sake of other testers, do not change the pre-loaded Contacts.
+
+. *Enter:* import
+. *Expected Message:* +
+“Authentication process initiated. Please login on the built-in browser. +
+Note: An active internet connection is required for this command.”
+. Login to your Google Account, or the following dummy account: +
+*ID* : acceptancetesterdocay1718@gmail.com +
+*PW* : importtest
+. Grant permission if prompted by Google
+. *Expected Message:* +
+“Import from Google is executing. +
+Note: Limit of import is 2000 contacts. Some lag with DoC is to be expected, if you are importing close to this limit.”
+. *Observe:* 2 new contacts listed on contacts panel, with name: “Import Test Person 1” and “Import Test Person 2”
+
+== Export Contacts Test
+
+[TIP]
+A different dummy account is specified for this export test. For the sake of other testers, adhere to the following instructions strictly
+
+. Logout of the ‘Importing Contacts tests’ account: +
+image::ManualTesting_export1.png[width="600"]
+
+. Add a unique contact (enter your name or a random name in place of *YOUR_NAME_HERE*): +
+*Enter:* “add n/YOUR_NAME_HERE  p/98765432 e/johnd@example.com a/John street, block 123, #02-02 t/friend” +
+
+. *Expected Message:* +
+“New person added: YOUR_NAME_HERE Phone: 98765432 Email: johnd@example.com Address: John street, block 123, #02-02 Tags: [friend]”
+
+. *Enter:* export
+
+. *Expected Message:* +
+“Authentication process initiated. Please login on the built-in browser. +
+Note: An active internet connection is required for this command.”
+
+. Click sign in with a different account: +
+image::ManualTesting_export2.png[width="600"]
+
+. Login to your Google Account, or the following dummy account: +
+*ID* : testeracceptancedocay1718@gmail.com +
+*PW* : exporttest
+
+. Grant permission if prompted by Google
+
+. *Expected Message:* +
+“The export to Google will be executed in the background. You can track this progress by reloading the Google Contacts page.” +
+Simply right click the browser -> click reload page.
+
+. *Wait:* about 10-15 seconds, then reload the browser panel by right clicking like so: +
+image::ManualTesting_export3.png[width="600"]
+
+. *Observe:* Your unique contact being listed in the browser panel, alongside any other contacts you currently have in DoC (Should be “Import Test Person 1” and “Import Test Person 2”). +
+You may observe contacts added by other acceptance testers.
+
+
+== Event Features Tests
+
+=== addE Tests
+. Successful addition
+
+.. *Enter:* “addE h/Meeting de/CS2101 group discussion for presentation d/2017-12-05” +
+*Expected Message:* +
+“New event added: CS2101 group discussion for presentation Header: Meeting Desc: CS2101 group discussion for presentation Date: 2017-12-05 +
+Event in: 0years 0months 18days” +
+*Note:* The number of days as of 2017-11-17
+
+.. *Enter:* “addE h/Birthday de/Jack neo’s 50th birthday at pasir ris d/2018-01-20” +
+*Expected Message:* +
+“New event added: Jack neo’s 50th birthday at pasir ris Header: Birthday Desc: Jack neo’s 50th birthday at pasir ris Date: 2018-01-20 +
+Event in: 0years 2months 3days” +
+*Note:* The number of days as of 2017-11-17
+
+.. *Enter:* “addE h/URGENT de/meeting with boss tmr d/2017-11-18” +
+*Expected Message:* +
+“New event added: meeting with boss tmr Header: URGENT Desc: meeting with boss tmr Date: 2017-11-18 +
+Event in: 0years 0months 1days” +
+*Note:* The number of days as of 2017-11-17. The new event will appear as first in list.
+
+.. *Enter:* “addE h/overdue de/dinner last week d/2017-11-12” +
+*Expected Message:* +
+“New event added: dinner last week Header: overdue Desc: dinner last week Date: 2017-11-12 +
+Event is overdue.”
+
+. Unsuccessful addition
+
+.. *Enter:* “addE h/Test” +
+*Expected Message:* +
+“Invalid command format! +
+addE: Adds an event to the address book. Parameters: h/HEADER de/DESC d/DATE +
+Example: addE h/Birthday party de/John Doe's house d/2017-10-15”
+
+.. *Enter:* “addE h/Test de/testing purpose d/tmr” +
+*Expected Message:* +
+“Event must have a valid date input +
+Format: year-month-day (yyyy-mm-dd) +
+Example: 2018-02-20”
+
+.. *Enter:* “addE h/Test de/testing purpose d/2017-1-1” +
+*Expected Message:* +
+“Event must have a valid date input +
+Format: year-month-day (yyyy-mm-dd) +
+Example: 2018-02-20”
+
+.. *Enter:* “addE h/Test de/testing purpose d/2017-02-29” +
+*Expected Message:* +
+“Event must have a valid date input +
+Format: year-month-day (yyyy-mm-dd) +
+Example: 2018-02-20”
+
+.. *Enter:* “addE h/Meeting de/CS2101 group discussion for presentation d/2017-12-05” +
+*Expected Message:* +
+“This event already exists in the address book”
+
+=== editE Tests
+
+. Successful edit
+
+.. *Enter:* “editE 3 de/Jack neo's 40th bd at changi airport” +
+*Expected Message:* +
+“Edited Event: Jack neo's 40th bd at changi airport Header: Birthday Desc: Jack neo's 40th bd at changi airport Date: 2018-01-20 +
+Event in: 0years 2months 7days” +
+*Note:* The number of days as of 2017-11-17
+
+.. *Enter:* “editE 3 d/2017-06-12” +
+*Expected Message:* +
+“Edited Event: Jack neo's 40th bd at changi airport Header: Birthday Desc: Jack neo's 40th bd at changi airport Date: 2017-06-12 +
+Event is overdue.” +
+*Note:* The edited event is sorted to the bottom.
+
+.. *Enter:* “editE 1 h/not urgent de/meeting with boss next month d/2017-12-19” +
+*Expected Message:* +
+“Edited Event: meeting with boss next month Header: not urgent Desc: meeting with boss next month Date: 2017-12-19 +
+Event in: 0years 1months 2days” +
+*Note:* The number of days as of 2017-11-17. Edited event is shifted to index 2.
+
+. Unsuccessful edit
+
+.. *Enter:* “editE” +
+*Expected Message:* +
+“Invalid command format! +
+editE: Edits the details of the event identified by the index number used in the last event listing. Existing values will be overwritten by the input values. +
+Parameters: INDEX (must be a positive integer) [h/HEADER] [de/DESC] [d/DATE] +
+Example: editE 1 h/birthday party d/2017-01-12”
+
+.. *Enter:* “editE 1” +
+*Expected Message:* +
+“At least one field to edit must be provided.”
+
+.. *Enter:* “editE 1 h/” +
+*Expected Message:* +
+“Event header can take any values, and it should not be blank”
+
+.. *Enter:* “editE 1 de/” +
+*Expected Message:* +
+“Event description can take any values, and it should not be blank”
+
+.. *Enter:* “editE 1 h/Group meeting d/2017-10-32” +
+*Expected Message:* +
+“Event must have a valid date input +
+Format: year-month-day (yyyy-mm-dd) +
+Example: 2018-02-20”
+
+.. *Enter:* “editE 10 h/Group meeting d/2017-10-30” +
+*Expected Message:* +
+“The event index provided is invalid”
+
+=== deleteE Tests
+
+. Successful deletion
+
+.. *Enter:* “deleteE 3” +
+*Expected Message:* +
+“Deleted Event: dinner last week Header: overdue Desc: dinner last week Date: 2017-11-12 +
+Event is overdue.”
+
+. Unsuccessful deletion
+
+.. *Enter:* “deleteE” +
+*Expected Message:* +
+“The event index provided is invalid”
+
+.. *Enter:* “deleteE 0” +
+*Expected Message:* +
+“Invalid command format! +
+deleteE: Deletes the event identified by the index number used in the last event listing. +
+Parameters: INDEX (must be a positive integer) +
+Example: deleteE 1”
+
+== Help Test
+
+. *Enter:* “help”
+. *Observe:* Help window pops up
+. Close the help window
+
+== Sort by view count test
+
+. *Enter:* “select 2”
+. *Enter:* “select 3”
+. *Enter:* “select 2”
+. *Click:* The red cross button to exit the app
+. *Observe:* app exits
+. Relaunch the app
+. *Observe:* The contact previously at index 2 is now at index 1, while the contact previously at index 3 is now at index 2 and the rest of the contacts follow.
+
+== Exit test
+. *Enter:* “exit”
+. *Observe:* app exits
