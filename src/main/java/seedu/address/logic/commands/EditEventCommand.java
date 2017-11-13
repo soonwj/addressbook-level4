@@ -38,7 +38,7 @@ public class EditEventCommand extends UndoableCommand {
             + "[" + PREFIX_EVENT_DATE + "DATE]\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_HEADER + "birthday party "
-            + PREFIX_EVENT_DATE + "01/12";
+            + PREFIX_EVENT_DATE + "2017-01-12";
 
     public static final String MESSAGE_EDIT_EVENT_SUCCESS = "Edited Event: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";

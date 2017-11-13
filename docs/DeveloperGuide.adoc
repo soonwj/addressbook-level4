@@ -526,7 +526,7 @@ This is enforced in the constructor of the `Oauth2Command` class, and can be see
 ----
 protected Oauth2Command(String inputType)  {
     if (!inputTypeValid(inputType)) {
-        assert true : "Child classes of Oauth2Command must provide a valid command type in the
+        assert false : "Child classes of Oauth2Command must provide a valid command type in the
             format: SERVICEPROVIDER_functionality";
     }
     commandType = inputType;

@@ -35,6 +35,8 @@ public class BrowserPanel extends UiPart<Region> {
     public static final String GOOGLE_MAPS_URL_DIR = "https://www.google.com.sg/maps/dir/";
     public static final String GOOGLE_SEARCH_URL_PREFIX = "https://www.google.com.sg/search?safe=off&q=";
     public static final String GOOGLE_SEARCH_URL_SUFFIX = "&cad=h";
+    public static final String GOOGLE_AUTH_SUCCESS_TOKEN_PREFIX = "access_token=";
+
 
     private static final String FXML = "BrowserPanel.fxml";
 
@@ -111,12 +113,14 @@ public class BrowserPanel extends UiPart<Region> {
 
     //@@author philemontan
     /**
-     * Handles an Oauth2BrowserRequestEvent sent by the execution of a command requiring the authentication against
+     * Handles an Oauth2BrowserRequestEvent sent by the execution of a command requiring authentication against
      * the OAuth2 protocol
      * @param event
      */
     @Subscribe
     private void handleOauth2BrowserRequestEvent(Oauth2BrowserRequestEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event, "Authentication with BrowserPanel "
+                + "in progress."));
         loadPage(event.getRequestUrl());
         resetUrlListener();
         currentUrlListener = new UrlListener(event.getCommandType());
@@ -133,7 +137,6 @@ public class BrowserPanel extends UiPart<Region> {
         }
     }
 
-
     /**
      * Implements the functional interface ChangeListener. Lambda not used, due to the need to reset the url listener
      */
@@ -142,6 +145,7 @@ public class BrowserPanel extends UiPart<Region> {
         UrlListener(String inputCommandType) {
             commandType = inputCommandType;
         }
+
         @Override
         public void changed(ObservableValue observable, Object oldValue, Object newValue) {
             currentUrl = (String) newValue;
@@ -153,21 +157,23 @@ public class BrowserPanel extends UiPart<Region> {
     }
 
     /**
-     * Checks if Authentication is successful -> current domain reflects the set redirect endpoint
+     * Checks if Authentication is successful
      * @param currentUrl
-     * @return
+     * @return true if currentUrl reflects the correct redirect endpoint, detected by prefix:
+     * GOOGLE_AUTH_SUCCESS_TOKEN_PREFIX
      */
     private boolean authSuccessUrlDetected(String currentUrl) {
-        System.out.println(currentUrl);
-        return currentUrl.contains("access_token=");
+        return currentUrl.contains(GOOGLE_AUTH_SUCCESS_TOKEN_PREFIX);
     }
 
     /**
      * Reloads page according to the completed Google Command
      */
     @Subscribe
-    private void handleGoogleCOmmandCompleteEvent(GoogleCommandCompleteEvent event) {
+    private void handleGoogleCommandCompleteEvent(GoogleCommandCompleteEvent event) {
         loadPage(event.getRedirectUrl());
+        logger.info(LogsCenter.getEventHandlingLogMessage(event,
+                "GoogleCommand execution completed."));
     }
     //@@author
 

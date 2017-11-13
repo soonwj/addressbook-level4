@@ -47,7 +47,7 @@ You should also refer to the Table of Contents above for quick navigation.
 === Installation guide
 To ensure a successful installation, please go through the following steps: +
 
-.  Ensure you have Java version `1.8.0_60` or later installed in your Computer.
+.  Ensure you have Java version `1.8.0_60` or later installed in your computer.
 +
 [NOTE]
 Having any Java 8 version is not enough. +
@@ -74,7 +74,7 @@ The `Status panel` displays DoC's feedback on your latest command.
 
 **Contacts panel** +
 The `Contacts panel` displays a list of your contacts stored by DoC. All your contacts will be displayed and listed alphabetically by default.
-Display customization can be achieved with commands `sort`, and `find`.
+Display customization can be achieved with commands `sort` and `find`.
 
 **Browser panel** +
 The `Browser panel` is DoC's built-in browser that facilitates several cool features like the `location`, `email`, `import`
@@ -107,7 +107,11 @@ Adds a contact to DoC. +
 Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]...`
 
 [TIP]
+====
+*Quick note:*
+
 A contact can have any number of tags (including 0).
+====
 
 Examples:
 
@@ -120,7 +124,7 @@ Examples:
 
 image::addpic.png[width="700"]
 
-As shown in the image above, after entering the `add` command in the example, the newly added contact will appear in the `Contacts panel`.
+As shown in the image above, after entering the `add` command from the example, the newly added contact will appear in the `Contacts panel`.
 
 <<<
 
@@ -209,8 +213,8 @@ Examples:
 
 * `updateProfilePic 1 u/file:///C:/Users/Bobby/image.jpg` +
 Updates the profile picture of the 1st contact to be the image at `file:///C:/Users/Bobby/image.jpg`. +
-* `updateProfilePic 2 u/http://www.google.com/images/image.png` +
-Updates the profile picture of the 2nd contact to be the image at `http://www.google.com/images/image.png`. +
+* `updateProfilePic 2 u/https://pbs.twimg.com/profile_images/889736688624312321/xVAFH9ZH_400x400.jpg` +
+Updates the profile picture of the 2nd contact to be the image at `https://pbs.twimg.com/profile_images/889736688624312321/xVAFH9ZH_400x400.jpg`. +
 
 <<<
 
@@ -288,7 +292,7 @@ According to the image above, let's say you want to delete the contact at index 
 <<<
 
 // tag::import[]
-=== Importing contacts: `import`
+==== Importing contacts: `import`
 
 Import contacts to DoC from Google Contacts. +
 Format: `import`
@@ -317,7 +321,7 @@ red boxes in the images above.
 <<<
 
 // tag::export[]
-=== Exporting contacts: `export`
+==== Exporting contacts: `export`
 
 Export your contacts from DoC to Google Contacts. +
 Format: `export` +
@@ -363,7 +367,7 @@ Format: `find TERM1 [MORE_TERMS]`
 
 image::findpic.png[width="700"]
 
-As demonstrated by the image above, entering the command `find Family han` displays all contacts with a tag or
+As demonstrated by the image above, entering the command `find Family han` will display all contacts with a tag or
 part of name, matching any search term.
 // end::find[]
 
@@ -461,6 +465,7 @@ image::Location_UG.PNG[width="1000"]
 Shows the address of the 1st contact in Google Maps as shown above.
 // end::map[]
 <<<
+
 // tag::eventUG[]
 === Event features
 You can manage your events through the following commands:
@@ -474,7 +479,7 @@ Format: `addE h/HEADER de/DESCRIPTION d/DATE`
 ====
 *Quick note:*
 
-The date must a valid date with format: year-month-day.
+The date must a valid date with the format: year-month-day (yyyy-MM-dd).
 ====
 
 
@@ -547,7 +552,6 @@ image::deleteEpic.png[width="700"]
 
 As shown on the image above, if you want to delete an overdue `Event`, simply key in the `deleteE` command stating the index and the event will be removed from DoC.
 // end::eventUG[]
-<<<
 
 === General features
 The following commands and features are not specific to contacts or events, and can be used system-wide:
