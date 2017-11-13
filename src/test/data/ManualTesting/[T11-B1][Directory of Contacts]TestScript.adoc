@@ -1,6 +1,6 @@
 = Directory of Contacts - TestScript
 ifdef::env-github,env-browser[:outfilesuffix: .adoc]
-:imagesDir: ./images
+:imagesDir: images
 :stylesDir: ../stylesheets
 
 == Unknown Command Test
