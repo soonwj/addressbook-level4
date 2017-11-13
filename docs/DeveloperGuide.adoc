@@ -628,6 +628,38 @@ object is added as a Google `Person` object's `UserDefined` attribute.
 * `ProfilePic` cannot be exported due to Google Contact's restrictions.
 * The produced Google `Person` objects are added to a contact group titled `Imported from DoC` on `Google Contacts`.
 
+===== Multithreaded implementation for HTTP request process and Conversion process
+Both the **HTTP request process** and the **Conversion process** are very time-consuming, and performing them on the main
+`JavaFX` user interface thread causes the user interface to freeze for a significant duration. Thus, it is important
+that they are performed on a separate background thread. To achieve this, we make use of the `javafx.concurent.Service` class.
+ The following code snippets from the implementation of `Import` illustrates how we can use it:
+
+[source,java]
+----
+class ImportBackgroundService extends Service {
+    // ... declaring necessary variables ...
+    @Override
+    protected Task createTask() {
+        return new Task() {
+            @Override
+            protected Object call() throws Exception {
+                // ... HTTP calls ...
+                // ... Conversion call ...
+                // ... return result ...
+            }
+        };
+    }
+}
+----
+
+Then, we simply start this service from the context of the main `JavaFX` user interface thread, like so:
+
+[source,java]
+----
+ImportBackgroundService importBackgroundService = setupImportBackgroundService();
+importBackgroundService.start();
+----
+
 ==== Design Considerations
 
 **Aspect:** How a successful authentication is handled +
