@@ -43,7 +43,7 @@ public class UpdateProfilePicCommand extends Command {
             + PREFIX_IMAGE_URL
             + "https://koreaboo.global.ssl.fastly.net/wp-content/uploads/2017/04/Girls-Generation-Sooyoung.jpg\n";
 
-    public static final String MESSAGE_UPDATE_PROFILE_PIC_SUCCESS = "Update profile pic of Person: %1$s";
+    public static final String MESSAGE_UPDATE_PROFILE_PIC_SUCCESS = "Updated profile pic of Person: %1$s";
     public static final String MESSAGE_NOT_UPDATED = "Please enter a valid image URL.";
     public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
 
