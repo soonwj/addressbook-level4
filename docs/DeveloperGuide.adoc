@@ -771,19 +771,23 @@ private void sendEmail(String emailTo) throws ParseException {
     if (emailTo.equalsIgnoreCase("")) {
         throw new ParseException("Invalid recipient email.");
     }
-    Desktop desktop = Desktop.getDesktop();
+    Desktop desktop;
     String url = "";
     URI mailTo;
 
     // the calling of the desktop mail app happens here
-    try {
-        url = "mailTo:" + emailTo + "?subject=" + this.subject
-                + "&body=" + this.body;
-        mailTo = new URI(url);
-        desktop.mail(mailTo);
-    }
-
-    // ... catches the possible errors and throws the appropriate exceptions
+    if (Desktop.isDesktopSupported() &&
+     (desktop = Desktop.getDesktop()).isSupported(Desktop.Action.MAIL)) {
+        try {
+            url = "mailTo:" + emailTo + "?subject=" + this.subject
+                    + "&body=" + this.body;
+            mailTo = new URI(url);
+            desktop.mail(mailTo);
+        }
+         // ... catches the possible errors and throws the appropriate exceptions
+    } else {
+          throw new RuntimeException("desktop doesn't support this feature.");
+     }
 }
 ----
 
