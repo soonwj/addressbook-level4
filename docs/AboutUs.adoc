@@ -11,7 +11,7 @@ We are a team based in the http://www.comp.nus.edu.sg[School of Computing, Natio
 
 == Project Team
 
-=== Philemon Tan
+=== Philemon Tan Hong Hao
 image::philemontan.png[width="150", align="left"]
 {empty}[https://github.com/philemontan[github]] [<<philemontan#, portfolio>>]
 
@@ -19,7 +19,7 @@ Role: Developer
 
 '''
 
-=== Royce Lim
+=== Royce Lim Jie Han
 image::RoyceLim.jpg[width="150", align="left"]
 {empty}[https://github.com/royceljh[github]] [<<royceljh#, portfolio>>]
 
