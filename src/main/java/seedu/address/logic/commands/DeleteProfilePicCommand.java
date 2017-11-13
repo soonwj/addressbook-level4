@@ -22,7 +22,7 @@ public class DeleteProfilePicCommand extends Command {
             + "Example: " + COMMAND_WORD + " 1";
     public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
 
-    public static final String MESSAGE_DELETE_PROFILE_PIC_SUCCESS = "Deleted Profile Picture of Person: %1$s";
+    public static final String MESSAGE_DELETE_PROFILE_PIC_SUCCESS = "Deleted profile picture of Person: %1$s";
 
     private final Index targetIndex;
 

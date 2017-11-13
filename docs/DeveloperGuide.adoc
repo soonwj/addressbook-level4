@@ -13,12 +13,12 @@ endif::[]
 ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 :repoURL: https://github.com/CS2103AUG2017-T11-B1/main/tree/master
 
+image::DoC_coverpage.png[width=100%]
+
 By: `CS2103AUG2017-T11-B1`      Since: `Sep 2017` +
 Adapted from AddressBook-Level4, by: `Team SE-EDU`      Since: `Jun 2016`      Licence: `MIT`
 
 toc::[]
-
-<<<
 
 == Introduction
 
@@ -114,8 +114,6 @@ The *_Architecture Diagram_* given above explains the high-level design of the A
 [TIP]
 The `.pptx` files used to create diagrams in this document can be found in the link:{repoURL}/docs/diagrams/[diagrams] folder. To update a diagram, modify the diagram in the pptx file, select the objects of the diagram, and choose `Save as picture`.
 
-<<<
-
 `Main` has only one class called link:{repoURL}/src/main/java/seedu/address/MainApp.java[`MainApp`]. It is responsible for the following:
 
 * At app launch: Initializes the components in the correct sequence, and connects them up with each other.
@@ -138,8 +136,6 @@ Each of the four components does the following:
 
 * Defines its _API_ in an `interface` with the same name as the Component.
 * Exposes its functionality using a `{Component Name}Manager` class.
-
-<<<
 
 For example, the `Logic` component (see the class diagram given below) defines its API in the `Logic.java` interface and exposes its functionality using the `LogicManager.java` class.
 
@@ -169,8 +165,6 @@ Note how the event is propagated through the `EventsCenter` to the `Storage` and
 
 The sections below give more details of each of the four components mentioned above.
 
-<<<
-
 === UI component
 
 image::UiClassDiagram.PNG[width="800"]
@@ -197,8 +191,6 @@ image::LogicCommandClassDiagram.png[width="800"]
 _Figure 3.3.2: Structure of commands in the `Logic` component. This diagram shows finer details concerning `XYZCommand` and `Command` in Figure 3.3.1_
 
 The above two diagrams show the structure of the `Logic` component and the structure of the commands in the `Logic` component.
-
-<<<
 
 *API* :
 link:{repoURL}/src/main/java/seedu/address/logic/Logic.java[`Logic.java`]
@@ -231,8 +223,6 @@ As shown in the diagram above, the `Model`:
 * Exposes an unmodifiable `ObservableList<ReadOnlyPerson>` and `ObservableList<ReadOnlyEvent>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list changes.
 * Does not depend on any of the other three components.
 
-<<<
-
 === Storage component
 
 image::StorageClassDiagram.PNG[width="800"]
@@ -244,8 +234,6 @@ As shown in the diagram above, the `Storage` component:
 
 * Can save `UserPref` objects in json format and read it back.
 * Can save the DoC data in xml format and read it back.
-
-<<<
 
 == Implementation
 
@@ -265,8 +253,6 @@ _Figure 4.1.1: Inheritance diagram for commands_
 
 As you can see in the diagram, `UndoableCommand` adds an extra layer between the abstract `Command` class and concrete commands that can be undone, such as the `DeleteCommand`. Note that extra tasks need to be done when executing a command in an _undoable_ way, such as saving the state of the address book before execution. `UndoableCommand` contains the high-level algorithm for those extra tasks while the child classes implements the details of how to execute the specific command. Note that this technique of putting the high-level algorithm in the parent class and lower-level steps of the algorithm in child classes is also known as the https://www.tutorialspoint.com/design_pattern/template_pattern.htm[template pattern].
 
-<<<
-
 Commands that are not undoable are implemented this way:
 [source,java]
 ----
@@ -277,6 +263,8 @@ public class ListCommand extends Command {
     }
 }
 ----
+
+<<<
 
 With the extra layer, the commands that are undoable are implemented this way:
 [source,java]
@@ -323,8 +311,6 @@ _Figure 4.1.2c: Mechanism of `UndoRedo` stack (part 3)_
 [NOTE]
 If the `undoStack` is empty, then there are no other commands left to be undone, and an `Exception` will be thrown when popping the `undoStack`.
 
-<<<
-
 The following sequence diagram shows how the undo operation works:
 
 image::UndoRedoSequenceDiagram.png[width="800"]
@@ -335,7 +321,7 @@ The redo does the exact opposite (pops from `redoStack`, pushes to `undoStack`, 
 [NOTE]
 If the `redoStack` is empty, then there are no other commands left to be redone, and an `Exception` will be thrown when popping the `redoStack`.
 
-The user now decides to execute a new command, `clear`. As before, `clear` will be pushed onto the `undoStack`. This time the `redoStack` is no longer empty. It will be purged as it no longer make sense to redo the `add n/David` command (this is the behavior that most modern desktop applications follow) (See Figure 4.1.4).
+The user now decides to execute a new command, `clear`. As before, `clear` will be pushed onto the `undoStack`. This time the `redoStack` is no longer empty. It will be purged as it no longer make sense to redo the `add n/David` command (this is the behavior that most modern desktop applications follow) (See Figure 4.1.4 on the next page).
 
 image::UndoRedoNewCommand2StackDiagram.png[width="800"]
 _Figure 4.1.4: `UndoRedo` stack after `clear` command_
@@ -400,7 +386,10 @@ Confusion for user, as user might think that undo also applies when the list is 
 **Alternative:** +
 Include all commands. +
 **Pros:** +
-Might be more intuitive for the user. +
+Might be more intuitive for the user.
+
+<<<
+
 **Cons:** +
 No way of skipping such commands if user just wants to reset the state of the address book and not the view. +
 
@@ -432,6 +421,8 @@ The `Event` class, which is located inside `Model`, is implemented with similar 
 An `Event` consists of three sub-components: `Header`, `Desc` and `EventDate`. Commands such as `clear`, `undo` and `redo` can be used to alter events in the list as they deal with code that directly modifies the address book.
 
 The `EventPanel` is incorporated into the `MainWindow` of the DoC to display all the events inside the internal list using `ObservableList<ReadOnlyEvent>`. This process will be explained later on under the section `Event card`.
+
+<<<
 
 ==== Event methods
 As stated in the summary, the `Event` class contains three main methods: `addE`, `editE` and `deleteE`.
@@ -610,6 +601,7 @@ this code is then attached to a `GoogleAuthenticationSuccessEvent` fired to the 
 **Note:** The **authentication URL*** is generated by Google's `oauth2` client library. Choice of **success URL*** is discussed
 later, under design considerations.
 
+<<<
 
 ===== HTTP request process
 With the `GoogleCredential` object generated at the end of the **authentication process**, we can now send HTTP requests
@@ -665,6 +657,8 @@ ImportBackgroundService importBackgroundService = setupImportBackgroundService()
 importBackgroundService.start();
 ----
 
+<<<
+
 ==== Design Considerations
 
 **Aspect:** Handling of successful Authentication +
@@ -718,7 +712,7 @@ Create a new background thread for every `Import` and `Export` commands executed
 **Pros:** +
 Easier implementation as we do not need to manage the call stack of the background threads created. +
 **Cons:** +
-A race condition might occur, and there is a possibility of the user entering multiple back-to-back `Import` and `Export` commands,
+Possible occurrence of race condition, and there is a possibility of the user entering multiple back-to-back `Import` and `Export` commands,
 which will cause the app to crash from the number of threads created.
 
 
@@ -734,19 +728,8 @@ commands currently require such a service.
 `Import` or `Export` command, while an instance of either one of them is still executing in the background. A long term solution would
 be the alternative mentioned above. The choice of either will depend on the number of new features
 requiring such a service as mentioned in the alternative, as DoC progress to `v2.0`.
-
-
-
-
-
-
-
-
-
-
 // end::oauth2[]
 
-<<<
 // tag::email[]
 === Email
 
@@ -791,8 +774,6 @@ private void sendEmail(String emailTo) throws ParseException {
 }
 ----
 
-<<<
-
 ==== Design considerations
 
 **Aspect:** Implementation of `Email` +
@@ -811,6 +792,8 @@ Can be emailed from the browser panel itself. +
 **Cons:** +
 UI for GMail is very poor on `JavaFX WebView`.
 // end::email[]
+
+<<<
 
 // tag::map[]
 === Map
@@ -865,9 +848,7 @@ More functions such as radius and many more could have been added. +
 Takes a longer time to load the map.
 // end::map[]
 
-<<<
 // tag::removeTag[]
-
 === RemoveTag
 
 ==== Overview
@@ -882,7 +863,9 @@ _Figure 4.6.1: `RemoveTag` sequence diagram_
 As shown in the diagram above, when the user executes the command `removeTag`, the `RemoveTagCommandParser` class will parse the tag and indexes if given, then call the `RemoveTagCommand`. In `RemoveTagCommand` the `execute()` function is called.
 This will invoke the `removeTag` function that resides in the `LogicManager`, which will remove the specific tag from specific or all contacts based on the call made by the user. These changes will then be updated and stored.
 
-The main logic behind `RemoveTagCommand` happens in the `ModelManager`. A brief overview of that code is shown below.
+<<<
+
+The main logic behind `RemoveTagCommand` happens in the `ModelManager`. A brief overview of that code is shown below:
 
 [source,java]
 ----
@@ -931,6 +914,8 @@ One lesser command for the user to remember. +
 Very tiring for the user to update each and every one of the contacts in the contact list, if he decides to remove the tag from everyone.
 // end::removeTag[]
 
+<<<
+
 // tag::find[]
 === Find
 
@@ -941,7 +926,7 @@ The `FindCommand` class is inherited from the
 
 
 The existing `NameContainsKeywordsPredicate` was modified to suit the new needs.
-The modified code is shown below.
+The modified code is shown below:
 
 [source,java]
 ----
@@ -1013,6 +998,8 @@ if (profilePic.toString().compareTo(ProfilePic.DEFAULT_URL) == 0) {
 
 The `deleteProfilePic` command works by taking in the index of the chosen contact and updating the `ProfilePic` property of the chosen contact to the default profile picture.
 
+<<<
+
 Below are the sequence diagrams of each command to illustrate how they work:
 
 image::updateProfilePicSD.jpg[width="800"]
@@ -1039,7 +1026,7 @@ Users do not have to remember a new command. +
 **Cons:** +
 Image might take a while to load, so all the data takes longer to be updated.
 
----
+<<<
 
 **Aspect:** Implementation of `deleteProfilePic` +
 
@@ -1075,6 +1062,8 @@ No space requirement to store the images locally +
 **Cons:** +
 Visible lag every time an image is displayed as a profile picture may be observed, if the image is too big and on the internet.
 // end::profilePic[]
+
+<<<
 
 // tag::viewCount[]
 === ViewCount tracking
@@ -1154,8 +1143,6 @@ File IO will be required for the saving of the list or the list has to be conver
 
 ---
 
-<<<
-
 **Aspect:** Updating of `Model` +
 
 **Chosen Implementation:** +
@@ -1199,7 +1186,6 @@ DoC will always show the updated order. +
 DoC will lag slightly each time a `PersonCard` is selected.
 // end::viewCount[]
 
-<<<
 // tag::unknowncommand[]
 === Unknown input parsing
 
@@ -1308,6 +1294,8 @@ For example, the current shortest command in DoC is 'add' with a length of 3. If
 Typos on longer commands have a higher propensity to produce a string with a Levenshtein distance of more than 2.
 These cannot be detected with this implementation. +
 
+<<<
+
 **Alternative 1:** +
 Set a maximum acceptable Levenshtein distance of 3 or higher. +
 **Pros:** +
@@ -1347,8 +1335,6 @@ Extra step is presented to the user on a wrong match, affecting the user's exper
 that a response is only required if the user wishes to accept the match.
 // end::unknowncommand[]
 
-<<<
-
 == Logging
 
 === Overview
@@ -1369,8 +1355,6 @@ We are using `java.util.logging` package for logging. The `LogsCenter` class is 
 === Configuration
 
 Certain properties of the application can be controlled (e.g App name, logging level) through the configuration file (default: `config.json`).
-
-<<<
 
 == Documentation
 
@@ -1416,8 +1400,6 @@ The most reliable way to run tests is the 3rd one. The first two methods might f
 * To run all tests, right-click on the `src/test/java` folder and choose `Run 'All Tests'`.
 * To run a subset of tests, you can right-click on a test package, test class, or a test and choose `Run 'ABC'`.
 
-<<<
-
 *Method 2: Using Gradle*
 
 * Open a console and run the command `gradlew clean allTests` (Mac/Linux: `./gradlew clean allTests`).
@@ -1445,8 +1427,6 @@ e.g. `seedu.address.commons.StringUtilTest`
 e.g. `seedu.address.storage.StorageManagerTest`
 ..  Hybrids of unit and integration tests. These test are checking multiple code units as well as how the are connected together. +
 e.g. `seedu.address.logic.LogicManagerTest`
-
-<<<
 
 === Troubleshooting testing
 **Problem: `HelpWindowTest` fails with a `NullPointerException`.**
@@ -1479,8 +1459,6 @@ A project often depends on third-party libraries. For example, Address Book depe
 
 * Include those libraries in the repo (this bloats the repo size). +
 * Require developers to download those libraries manually (this creates extra work for developers).
-
-<<<
 
 [appendix]
 == Suggested programming tasks to get started
@@ -1517,6 +1495,8 @@ Do take a look at the link:#logic-component[Design: Logic Component] section bef
 
 [TIP]
 Do take a look at the link:#model-component[Design: Model Component] section before attempting to modify the `Model` component.
+
+<<<
 
 . Add a `removeTag(Tag)` method. The specified tag will be removed from everyone in the address book.
 +
@@ -1617,8 +1597,6 @@ By creating this command, you will get a chance to learn how to implement a feat
 Edits the remark for a person specified in the `INDEX`. +
 Format: `remark INDEX r/[REMARK]`
 
-<<<
-
 Examples:
 
 * `remark 1 r/Likes to drink coffee.` +
@@ -1635,6 +1613,8 @@ Let's start by teaching the application how to parse a `remark` command. We will
 
 . Add a `RemarkCommand` that extends link:{repoURL}/src/main/java/seedu/address/logic/commands/UndoableCommand.java[`UndoableCommand`]. Upon execution, it should just throw an `Exception`.
 . Modify link:{repoURL}/src/main/java/seedu/address/logic/parser/AddressBookParser.java[`AddressBookParser`] to accept a `RemarkCommand`.
+
+<<<
 
 **Tests:**
 
@@ -1671,8 +1651,6 @@ Let's add a placeholder on all our link:{repoURL}/src/main/java/seedu/address/ui
 
 ===== [Step 4] Model: Add `Remark` class
 We have to properly encapsulate the remark in our link:{repoURL}/src/main/java/seedu/address/model/person/ReadOnlyPerson.java[`ReadOnlyPerson`] class. Instead of just using a `String`, let's follow the conventional class structure that the codebase already uses by adding a `Remark` class.
-
-<<<
 
 **Main:**
 
@@ -1727,6 +1705,8 @@ We now have everything set up... but we still can't modify the remarks. Let's fi
 
 . Update `RemarkCommandTest` to test that the `execute()` logic works.
 
+<<<
+
 ==== Full solution
 
 See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-by-step solution.
@@ -1742,10 +1722,9 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 |`* * *` |user |import contacts from an existing source |use the app with less set-up time | Available since DoC v1.1
 |`* * *` |user |add more fields to a contact |cater to contacts with multiple emails, phone numbers, etc |
 |`* * *` |user |view frequently contacted contacts on the top of the list | | Available since v1.3
-|`* * *` |user |delete multiple people | delete groups faster | |
+|`* * *` |user |delete multiple people | delete groups faster |
 |`* * *` |user |search for contacts by common tags | |
 |`* * *` |user |favourite a contact | |
-
 |`* * *` |new user |see usage instructions |refer to instructions when I forget how to use the App |AddressBook Level 4: `delete`
 |`* * *` |user |add a new person | |AddressBook Level 4: `add`
 |`* * *` |user |list all my contacts | |AddressBook Level 4: `list`
@@ -1755,6 +1734,13 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 |`* * *` |user |select a person |Automatically perform a google search on them |AddressBook Level 4: `delete`
 |`* * *` |user |view history of recent commands | |AddressBook Level 4: `history`
 |`* * *` |user |undo a previous command |revert any accidental changes |AddressBook Level 4: `undo`
+|=======================================================================
+
+<<<
+
+[width="100%",cols="10%,10%,30%,30%,20%",options="header",]
+|=======================================================================
+|Priority |As a ... |I want to ... |So that I can... |Status
 |`* * *` |user |redo an undone command | |AddressBook Level 4: `redo`
 |`* * *` |user |delete all contacts | |AddressBook Level 4: `clear`
 |`* * *` |user |exit the program | |AddressBook Level 4: `exit`
@@ -1831,8 +1817,6 @@ Use case ends.
 +
 Use case ends.
 
-<<<
-
 *Extensions*
 
 [none]
@@ -1846,6 +1830,8 @@ Use case ends.
 ** 2a1. DoC shows an error message.
 +
 Use case ends.
+
+<<<
 
 [none]
 === Use case: Swap persons
@@ -2022,6 +2008,8 @@ Private contact detail
 ....
 A contact detail that is not meant to be shared with others
 ....
+
+<<<
 
 [appendix]
 == Product survey
