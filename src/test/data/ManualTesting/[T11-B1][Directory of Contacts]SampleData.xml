@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addressbook>
+    <persons>
+        <name>Alice Pauline</name>
+        <phone>85355255</phone>
+        <email>alice@example.com</email>
+        <address>123, Jurong West Ave 6, #08-111</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Benson Meier</name>
+        <phone>98765432</phone>
+        <email>benson@example.com</email>
+        <address>311, Clementi Ave 2, #02-25</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Carl Kurz</name>
+        <phone>95352563</phone>
+        <email>carl@example.com</email>
+        <address>wall street</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Daniel Meier</name>
+        <phone>87652533</phone>
+        <email>daniel@example.com</email>
+        <address>10th street</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Elle Meyer</name>
+        <phone>94822245</phone>
+        <email>elle@example.com</email>
+        <address>michegan ave</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Fred Prick</name>
+        <phone>91236745</phone>
+        <email>fred@example.com</email>
+        <address>freddy street 542</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>George Tay</name>
+        <phone>86421933</phone>
+        <email>georgetay@example.com</email>
+        <address>Lim Tua Tao ave 10</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Henry Park</name>
+        <phone>96415823</phone>
+        <email>henrypark@example.com</email>
+        <address>henry street 123</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Iniesta</name>
+        <phone>97638523</phone>
+        <email>iniesta123@example.com</email>
+        <address>Barcelona club</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Jack Neo</name>
+        <phone>91232842</phone>
+        <email>jackneo@example.com</email>
+        <address>Pasir Ris Drive 1</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Kelly Choo</name>
+        <phone>96284721</phone>
+        <email>kellychoo@example.com</email>
+        <address>kelly walk</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Limou Sine</name>
+        <phone>97281858</phone>
+        <email>Limousine@example.com</email>
+        <address>rich street 1</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Milo Fernandes</name>
+        <phone>92993923</phone>
+        <email>milobest@example.com</email>
+        <address>HillV2</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Nelson Monday</name>
+        <phone>97582836</phone>
+        <email>nelson@example.com</email>
+        <address>Elias Park</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Omakase Mina</name>
+        <phone>97281869</phone>
+        <email>omakasesan@example.com</email>
+        <address>Oma street 76</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Peter Cheng</name>
+        <phone>98246523</phone>
+        <email>petercheng@example.com</email>
+        <address>peter street 69</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Qatar Pee</name>
+        <phone>96782312</phone>
+        <email>qatarpee@example.com</email>
+        <address>Qatar walk 91</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Xilinx Bibado</name>
+        <phone>94444578</phone>
+        <email>xilinx@example.com</email>
+        <address>vivado walk</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Yankee Dowat</name>
+        <phone>9666444</phone>
+        <email>YankeeDunno@example.com</email>
+        <address>yolo walk</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <persons>
+        <name>Zames Lim</name>
+        <phone>96655444</phone>
+        <email>zamesLim@example.com</email>
+        <address>Lim walk</address>
+        <profilePic>images/default.png</profilePic>
+        <viewCount>0</viewCount>
+        <tagged>friend</tagged>
+    </persons>
+    <tags>friend</tags>
+</addressbook>
