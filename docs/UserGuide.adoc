@@ -433,7 +433,7 @@ Opens the default emailing client and adds Adam to the `to` field and has the su
 
 * `email to/friends subject/SUBJECT body/BODY` +
 Opens the default emailing client and adds all the contacts who has the tag `friends` into the `to` area,
-adds the `subject` as `SUBJECT` and `body` as `BODY`. Please refer to the visual guide attached below.
+adds the `subject` as `SUBJECT` and `body` as `BODY`. Please refer to the visual guide on the following page.
 
 <<<
 
