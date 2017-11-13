@@ -5,6 +5,7 @@ ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 
 == Loading of Sample Data
 . Place the downloaded [T11-B1][Directory of Contacts]SampleData.xml into the data folder inside DoC1.5
+. Rename the file [T11-B1][Directory of Contacts]SampleData.xml to addressbook.xml
 . Launch the application
 
 == Unknown Command Test
