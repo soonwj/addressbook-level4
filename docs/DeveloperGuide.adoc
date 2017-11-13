@@ -754,7 +754,7 @@ As seen in the above diagram, an event based approach is used to display informa
 [NOTE]
 Note that the `LocationCommandParser` will throw a `ParseException` if the `INDEX` is not stated.
 
-Once `AddressBookParser` identifies the user command as a valid location command, it will make use of the Google Event bus to raise the event.
+Once `AddressBookParser` identifies the user command as a valid location command, it will make use of the Google Event Center to raise the event.
 The browser panel has subscribed for that particular event and therefore when the event is raised, the browser panel will pick it up and execute the function.
 If the there is only one INDEX, This will eventually render the browser panel with Google Maps and a marker pointing at the address of the requested contact.
 If there are more than one INDEX present, then the direction from one place to another will be shown by the Google Maps.
