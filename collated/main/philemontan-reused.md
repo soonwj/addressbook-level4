@@ -3,8 +3,8 @@
 ``` java
     /**
      * This switch is adapted from the original AddressBookParser.
-     * If a match is found, but its parameters are invalid, we will not prompt the user for a response, but instead
-     * with a formatting alert, through the exception thrown by the existings command parsers.
+     * If a match is found, but input arguments are invalid, the user will be prompted with the MESSAGE_USAGE of the
+     * matched Command
      * @param closestCommandWord
      * @throws ParseException
      */
