@@ -289,6 +289,7 @@ Note: Limit of import is 2000 contacts. Some lag with DoC is to be expected, if 
 A different dummy account is specified for this export test. For the sake of other testers, adhere to the following instructions strictly
 
 . Logout of the ‘Importing Contacts tests’ account: +
+
 image::ManualTesting_export1.png[width="600"]
 
 . Add a unique contact (enter your name or a random name in place of *YOUR_NAME_HERE*): +
@@ -304,6 +305,7 @@ image::ManualTesting_export1.png[width="600"]
 Note: An active internet connection is required for this command.”
 
 . Click sign in with a different account: +
+
 image::ManualTesting_export2.png[width="600"]
 
 . Login to your Google Account, or the following dummy account: +
@@ -317,6 +319,7 @@ image::ManualTesting_export2.png[width="600"]
 Simply right click the browser -> click reload page.
 
 . *Wait:* about 10-15 seconds, then reload the browser panel by right clicking like so: +
+
 image::ManualTesting_export3.png[width="600"]
 
 . *Observe:* Your unique contact being listed in the browser panel, alongside any other contacts you currently have in DoC (Should be “Import Test Person 1” and “Import Test Person 2”). +
