@@ -151,6 +151,8 @@ Edits the phone number and email address of the 1st contact to be `91234567` and
 * `edit 2 n/Betsy Crower t/` +
 Edits the name of the 2nd contact to be `Betsy Crower` and clears all existing tags.
 
+<<<
+
 **Visual guide:**
 
 image::editpic.png[width="700"]
@@ -182,6 +184,8 @@ Examples:
 Friend tag is removed from all contacts.
 * `removeTag rm/1 2 t/Friend` +
 Friend tag is only removed from Index 1 and 2.
+
+<<<
 
 **Visual guide:**
 
@@ -363,6 +367,8 @@ Format: `find TERM1 [MORE_TERMS]`
 * Name of contacts can be matched partially; e.g a search term of `Han` will match the contact name `Han Solo`.
 ====
 
+<<<
+
 **Visual guide:**
 
 image::findpic.png[width="700"]
@@ -427,7 +433,7 @@ Opens the default emailing client and adds Adam to the `to` field and has the su
 
 * `email to/friends subject/SUBJECT body/BODY` +
 Opens the default emailing client and adds all the contacts who has the tag `friends` into the `to` area,
-adds the `subject` as `SUBJECT` and `body` as `BODY`. Please refer to the visual guide attached below.
+adds the `subject` as `SUBJECT` and `body` as `BODY`. Please refer to the visual guide on the following page.
 
 <<<
 
@@ -464,6 +470,7 @@ image::Location_UG.PNG[width="1000"]
 
 Shows the address of the 1st contact in Google Maps as shown above.
 // end::map[]
+
 <<<
 
 // tag::eventUG[]
@@ -519,6 +526,8 @@ Example:
 `editE 3 h/Birthday party d/2017-10-30` +
 Edits the header and date of the 1st event to be `Birthday party` and `2017-10-30` respectively.
 
+<<<
+
 **Visual guide:**
 
 image::editEpic.png[width="700"]
@@ -552,6 +561,8 @@ image::deleteEpic.png[width="700"]
 
 As shown on the image above, if you want to delete an overdue `Event`, simply key in the `deleteE` command stating the index and the event will be removed from DoC.
 // end::eventUG[]
+
+<<<
 
 === General features
 The following commands and features are not specific to contacts or events, and can be used system-wide:
@@ -632,6 +643,8 @@ You can simply accept the suggestion with an input of `'yes'` or `'y'`. If you d
 and continue with another command.
 // end::unknowncommand[]
 
+<<<
+
 ==== Saving the data
 All additions, deletions, and changes performed on the contacts stored in DoC are saved automatically.
 
@@ -640,8 +653,6 @@ All additions, deletions, and changes performed on the contacts stored in DoC ar
 *How do I transfer my data to another Computer?* +
 Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous DoC folder.
 ****
-
-<<<
 
 == Command summary
 
@@ -696,5 +707,3 @@ DoC v2.0 is capable of delivering these features:
 * Extract a list of contacts into a folder.
 * Send messages to contacts from DoC.
 * Option to type abbreviations of a command.
-
-
