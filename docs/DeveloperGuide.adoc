@@ -633,7 +633,39 @@ object is added as a Google `Person` object's `UserDefined` attribute.
 * `ProfilePic` cannot be exported due to Google Contact's restrictions.
 * The produced Google `Person` objects are added to a contact group titled `Imported from DoC` on `Google Contacts`.
 
-==== Design considerations
+===== Multithreaded implementation for the HTTP request process and the Conversion process
+Both the **HTTP request process** and the **Conversion process** are very time-consuming, and performing them on the main
+`JavaFX` user interface thread causes the user interface to freeze for a significant duration. Thus, it is important
+that they are performed on a separate background thread. To achieve this, we make use of the `javafx.concurent.Service` class.
+ The following code snippets from the implementation of `Import` illustrates how we can use it:
+
+[source,java]
+----
+class ImportBackgroundService extends Service {
+    // ... declaring necessary variables ...
+    @Override
+    protected Task createTask() {
+        return new Task() {
+            @Override
+            protected Object call() throws Exception {
+                // ... HTTP calls ...
+                // ... Conversion call ...
+                // ... return result ...
+            }
+        };
+    }
+}
+----
+
+Then, we simply start this service from the context of the main `JavaFX` user interface thread, like so:
+
+[source,java]
+----
+ImportBackgroundService importBackgroundService = setupImportBackgroundService();
+importBackgroundService.start();
+----
+
+==== Design Considerations
 
 **Aspect:** Handling of successful Authentication +
 
@@ -653,7 +685,7 @@ No risk of an error page being display. +
 **Cons:** +
 Underlying `HTTP GET` containing the authentication token is sent to an external domain.
 
-'''
+---
 
 **Aspect:** Duplication handling +
 
@@ -677,6 +709,41 @@ in this current version of DoC, due to the following redeeming factors:
 
 - Google Contacts automatically flags possible duplicates, and offers a quick merging service.
 - Contacts exported from DoC will be added to a designated "ImportedFromGoogle" contact group, and can be filtered out on Google Contacts easily.
+
+---
+**Aspect:** Thread management +
+
+**Chosen implementation:** +
+Create a new background thread for every `Import` and `Export` commands executed. +
+**Pros:** +
+Easier implementation as we do not need to manage the call stack of the background threads created. +
+**Cons:** +
+A race condition might occur, and there is a possibility of the user entering multiple back-to-back `Import` and `Export` commands,
+which will cause the app to crash from the number of threads created.
+
+
+**Alternative:** +
+Create a shared background task manager to manage all `Import` and `Export` commands executed. +
+**Pros:** +
+Increased stability in the system. +
+**Cons:** +
+Excessive implementation will be required, and is not feasible for the `v1.5` release, as only the `Import` and `Export`
+commands currently require such a service.
+
+**Note:** A simple solution to the cons of the chosen implementation would be to simply restrict the user from calling another
+`Import` or `Export` command, while an instance of either one of them is still executing in the background. A long term solution would
+be the alternative mentioned above. The choice of either will depend on the number of new features
+requiring such a service as mentioned in the alternative, as DoC progress to `v2.0`.
+
+
+
+
+
+
+
+
+
+
 // end::oauth2[]
 
 <<<
