@@ -927,7 +927,7 @@ One lesser command for the user to remember. +
 Very tiring for the user to update each and every one of the contacts in the contact list, if he decides to remove the tag from everyone.
 // end::removeTag[]
 
-// tag::Find[]
+// tag::find[]
 === Find
 
 ==== Overview
