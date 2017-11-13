@@ -52,18 +52,22 @@ public class EmailCommand extends Command {
         if (emailTo.equalsIgnoreCase("")) {
             throw new ParseException("Invalid recipient email.");
         }
-        Desktop desktop = Desktop.getDesktop();
+        Desktop desktop;
         String url = "";
         URI mailTo;
-        try {
-            url = "mailTo:" + emailTo + "?subject=" + this.subject
-                    + "&body=" + this.body;
-            mailTo = new URI(url);
-            desktop.mail(mailTo);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (Desktop.isDesktopSupported() && (desktop = Desktop.getDesktop()).isSupported(Desktop.Action.MAIL)) {
+            try {
+                url = "mailTo:" + emailTo + "?subject=" + this.subject
+                        + "&body=" + this.body;
+                mailTo = new URI(url);
+                desktop.mail(mailTo);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new RuntimeException("desktop doesn't support this feature.");
         }
     }
 
@@ -75,6 +79,8 @@ public class EmailCommand extends Command {
         } catch (ParseException e) {
             e.printStackTrace();
             return new CommandResult(MESSAGE_NOT_SENT);
+        } catch (RuntimeException re) {
+            return new CommandResult("desktop doesn't support this feature.");
         }
         return new CommandResult(MESSAGE_EMAIL_APP);
     }
