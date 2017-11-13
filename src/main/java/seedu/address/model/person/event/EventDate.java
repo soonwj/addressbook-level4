@@ -20,7 +20,8 @@ public class EventDate {
 
     public static final String MESSAGE_EVENT_DATE_CONSTRAINTS =
             "Event must have a valid date input\n"
-                    + "Format: year-month-day";
+                    + "Format: year-month-day (yyyy-mm-dd)\n"
+                    + "Example: 2018-02-20";
 
     public final String value;
     public final LocalDate eventLocalDate;
