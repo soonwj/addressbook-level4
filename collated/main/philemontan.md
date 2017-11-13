@@ -35,20 +35,44 @@ public class GoogleAuthenticationSuccessEvent extends BaseEvent {
  * commandType are provided by the firer, for identifying the the GoogleCommand subclass of the instance.
  */
 public class GoogleCommandCompleteEvent extends BaseEvent {
+    private static final String EXPORT_PROGRESS_MESSAGE = "The export to Google will be executed in the background."
+            + " You can track this progress by reloading the Google Contacts page. "
+            + "\nSimply right click the browser -> click reload page.";
+    private static final String IMPORT_PROGRESS_MESSAGE = "Import from Google is executing.\nNote: Limit of import"
+            + " is 2000 contacts. Some lag with DoC is to be expected, if you are importing close to this limit.";
+    private static final String EXPORT_COMMAND_TYPE = "GOOGLE_export";
+    private static final String IMPORT_COMMAND_TYPE = "GOOGLE_import";
     private String redirectUrl;
     private String commandType;
 
     public GoogleCommandCompleteEvent(String inputUrl, String inputCommandType) {
         redirectUrl = inputUrl;
         commandType = inputCommandType;
-        EventsCenter.getInstance().post(new NewResultAvailableEvent(commandType
-                + " has successfully completed", false));
+        postCommandMessage();
     }
+
     public String getRedirectUrl() {
         return redirectUrl;
     }
     public String getCommandType() {
         return commandType;
+    }
+
+    /**
+     * Prompts the user with the relevant message, based on the command being executed
+     */
+    private void postCommandMessage() {
+        switch(commandType) {
+        case EXPORT_COMMAND_TYPE: {
+            EventsCenter.getInstance().post(new NewResultAvailableEvent(EXPORT_PROGRESS_MESSAGE, false));
+        } break;
+        case IMPORT_COMMAND_TYPE: {
+            EventsCenter.getInstance().post(new NewResultAvailableEvent(IMPORT_PROGRESS_MESSAGE, false));
+        } break;
+        default : {
+            return;
+        }
+        }
     }
 
     @Override
@@ -326,95 +350,78 @@ public abstract class GooglePersonConverterUtil {
 ``` java
 /**
  * Purpose: Exports DoC's contacts to Google Contacts, with the OAuth2 protocol against the Google People API.
- * Inherits from GoogleCommand & Oauth2Command
+ * Inherits from {@link seedu.address.logic.commands.GoogleCommand},{@link seedu.address.logic.commands.Oauth2Command}
  */
 public class ExportCommand extends GoogleCommand {
     public static final String COMMAND_WORD = "export";
 
-    //Scope includes write access to a users' Google Contacts
+    //This scope includes write access to a users' Google Contacts
     public static final String ACCESS_SCOPE = "https://www.googleapis.com/auth/contacts";
 
-    private static final String googleContactsGroupView = "https://contacts.google.com/label/";
-    private PeopleService peopleService;
+    private static final String GOOGLE_CONTACTS_GROUP_VIEW = "https://contacts.google.com/label/";
 
     public ExportCommand() {
         super(COMMAND_WORD, ACCESS_SCOPE);
         EventsCenter.getInstance().registerHandler(this);
     }
 
+    /**
+     * Begins the authentication process with the {@link seedu.address.ui.BrowserPanel}
+     * @return message on success
+     * @throws CommandException on failure to trigger the process
+     */
     @Override
     public CommandResult execute() throws CommandException {
-        //Fires an event to the BrowserPanel
         try {
             triggerBrowserAuth();
         } catch (IOException e) {
-            throw new CommandException("Failed to trigger browser auth");
+            throw new CommandException(TRIGGER_BROWSER_AUTH_FAILED_MESSAGE);
         }
-        return new CommandResult("Authentication in process");
+        return new CommandResult(TRIGGER_BROWSER_AUTH_SUCCESS_MESSAGE);
     }
 
     /**
      * Event listener for a successful authentication
-     * @param event Should be fired from the BrowserPanel, with an authcode
+     * @param event should be fired from the {@link seedu.address.ui.BrowserPanel} once it retrieves the authentication
+     * code
      */
     @Override
     @Subscribe
     protected void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event) {
-        if (!getCommandCompleted()) {
-            //Fire event to alert status bar of conversion process
-            EventsCenter.getInstance().post(
-                    new NewResultAvailableEvent("Successfully authenticated - Conversion in process now",
-                            false));
-
-            if (!commandTypeCheck(event.getCommandType())) {
-                return;
-            }
-            //set up credentials
-            setupCredentials(event.getAuthCode());
-
-            //set up people service
-            peopleService = new PeopleService.Builder(httpTransport, jsonFactory, credential)
-                    .setApplicationName("CS2103T - Doc")
-                    .build();
-
-            //Conversion calls
-            List<ReadOnlyPerson> docPersonList = model.getAddressBook().getPersonList();
-            List<com.google.api.services.people.v1.model.Person> googlePersonList =
-                    GooglePersonConverterUtil.listDocToGooglePersonConversion(docPersonList);
-
-            //Set contactGroupId for exporting to a specific contact group: `Imported From DoC`
-            String contactGroupId = retrieveExistingContractGroupResourceName();
-
-            //Create a new contact group titled `Imported From DoC`, if still not set
-            if (contactGroupId == null) {
-                contactGroupId = createNewContactGroup();
-            }
-
-            //HTTP calls - exporting
-            for (com.google.api.services.people.v1.model.Person p : googlePersonList) {
-                try {
-                    //create Contact
-                    String newPersonId;
-                    newPersonId = peopleService.people().createContact(p).execute().getResourceName();
-
-                    //set Contact's group
-                    peopleService.contactGroups().members().modify(contactGroupId,
-                            new ModifyContactGroupMembersRequest()
-                                    .setResourceNamesToAdd(GooglePersonConverterUtil
-                                            .makeListFromOne(newPersonId)))
-                            .execute();
-                } catch (IOException E) {
-                    System.out.println(E);
-                }
-            }
-            EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
-                    googleContactsGroupView + contactGroupId.split("/")[1], commandType));
-            setCommandCompleted();
+        if (!commandTypeCheck(event.getCommandType())) {
+            return;
         }
+
+        if (getCommandCompleted()) {
+            return;
+        }
+
+        setupCredentials(event.getAuthCode());
+        setupPeopleService();
+        String contactGroupId = getContactGroupId();
+        startBackgroundConversionAndHttpCalls(contactGroupId);
+        EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
+                GOOGLE_CONTACTS_GROUP_VIEW + contactGroupId.split("/")[1], getCommandType()));
+        setCommandCompleted();
     }
 
     /**
-     * Helper Method, executed when no existing Contact Group with the name: "ImportedFromGoogle" is found
+     * This method tries to retrieve the contactGroupId of an existing contact group in the user's Google Contacts,
+     * with the name {@link seedu.address.logic.commands.GoogleCommand#CONTACT_GROUP_NAME_ON_GOOGLE}. If it cannot be
+     * fetched, it creates it instead.
+     * @return contactGroupId String of an existing or new group.
+     */
+    private String getContactGroupId() {
+        String contactGroupId = retrieveExistingContractGroupResourceName();
+        if (contactGroupId == null) {
+            contactGroupId = createNewContactGroup();
+        }
+        return contactGroupId;
+    }
+
+    /**
+     * Helper Method, executed when no existing Contact Group with the name
+     * {@link seedu.address.logic.commands.GoogleCommand#CONTACT_GROUP_NAME_ON_GOOGLE} is found
      * @return the ResourceName String of the newly created Contact Group ID
      */
     private String createNewContactGroup() {
@@ -422,18 +429,19 @@ public class ExportCommand extends GoogleCommand {
         try {
             contactGroupId = peopleService.contactGroups().create(
                     new CreateContactGroupRequest()
-                            .setContactGroup(new ContactGroup().setName("Imported From DoC")))
+                            .setContactGroup(new ContactGroup().setName(CONTACT_GROUP_NAME_ON_GOOGLE)))
                     .execute().getResourceName();
-        } catch (IOException e7) {
-            System.out.println(e7);
-            assert true : "google server error";
+        } catch (IOException E) {
+            EventsCenter.getInstance().post(new NewResultAvailableEvent(FAILED_CONNECTION_MESSAGE, true));
+            setCommandCompleted();
         }
         return contactGroupId;
     }
 
     /**
-     * Helper Method, tries to fetch the ResourceName String of an existing Contact Group named: "ImportedFromGoogle"
-     * @return the ResourceName String of the existing Contact Group
+     * Helper Method, tries to fetch the ResourceName String of an existing Contact Group named:
+     * {@link seedu.address.logic.commands.GoogleCommand#CONTACT_GROUP_NAME_ON_GOOGLE}
+     * @return the ResourceName String of the existing Contact Group if it can be fetched, else, null
      */
     private String retrieveExistingContractGroupResourceName() {
         String contactGroupId = null;
@@ -441,11 +449,12 @@ public class ExportCommand extends GoogleCommand {
         List<ContactGroup> contactGroupList = new ArrayList<>();
         try {
             contactGroupList = peopleService.contactGroups().list().execute().getContactGroups();
-        } catch (IOException e4) {
-            System.out.println(e4);
+        } catch (IOException E) {
+            EventsCenter.getInstance().post(new NewResultAvailableEvent(FAILED_CONNECTION_MESSAGE, true));
+            setCommandCompleted();
         }
         for (ContactGroup c : contactGroupList) {
-            if (c.getFormattedName().equals("Imported From DoC")) {
+            if (c.getFormattedName().equals(CONTACT_GROUP_NAME_ON_GOOGLE)) {
                 contactGroupId = c.getResourceName();
                 break;
             }
@@ -455,35 +464,97 @@ public class ExportCommand extends GoogleCommand {
 
     @Override
     public String getAuthenticationUrl() {
-        return new GoogleBrowserClientRequestUrl(CLIENT_ID, getRedirectUrl(), Arrays.asList(getAccessScope())).build();
+        return new GoogleBrowserClientRequestUrl(getClientId(), getRedirectUrl(),
+                Arrays.asList(ACCESS_SCOPE)).build();
     }
 
     private boolean commandTypeCheck(String inputCommandType) {
-        return inputCommandType.equals("GOOGLE_export");
+        return inputCommandType.equals(SERVICE_SOURCE + "_" + COMMAND_WORD);
     }
 
     public String getAccessScope() {
         return accessScope;
     }
 
+    private void startBackgroundConversionAndHttpCalls(String contactGroupId) {
+        ExportBackgroundService exportBackgroundService = new ExportBackgroundService(contactGroupId);
+        exportBackgroundService.start();
+    }
+
+    /**
+     * This class extends the {@link javafx.concurrent.Service} class, to run the intensive conversion and http calls
+     * in a separate background thread.
+     */
+    class ExportBackgroundService extends Service {
+        private String contactGroupId;
+
+        public ExportBackgroundService(String inputContactGroupId) {
+            contactGroupId = inputContactGroupId;
+        }
+
+        @Override
+        protected Task createTask() {
+            return new Task() {
+                @Override
+                protected Object call() throws Exception {
+                    //Conversion calls
+                    List<ReadOnlyPerson> docPersonList = model.getAddressBook().getPersonList();
+                    List<com.google.api.services.people.v1.model.Person> googlePersonList =
+                            GooglePersonConverterUtil.listDocToGooglePersonConversion(docPersonList);
+
+                    //HTTP calls - exporting
+                    for (com.google.api.services.people.v1.model.Person p : googlePersonList) {
+                        try {
+                            //create Contact
+                            String newPersonId;
+                            newPersonId = peopleService.people().createContact(p).execute().getResourceName();
+
+                            //set Contact's group
+                            peopleService.contactGroups().members().modify(contactGroupId,
+                                    new ModifyContactGroupMembersRequest()
+                                            .setResourceNamesToAdd(GooglePersonConverterUtil
+                                                    .makeListFromOne(newPersonId)))
+                                    .execute();
+                        } catch (IOException E) {
+                            EventsCenter.getInstance().post(new NewResultAvailableEvent(FAILED_CONNECTION_MESSAGE,
+                                    true));
+                            setCommandCompleted();
+                        }
+                    }
+                    return null;
+                }
+            };
+        }
+    }
+
 }
+
+
 ```
 ###### \java\seedu\address\logic\commands\GoogleCommand.java
 ``` java
 /**
  * This class inherits from the Oauth2Command class and is the parent class for all commands making calls to
  * Google's APIs.
- * Created by Philemon1 on 21/10/2017.
  */
 public abstract class GoogleCommand extends Oauth2Command {
-    protected static final String CLIENT_ID =
+    public static final String SERVICE_SOURCE = "GOOGLE";
+    public static final String FAILED_CONNECTION_MESSAGE = "Unable to reach Google's servers. Please check that you"
+            + "have an active internet connection.";
+    public static final String CONTACT_GROUP_NAME_ON_GOOGLE = "Imported From DoC";
+    public static final String APPLICATION_NAME_FOR_GOOGLE = "CS2103T - DoC";
+
+    private static final String CLIENT_ID =
             "591065149112-69ikmid17q2trahg28gip4o8srmo47pv.apps.googleusercontent.com";
-    private static final String SERVICE_SOURCE = "GOOGLE";
+
+
     protected String accessScope;
     protected TokenResponse authToken;
     protected GoogleCredential credential;
     protected HttpTransport httpTransport;
     protected JacksonFactory jsonFactory;
+    protected PeopleService peopleService;
+
 
     protected GoogleCommand(String googleCommandType, String inputAccessScope)  {
         super(SERVICE_SOURCE + "_" + googleCommandType);
@@ -491,95 +562,98 @@ public abstract class GoogleCommand extends Oauth2Command {
         httpTransport = new NetHttpTransport();
         jsonFactory = new JacksonFactory();
     }
-    /**Instantiates the GoogleCredentials for OAuth2 requests.
+
+    /**Instantiates the GoogleCredential for OAuth2 requests.
      * This is the final step in the OAuth2 protocol for Google APIs
-     * @param authCode
+     * @param authCode is obtained from service provider, after successful authentication
      */
     protected void setupCredentials(String authCode) {
         authToken = new TokenResponse();
         authToken.setAccessToken(authCode);
         credential = new GoogleCredential().setFromTokenResponse(authToken);
     }
+
+    /**
+     * This method can only be called after the setupCredentials method has been called
+     */
+    protected void setupPeopleService() {
+        assert (credential != null) : "setupPeopleService() should not be called before setupCredentials()";
+        peopleService = new PeopleService.Builder(httpTransport, jsonFactory, credential)
+                .setApplicationName(APPLICATION_NAME_FOR_GOOGLE)
+                .build();
+    }
+
+    protected static String getClientId() {
+        return CLIENT_ID;
+    }
+
 }
 ```
 ###### \java\seedu\address\logic\commands\ImportCommand.java
 ``` java
 /**
- * Purpose: Imports contacts from Google Contacts, fulfilling Google's OAuth2 protocol.
- * Limit of contacts retrieved set at : 1000
- * Created by Philemon1 on 11/10/2017.
+ * Purpose: Import contacts from Google Contacts to DoC, with the OAuth2 protocol against the Google People API.
+ * Limit of contacts retrieved set at : 2000, which is the People API's inherent limit
+ * of UI
  */
 public class ImportCommand extends GoogleCommand {
     public static final String COMMAND_WORD = "import";
+    public static final int CONTACT_RETRIEVAL_LIMIT = 2000;
 
-    //Scope includes read-only access to a users' Google Contacts
+    //This scope includes read-only access to a users' Google Contacts
     public static final String ACCESS_SCOPE = "https://www.googleapis.com/auth/contacts.readonly";
 
-    protected PeopleService peopleService;
+    private static final String GOOGLE_CONTACTS_DEFAULT_VIEW = "https://contacts.google.com/";
 
     public ImportCommand() {
         super(COMMAND_WORD, ACCESS_SCOPE);
         EventsCenter.getInstance().registerHandler(this);
     }
 
-
     @Override
     public CommandResult execute() throws CommandException {
         //Fires an event to the BrowserPanel
         try {
             triggerBrowserAuth();
-        } catch (IOException e) {
-            throw new CommandException("Failed to trigger browser auth");
+        } catch (IOException E) {
+            throw new CommandException(TRIGGER_BROWSER_AUTH_FAILED_MESSAGE);
         }
-        return new CommandResult("Authentication in process");
+        return new CommandResult(TRIGGER_BROWSER_AUTH_SUCCESS_MESSAGE);
     }
 
     /**
      * Event listener for a successful authentication
-     * @param event Should be fired from the BrowserPanel, with an authcode
+     * @param event should be fired from the {@link seedu.address.ui.BrowserPanel} once it retrieves the authentication
+     * code
      */
     @Override
     @Subscribe
     protected void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event) {
-        if (!getCommandCompleted()) {
-            //Fire event to alert status bar of conversion process
-            EventsCenter.getInstance().post(
-                    new NewResultAvailableEvent("Successfully authenticated - Conversion in process now",
-                            false));
+        if (!commandTypeCheck(event.getCommandType())) {
+            return;
+        }
 
-            //Incoming Google Person List
-            List<com.google.api.services.people.v1.model.Person> googlePersonList = new ArrayList<>();
+        if (getCommandCompleted()) {
+            return;
+        }
 
-            //List of converted DoC person
-            List<Person> docPersonList = new ArrayList<>();
+        setupCredentials(event.getAuthCode());
+        setupPeopleService();
+        ImportBackgroundService importBackgroundService = setupImportBackgroundService();
+        importBackgroundService.start();
+        EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
+                GOOGLE_CONTACTS_DEFAULT_VIEW, getCommandType()));
+        setCommandCompleted();
+    }
 
-            if (!commandTypeCheck(event.getCommandType())) {
-                return;
-            }
-
-            //set up credentials
-            setupCredentials(event.getAuthCode());
-
-            //set up people service
-            peopleService = new PeopleService.Builder(httpTransport, jsonFactory, credential)
-                    .setApplicationName("CS2103T - Doc")
-                    .build();
-
-            //HTTP calls
-            try {
-                ListConnectionsResponse response = peopleService.people().connections().list("people/me")
-                        .setPersonFields("names,emailAddresses,phoneNumbers,addresses")
-                        .setPageSize(1000)
-                        .execute();
-                googlePersonList = response.getConnections();
-            } catch (IOException e) {
-                System.out.print(e);
-            }
-            //Conversion call
-            docPersonList = GooglePersonConverterUtil.listGoogleToDoCPersonConversion(googlePersonList);
-
-            //Adding to the model
-            for (Person p : docPersonList) {
+    /**
+     * Creates and primes an ImportBackgroundService to update the Model once background task has completed
+     * @return the primed Service
+     */
+    private ImportBackgroundService setupImportBackgroundService() {
+        ImportBackgroundService importBackgroundService = new ImportBackgroundService();
+        importBackgroundService.setOnSucceeded(event1 -> {
+            for (Person p : importBackgroundService.producedDocPersonList) {
                 try {
                     model.addPerson(p);
                 } catch (DuplicatePersonException e) {
@@ -587,70 +661,113 @@ public class ImportCommand extends GoogleCommand {
                     continue;
                 }
             }
-            EventsCenter.getInstance().post(new GoogleCommandCompleteEvent(
-                    "https://contacts.google.com/", commandType));
-            setCommandCompleted();
-        }
-
+        });
+        return importBackgroundService;
     }
+
     @Override
     public String getAuthenticationUrl() {
-        return new GoogleBrowserClientRequestUrl(CLIENT_ID, getRedirectUrl(), Arrays.asList(getAccessScope())).build();
+        return new GoogleBrowserClientRequestUrl(getClientId(), getRedirectUrl(),
+                Arrays.asList(ACCESS_SCOPE)).build();
     }
-    public String getAccessScope() {
-        return accessScope;
-    }
+
     private boolean commandTypeCheck(String inputCommandType) {
-        return inputCommandType.equals("GOOGLE_import");
+        return inputCommandType.equals(SERVICE_SOURCE + "_" + COMMAND_WORD);
+    }
+
+    /**
+     * This class extends the {@link javafx.concurrent.Service} class, to run the intensive conversion and http calls
+     * in a separate background thread.
+     */
+    class ImportBackgroundService extends Service {
+        private List<Person> producedDocPersonList;
+
+        @Override
+        protected Task createTask() {
+            return new Task() {
+                @Override
+                protected Object call() throws Exception {
+                    List<com.google.api.services.people.v1.model.Person> incomingGooglePersonList = new ArrayList<>();
+                    //HTTP calls
+                    try {
+                        ListConnectionsResponse response = peopleService.people().connections().list("people/me")
+                                .setPersonFields("names,emailAddresses,phoneNumbers,addresses")
+                                .setPageSize(CONTACT_RETRIEVAL_LIMIT)
+                                .execute();
+                        incomingGooglePersonList = response.getConnections();
+                    } catch (IOException e) {
+                        System.out.print(e);
+                    }
+                    //Conversion call
+                    producedDocPersonList = GooglePersonConverterUtil
+                            .listGoogleToDoCPersonConversion(incomingGooglePersonList);
+                    return null;
+                }
+            };
+        }
     }
 }
 ```
 ###### \java\seedu\address\logic\commands\Oauth2Command.java
 ``` java
 /**
- * This class is the parent class for all commands requiring OAuth2 authentication using the BrowserPanel.
- * This class is abstract, and requires child classes to define the commandType.
- * Child classes are also expected to implement the event listener: handleAuthenticationSuccessEvent()
- * Created by Philemon1 on 21/10/2017.
+ * This is the abstract parent class for all commands requiring OAuth2 authentication using the BrowserPanel.
+ * Child classes are expected to implement the event listener: handleAuthenticationSuccessEvent(), and provide the
+ * commandType
  */
 public abstract class Oauth2Command extends Command {
-    public static final String INVALID_COMMAND_TYPE_MESSAGE = "The COMMAND_TYPE cannot be null";
+    public static final String INVALID_COMMAND_TYPE_MESSAGE = "Child classes of Oauth2Command must provide a valid"
+            + " command type in the format: SERVICEPROVIDER_functionality";
+    public static final String TRIGGER_BROWSER_AUTH_FAILED_MESSAGE = "Failed to trigger the authentication process "
+            + "with the built-in browser.";
+    public static final String TRIGGER_BROWSER_AUTH_SUCCESS_MESSAGE = "Authentication process initiated. Please login"
+            + " on the built-in browser." + "\nNote: An active internet connection is required for this command.";
+
     private static final String REDIRECT_URL = "https://cs2103tdummyendpoint.herokuapp.com";
-    protected final String commandType;
+
+    private final String commandType;
+
+    private String authenticationUrl;
+
     private boolean commandCompleted;
 
     protected Oauth2Command(String inputType)  {
         if (!inputTypeValid(inputType)) {
-            assert true : "Child classes of Oauth2Command must provide a valid command type in the format:"
-                   + " SERVICEPROVIDER_functionality";
+            assert false : INVALID_COMMAND_TYPE_MESSAGE;
         }
         commandType = inputType;
         commandCompleted = false;
+        authenticationUrl = getAuthenticationUrl();
     }
 
     protected Oauth2Command() {
         this(null);
     }
 
-    public static String getRedirectUrl() {
+    protected static String getRedirectUrl() {
         return REDIRECT_URL;
     }
 
-    public void setCommandCompleted() {
+    protected void setCommandCompleted() {
         commandCompleted = true;
     }
-    public boolean getCommandCompleted() {
+
+    protected boolean getCommandCompleted() {
         return commandCompleted;
     }
 
+    public String getCommandType() {
+        return commandType;
+    }
+
     /**
-     * Main common functionality for all Oauth2Command childs classes. Fires an event intended for the BrowserPanel,
+     * Common functionality of all Oauth2Command child classes. Fires an event intended for the BrowserPanel,
      * triggering it to start the UI authentication process within the BrowserPanel
      * @throws IOException
      */
     protected void triggerBrowserAuth() throws IOException {
         try {
-            Oauth2BrowserRequestEvent trigger = new Oauth2BrowserRequestEvent(commandType, getAuthenticationUrl());
+            Oauth2BrowserRequestEvent trigger = new Oauth2BrowserRequestEvent(commandType, authenticationUrl);
             EventsCenter.getInstance().post(trigger);
         } catch (IOException E) {
             throw E;
@@ -658,17 +775,19 @@ public abstract class Oauth2Command extends Command {
     }
 
     /**
-     * Event listener to be implemented by child classes
+     * Authentication success handling is to be implemented by child classes.
      */
     @Subscribe
     protected abstract void handleAuthenticationSuccessEvent(GoogleAuthenticationSuccessEvent event);
 
     /**
-     * All child classes should provide this URL based on their scope required
-     * @return the authentication URL, based on the scope required of the command
+     *  To be defined by child classes, URL is expected to be unique, based on service provider and scope required.
      */
     public abstract String getAuthenticationUrl ();
 
+    /**
+     *  Expected formatting: SERVICEPROVIDER_FUNCTIONALITY
+     */
     private boolean inputTypeValid(String inputType) {
         return inputType != null && inputType.charAt(inputType.length() - 1) != '_';
     }
@@ -677,7 +796,6 @@ public abstract class Oauth2Command extends Command {
 ###### \java\seedu\address\logic\commands\UnknownCommand.java
 ``` java
 /**
- * Created by Philemon1 on 29/10/2017.
  * This class is used to process all unknown commands, i.e user input that does not match any existing COMMAND_WORD
  * this is done by searching for COMMAND_WORDs with a Levenshtein distance <= the set ACCEPTABLE_LEVENSHTEIN_DISTANCE,
  * away from the user input command word
@@ -695,8 +813,8 @@ public class UnknownCommand extends Command {
      * the ACCEPTABLE_MAXIMUM_COMMAND_WORD_LENGTH should be computed by summing the longest system-recognized
      * COMMAND_WORD available, and the set ACCEPTABLE_LEVENSHTEIN_DISTANCE, to prevent needless checking
      */
-    private static final int ACCEPTABLE_LEVENSHTEIN_DISTANCE = 2;
-    private static final int ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH = 18;
+    public static final int ACCEPTABLE_LEVENSHTEIN_DISTANCE = 2;
+    public static final int ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH = 18;
 
     //A constant String[] of all known COMMAND WORDS; this list should be extended when new Command types are created
     private static final String[] ALL_COMMAND_WORDS = {
@@ -713,15 +831,17 @@ public class UnknownCommand extends Command {
     private String arguments;
     private String promptToUser;
     private Command suggestedCommand;
+    private boolean suggestionFoundHasBeenExecuted = false;
 
     public UnknownCommand(String inputCommandWord, String inputArguments) {
         commandWord = inputCommandWord;
         arguments = inputArguments;
     }
 
-
     @Override
     public CommandResult execute() throws CommandException {
+        assert suggestionFoundHasBeenExecuted : "Invalid behaviour: UnknownCommand.execute() has been called before"
+                + "UnknownCommand.suggestionFound()";
         return new CommandResult(promptToUser);
     }
 
@@ -729,50 +849,57 @@ public class UnknownCommand extends Command {
         return suggestedCommand;
     }
 
-
     /**
      * This method initiates the computation of Levenshtein distance between the user input commandWord, and each of
      * the system-recognized COMMAND_WORDs, in the constant String[] ALL_COMMAND_WORDS.
-     * This method also sets the suggested command, and updates the PROMPT_TO_USER accordingly, if any matches are
-     * found.
-     * This method will only check for user-entered commandWord <= ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH in length
-     * In the case of equal Levenshtein distance, the first encountered in the order of delcaration in the
-     * String[] ALL_COMMAND_WORDS, will be used.
-     * This method should always be executed before execute() method is called
+     * This method should always be executed before the execute() method is called
      * @return true if minimum distance found is <= the ACCEPTABLE_LEVENSHTEIN_DISTANCE constant set, else false
      */
     public boolean suggestionFound() throws ParseException {
-        int min = ACCEPTABLE_LEVENSHTEIN_DISTANCE + 1;
-        int tempDistance;
-        String closestCommandWord = null;
+        suggestionFoundHasBeenExecuted = true;
 
-        //Checks for invalid commandWord length, i.e 18 and above (To prevent performance issues)
+        //Checks for invalid commandWord length, i.e 19 and above (To prevent performance issues)
         if (invalidLengthDetected()) {
             return false;
         }
 
-        /**
-         * Iterates through all known COMMAND_WORDs, and find the smallest possible Levenshtein distance.
-         * In the case of equal Levenshtein distance, the first encountered in the order of delcaration in the String[]
-         * ALL_COMMAND_WORDS, will be used.
-         */
+        String closestCommandWord = searchMinDistanceCommand();
+
+        //closestCommandWord is set to null if no acceptable match is found
+        if (closestCommandWord == null) {
+            return false;
+        } else {
+            setSuggestedCommand(closestCommandWord);
+            setPromptToUser(closestCommandWord);
+            return true;
+        }
+    }
+
+    //Sets the prompt to the user based on the match found
+    private void setPromptToUser(String closestCommandWord) {
+        promptToUser = "Did you mean: " + closestCommandWord + arguments + " ?" + "\n" + "Respond: "
+                + "'yes' or 'y' to accept the suggested command." + "\n"
+                + "Suggested command will be discarded otherwise.";
+    }
+
+    /**
+     * Iterative search for an acceptable & minimum distance match to a known command.
+     * @return null if no acceptable match found (i.e Levenshtein distance between commandWord and all known Commands
+     * is more than the ACCEPTABLE_LEVENSTHEIN_DISTANCE), else returns the match with smallest Levenshtein distance.
+     */
+    private String searchMinDistanceCommand() {
+        int min = ACCEPTABLE_LEVENSHTEIN_DISTANCE + 1;
+        int tempDistance;
+        String closestCommandWord = null;
+
         for (String s: ALL_COMMAND_WORDS) {
             tempDistance = levenshteinDistance(s, commandWord);
-            if (tempDistance < min) {
+            if (tempDistance < min) { // tempDistance within acceptable range
                 min = tempDistance;
                 closestCommandWord = s;
             }
         }
-        //An unchanged min indicates that no acceptable substitute has been found
-        if (min == ACCEPTABLE_LEVENSHTEIN_DISTANCE + 1) {
-            return false;
-        } else {
-            setSuggestedCommand(closestCommandWord);
-            promptToUser = "Did you mean: " + closestCommandWord + arguments + " ?" + "\n" + "Respond: "
-                    + "'yes' or 'y' to accept the suggested command." + "\n"
-                    + "Suggested command will be discarded otherwise.";
-            return true;
-        }
+        return closestCommandWord;
     }
 
     /**
@@ -781,14 +908,7 @@ public class UnknownCommand extends Command {
      * @throws ParseException if user input command length is 0
      */
     private boolean invalidLengthDetected () {
-        if (commandWord.length() > ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH) {
-            return true;
-        }
-        if (commandWord.length() == 0) {
-            assert true : "Unexpected behaviour: Empty input has gone through the AddressBookParser parseCommand()"
-                    + "matcher check";
-        }
-        return false;
+        return commandWord.length() > ACCETABLE_MAXIMUM_COMMAND_WORD_LENGTH || commandWord.length() == 0;
     }
 
 ```
@@ -813,18 +933,19 @@ public class UnknownCommand extends Command {
 ```
 ###### \java\seedu\address\logic\parser\AddressBookParser.java
 ``` java
+        /**
+         * The default case will attempt to guess the intended user input
+         */
         default:
             unknownCommand = new UnknownCommand(commandWord, arguments);
-            /**
-             * initiate the similarity checking logic. If suggestionFound() returns false, we will reset the
-             * unknownCommand to null, as no matches were found
-             */
+
             if (unknownCommand.suggestionFound()) {
                 correctionPrompted = true;
                 return unknownCommand;
             } else {
                 unknownCommand = null;
             }
+
             throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
         }
 ```
@@ -847,12 +968,14 @@ public class UnknownCommand extends Command {
 ###### \java\seedu\address\ui\BrowserPanel.java
 ``` java
     /**
-     * Handles an Oauth2BrowserRequestEvent sent by the execution of a command requiring the authentication against
+     * Handles an Oauth2BrowserRequestEvent sent by the execution of a command requiring authentication against
      * the OAuth2 protocol
      * @param event
      */
     @Subscribe
     private void handleOauth2BrowserRequestEvent(Oauth2BrowserRequestEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event, "Authentication with BrowserPanel "
+                + "in progress."));
         loadPage(event.getRequestUrl());
         resetUrlListener();
         currentUrlListener = new UrlListener(event.getCommandType());
@@ -869,7 +992,6 @@ public class UnknownCommand extends Command {
         }
     }
 
-
     /**
      * Implements the functional interface ChangeListener. Lambda not used, due to the need to reset the url listener
      */
@@ -878,6 +1000,7 @@ public class UnknownCommand extends Command {
         UrlListener(String inputCommandType) {
             commandType = inputCommandType;
         }
+
         @Override
         public void changed(ObservableValue observable, Object oldValue, Object newValue) {
             currentUrl = (String) newValue;
@@ -889,20 +1012,22 @@ public class UnknownCommand extends Command {
     }
 
     /**
-     * Checks if Authentication is successful -> current domain reflects the set redirect endpoint
+     * Checks if Authentication is successful
      * @param currentUrl
-     * @return
+     * @return true if currentUrl reflects the correct redirect endpoint, detected by prefix:
+     * GOOGLE_AUTH_SUCCESS_TOKEN_PREFIX
      */
     private boolean authSuccessUrlDetected(String currentUrl) {
-        System.out.println(currentUrl);
-        return currentUrl.contains("access_token=");
+        return currentUrl.contains(GOOGLE_AUTH_SUCCESS_TOKEN_PREFIX);
     }
 
     /**
      * Reloads page according to the completed Google Command
      */
     @Subscribe
-    private void handleGoogleCOmmandCompleteEvent(GoogleCommandCompleteEvent event) {
+    private void handleGoogleCommandCompleteEvent(GoogleCommandCompleteEvent event) {
         loadPage(event.getRedirectUrl());
+        logger.info(LogsCenter.getEventHandlingLogMessage(event,
+                "GoogleCommand execution completed."));
     }
 ```

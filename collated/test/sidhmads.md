@@ -520,7 +520,7 @@ public class RemoveTagCommandSystemTest extends AddressBookSystemTest {
         assertCommandFailure(RemoveTagCommand.COMMAND_WORD + " 1 abc", MESSAGE_INVALID_REMOVE_TAG_COMMAND_FORMAT);
 
         /* Case: mixed case command word -> rejected */
-        assertCommandFailure("DelETE 1", MESSAGE_UNKNOWN_COMMAND);
+        assertCommandFailure("REmoveTAg 1", MESSAGE_UNKNOWN_COMMAND);
     }
 
     /**
