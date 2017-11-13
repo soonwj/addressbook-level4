@@ -470,7 +470,7 @@ Example:
 
 image::Location_UG.PNG[width="1000"]
 
-As shown in the visual guide above, the address of the 1st contact is highlighted on Google Maps with the help of a marker. 
+As shown in the visual guide above, the address of the 1st contact is highlighted on Google Maps with the help of a marker.
 // end::map[]
 
 <<<
