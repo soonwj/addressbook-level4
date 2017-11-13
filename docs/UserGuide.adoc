@@ -470,7 +470,7 @@ Example:
 
 image::Location_UG.PNG[width="1000"]
 
-Shows the address of the 1st contact in Google Maps as shown above.
+The address of the 1st contact in Google Maps is shown above.
 // end::map[]
 
 <<<
